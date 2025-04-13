@@ -3,25 +3,26 @@ package ti.elibreriaalfa.business.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
-@Table(name = "COMENTARIOS")
-public class Comentario {
+@Table(name = "PEDIDOS")
+public class Producto_Encargue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime fechaCreacion;
+    private Integer cantidad;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "encargue_id", nullable = false)
+    private Encargue encargue;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "publicacion_id", nullable = false)
-    private Publicacion publicacion;
+    @JoinColumn(name = "producto_id", nullable = false)
+    private Producto producto;
+
 }

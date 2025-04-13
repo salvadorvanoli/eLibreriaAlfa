@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "ENCARGUES")
@@ -20,6 +22,9 @@ public class Encargue {
     @JoinColumn(name = "usuario_id", nullable = false)
     @JsonManagedReference
     private Usuario usuario;
+
+    @OneToMany(mappedBy = "encargue", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Producto_Encargue> productos;
 
     /*
     @ManyToMany
