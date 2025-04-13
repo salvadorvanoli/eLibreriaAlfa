@@ -11,4 +11,6 @@ public class CategoriaDto {
     private String nombre;
 
     private List<ProductoDto> productos;
+
+    private List<CategoriaDto> hijos;
 }
