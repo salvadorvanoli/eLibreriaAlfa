@@ -19,4 +19,11 @@ public class Categoria {
 
     @ManyToMany(mappedBy = "categorias")
     private List<Producto> productos;
+
+    @ManyToOne
+    @JoinColumn(name = "padre_id", nullable = true)
+    private Categoria padre;
+
+    @OneToMany(mappedBy = "padre", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Categoria> hijos;
 }
