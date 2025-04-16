@@ -1,6 +1,7 @@
 package ti.elibreriaalfa.dtos;
 
 import lombok.Data;
+import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
 
 @Data
 public class ImpresionDto {
