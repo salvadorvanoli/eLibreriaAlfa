@@ -3,9 +3,13 @@ package ti.elibreriaalfa.business.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.security.core.parameters.P;
+import ti.elibreriaalfa.dtos.Comentario.ComentarioDto;
+import ti.elibreriaalfa.dtos.Publicacion.PublicacionDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -29,4 +33,28 @@ public class Publicacion {
     @Column(nullable = false)
     @JsonBackReference
     private List<Comentario> comentarios;
+
+    public Publicacion(Long id) {
+        this.id = id;
+    }
+
+    public Publicacion() {
+    }
+
+    public PublicacionDto mapToDto() {
+        PublicacionDto publicacionDto = new PublicacionDto();
+
+        publicacionDto.setId(this.getId());
+        publicacionDto.setContenido(this.getContenido());
+        publicacionDto.setTitulo(this.getTitulo());
+        publicacionDto.setFechaCreacion(this.getFechaCreacion());
+        publicacionDto.setComentarios(
+            this.getComentarios()
+                .stream()
+                .map(Comentario::mapToDto)
+                .collect(Collectors.toList())
+        );
+
+        return publicacionDto;
+    }
 }
