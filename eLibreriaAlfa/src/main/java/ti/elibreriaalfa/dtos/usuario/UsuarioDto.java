@@ -1,7 +1,10 @@
-package ti.elibreriaalfa.dtos;
+package ti.elibreriaalfa.dtos.usuario;
 
 import lombok.Data;
 import ti.elibreriaalfa.business.entities.Rol;
+import ti.elibreriaalfa.dtos.ComentarioDto;
+import ti.elibreriaalfa.dtos.EncargueDto;
+import ti.elibreriaalfa.dtos.ImpresionDto;
 
 import java.util.List;
 
