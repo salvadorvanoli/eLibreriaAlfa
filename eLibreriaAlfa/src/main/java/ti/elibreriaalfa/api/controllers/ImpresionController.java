@@ -45,7 +45,7 @@ public class ImpresionController {
 
     @PostMapping
     //@PreAuthorize("#email == authentication.name or hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<String> createImpresion(@RequestBody ImpresionDto impresionDto) { // Se recibe el socio dentro de los valores de la petición
+    public ResponseEntity<String> createImpresion(@RequestBody ImpresionDto impresionDto) {
         String response = impresionService.crearImpresion(impresionDto);
 
         if(response == null) {
