@@ -10,5 +10,5 @@ public class Producto_EncargueDto {
 
     private EncargueDto encargue;
 
-    private ProductoDto producto;
+
 }

@@ -24,7 +24,6 @@ public class Producto {
     @Column(nullable = false)
     private String descripcion;
 
-    @Column(nullable = false)
     private String[] imagenes;
 
     @ManyToMany

@@ -9,7 +9,5 @@ public class RequestRegistroUsuario {
 
     private UsuarioDto usuario;
 
-    public Usuario toUsuario() {
-        return usuario.toUsuario();
-    }
+
 }
