@@ -2,6 +2,7 @@ package ti.elibreriaalfa.business.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import ti.elibreriaalfa.dtos.impresion.ImpresionDto;
 
 @Data
 @Entity
@@ -27,4 +28,17 @@ public class Impresion {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
+    public ImpresionDto mapToDto() {
+        ImpresionDto impresionDto = new ImpresionDto();
+
+        impresionDto.setId(this.getId());
+        impresionDto.setUsuario(this.getUsuario().mapToDtoSimple());
+        impresionDto.setColor(this.getColor());
+        impresionDto.setVertical(this.getVertical());
+        impresionDto.setSimple(this.getSimple());
+        impresionDto.setComentarioAdicional(this.getComentarioAdicional());
+
+        return impresionDto;
+    }
 }

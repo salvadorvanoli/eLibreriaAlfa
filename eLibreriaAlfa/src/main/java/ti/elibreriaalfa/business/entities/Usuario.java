@@ -3,10 +3,8 @@ package ti.elibreriaalfa.business.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import ti.elibreriaalfa.dtos.ComentarioDto;
-import ti.elibreriaalfa.dtos.EncargueDto;
-import ti.elibreriaalfa.dtos.ImpresionDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
+import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
 
 import java.util.List;
 
@@ -68,5 +66,18 @@ public class Usuario {
         usuarioDto.setEncargues(encarguesDto);
         */
         return usuarioDto;
+    }
+
+    public UsuarioSimpleDto mapToDtoSimple() {
+        UsuarioSimpleDto usuarioSimpleDto = new UsuarioSimpleDto();
+
+        usuarioSimpleDto.setApellido(this.getApellido());
+        usuarioSimpleDto.setEmail(this.getEmail());
+        usuarioSimpleDto.setId(this.getId());
+        usuarioSimpleDto.setRol(this.getRol());
+        usuarioSimpleDto.setNombre(this.getNombre());
+        usuarioSimpleDto.setTelefono(this.getTelefono());
+
+        return usuarioSimpleDto;
     }
 }
