@@ -1,6 +1,7 @@
 package ti.elibreriaalfa.api.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,4 +61,52 @@ public class ProductoController {
         }
     }
 
+    //http://localhost:8080/product/paginado?pagina=0&cantidad=10
+    @GetMapping("/paginado")
+    public ResponseEntity<Page<ProductoDto>> productosPaginados(
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("cantidad")  Integer cantidad) {
+
+        return new ResponseEntity<>(productoService.listadoProductoPage(pagina, cantidad), HttpStatus.OK);
+    }
+
+ /* Ejemplos de Json para probar:
+
+    CREAR
+
+    1)
+    {
+    "nombre": "Licuadora",
+    "precio": 2590.99,
+    "descripcion": "Licuadora de 3 velocidades con vaso de vidrio.",
+    "categorias": []
+    }
+
+    2)
+    {
+    "nombre": "Horno Eléctrico",
+    "precio": 8990.50,
+    "descripcion": "Horno eléctrico 45L con temporizador y control de temperatura.",
+    "categorias": [
+        { "id": 1 },
+        { "id": 2 }
+        ]
+    }
+
+
+    MODIFICAR
+
+    {
+  "id": 54,
+  "nombre": "Laptop",
+  "categorias": [
+        {
+          "id": 2
+        }
+    ],
+  "precio": 899660.5,
+  "descripcion": "A."
+    }
+
+     */
 }

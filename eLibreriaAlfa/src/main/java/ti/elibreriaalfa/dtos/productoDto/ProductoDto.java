@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ti.elibreriaalfa.business.entities.Producto;
 import ti.elibreriaalfa.dtos.categoriaDto.CategoriaSimpleDto;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

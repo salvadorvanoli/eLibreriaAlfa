@@ -1,9 +1,13 @@
 package ti.elibreriaalfa.services;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import ti.elibreriaalfa.api.respones.ResponseListadoCategorias;
 import ti.elibreriaalfa.business.repositories.CategoriaRepository;
 import ti.elibreriaalfa.business.repositories.ProductoRepository;
@@ -13,6 +17,8 @@ import ti.elibreriaalfa.dtos.categoriaDto.CategoriaDto;
 import ti.elibreriaalfa.dtos.categoriaDto.CategoriaCreateDto;
 import ti.elibreriaalfa.dtos.productoDto.ProductoSimpleDto;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,42 +82,59 @@ public class CategoriaService {
         }
 
         if (categoriaDto.getProductos() != null) {
-            Set<Long> productoIds = categoriaDto.getProductos().stream()
+            Set<Long> nuevosIds = categoriaDto.getProductos().stream()
                     .map(ProductoSimpleDto::getId)
                     .collect(Collectors.toSet());
 
-            categoria.getProductos().removeIf(producto ->
-                    !productoIds.contains(producto.getId()));
+            Set<Producto> actuales = new HashSet<>(categoria.getProductos());
 
-            List<Producto> productosAAgregar = productoRepository.findAllById(productoIds).stream()
-                    .filter(producto -> !categoria.getProductos().contains(producto))
-                    .collect(Collectors.toList());
+            for (Producto producto : actuales) {
+                if (!nuevosIds.contains(producto.getId())) {
+                    producto.getCategorias().remove(categoria);
+                    categoria.getProductos().remove(producto);
+                    productoRepository.save(producto);
+                }
+            }
 
-            productosAAgregar.forEach(producto -> {
-                producto.getCategorias().add(categoria);
-                productoRepository.save(producto);
-            });
+            List<Producto> nuevosProductos = productoRepository.findAllById(nuevosIds);
+            for (Producto producto : nuevosProductos) {
+                if (!categoria.getProductos().contains(producto)) {
+                    producto.getCategorias().add(categoria);
+                    categoria.getProductos().add(producto);
+                    productoRepository.save(producto);
+                }
+            }
         }
 
         categoriaRepository.save(categoria);
         return "Categoría modificada exitosamente";
     }
 
+
     @Transactional
     public void borrarCategoria(Long idCategoria) {
         Categoria categoria = categoriaRepository.findById(idCategoria)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+                .orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada"));
 
-        for (Producto producto : categoria.getProductos()) {
+        List<Producto> productos = new ArrayList<>(categoria.getProductos());
+        for (Producto producto : productos) {
             producto.getCategorias().remove(categoria);
+            productoRepository.save(producto);
         }
 
-        categoria.getProductos().clear(); // También vacía desde el otro lado
+        categoria.getProductos().clear();
+
         categoriaRepository.delete(categoria);
     }
 
+    public Page<CategoriaDto> listadoCategoriaPage(int pagina, int cantidad) {
+        Pageable pageable = PageRequest.of(pagina, cantidad, Sort.by("Id").descending());
+        Page<Categoria> categoriasPage = categoriaRepository.findAll(pageable);
+        return categoriasPage.map(this::mapToDto);
+    }
+
     private CategoriaDto mapToDto(Categoria categoria) {
-        return new CategoriaDto(categoria); // ¡Solo una línea!
+        return new CategoriaDto(categoria);
     }
 }
 

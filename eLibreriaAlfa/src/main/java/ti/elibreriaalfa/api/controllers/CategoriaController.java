@@ -8,6 +8,7 @@ import ti.elibreriaalfa.api.respones.ResponseListadoCategorias;
 import ti.elibreriaalfa.dtos.categoriaDto.CategoriaCreateDto;
 import ti.elibreriaalfa.dtos.categoriaDto.CategoriaDto;
 import ti.elibreriaalfa.services.CategoriaService;
+import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping(value = "category")
@@ -60,5 +61,44 @@ public class CategoriaController {
             return new ResponseEntity<>("Error interno al modificar categoría", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    //http://localhost:8080/category/paginado?pagina=0&cantidad=10
+    @GetMapping("/paginado")
+    public ResponseEntity<Page<CategoriaDto>> categoriasPaginadas(
+            @RequestParam("pagina")  Integer pagina,
+            @RequestParam("cantidad")  Integer cantidad) {
+
+        return new ResponseEntity<>(categoriaService.listadoCategoriaPage(pagina, cantidad), HttpStatus.OK);
+    }
+
+    /* Ejemplos de Json para probar:
+
+    CREAR
+
+    1)
+    {
+    "nombre": "Electrodomésticos"
+    }
+
+    2)
+    {
+    "nombre": "Heladeras",
+    "padreId": 1
+    }
+
+    MODIFICAR
+
+   {
+  "id": 2,
+  "nombre": "Heladeras",
+  "padre": {
+        "id": 1
+        },
+  "productos": [
+        { "id": 53 },
+        { "id": 54 }
+         ]
+    }
+     */
 
 }

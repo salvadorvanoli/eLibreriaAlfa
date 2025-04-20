@@ -3,7 +3,6 @@ package ti.elibreriaalfa.business.entities;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.util.List;
 
 @Data
@@ -16,7 +15,7 @@ public class Encargue {
     private Long id;
 
     @Column(nullable = false)
-    private Integer total;
+    private Float total;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id", nullable = false)

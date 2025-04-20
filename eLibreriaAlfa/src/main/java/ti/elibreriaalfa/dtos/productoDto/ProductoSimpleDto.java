@@ -18,4 +18,5 @@ public class ProductoSimpleDto {
         this.nombre = producto.getNombre();
         this.precio = producto.getPrecio();
     }
+
 }

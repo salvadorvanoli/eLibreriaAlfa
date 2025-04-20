@@ -2,6 +2,10 @@ package ti.elibreriaalfa.services;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ti.elibreriaalfa.api.respones.ResponseListadoCategorias;
 import ti.elibreriaalfa.api.respones.ResponseListadoProductos;
@@ -129,6 +133,12 @@ public class ProductoService {
         productoRepository.save(producto);
 
         return "Producto modificado exitosamente";
+    }
+
+    public Page<ProductoDto> listadoProductoPage(int pagina, int cantidad) {
+        Pageable pageable = PageRequest.of(pagina, cantidad, Sort.by("Id").descending());
+        Page<Producto> productosPage = productoRepository.findAll(pageable);
+        return productosPage.map(this::mapToDto);
     }
 
     private ProductoDto mapToDto(Producto producto) {
