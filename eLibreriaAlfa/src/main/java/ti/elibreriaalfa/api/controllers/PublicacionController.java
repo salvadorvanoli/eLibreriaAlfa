@@ -44,6 +44,11 @@ public class PublicacionController {
         return new ResponseEntity<>(publicacionService.listadoPublicacionPage(pagina, cantidad), HttpStatus.OK);
     }
 
+    @GetMapping("/comment/page")
+    public ResponseEntity<Page<ComentarioDto>> getComentariosPageByPublicacion(@RequestParam(name = "pagina") Integer pagina, @RequestParam(name = "cantidad") Integer cantidad, @RequestParam(name = "idPublicacion") Long idPublicacion) {
+        return new ResponseEntity<>(comentarioService.listadoComentariosPageByPublicacion(pagina, cantidad, idPublicacion), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<String> createPublicacion(@RequestBody PublicacionDto publicacionDto) {
         String response = publicacionService.crearPublicacion(publicacionDto);

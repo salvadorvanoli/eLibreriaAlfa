@@ -1,6 +1,10 @@
 package ti.elibreriaalfa.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ti.elibreriaalfa.api.responses.usuario.ResponseListadoPublicaciones;
 import ti.elibreriaalfa.api.responses.usuario.ResponsePublicacion;
@@ -11,6 +15,8 @@ import ti.elibreriaalfa.business.repositories.PublicacionRepository;
 import ti.elibreriaalfa.dtos.Comentario.ComentarioDto;
 import ti.elibreriaalfa.dtos.Publicacion.PublicacionDto;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,7 +25,6 @@ public class ComentarioService {
     private final ComentarioRepository comentarioRepository;
 
     private final PublicacionRepository publicacionRepository;
-
 
     public ComentarioService(ComentarioRepository comentarioRepository, PublicacionRepository publicacionRepository) {
         this.comentarioRepository = comentarioRepository;
@@ -41,5 +46,10 @@ public class ComentarioService {
 
     public void borrarComentario(Long idComentario) {
         comentarioRepository.deleteById(idComentario);
+    }
+
+    public Page<ComentarioDto> listadoComentariosPageByPublicacion(Integer pagina, Integer cantidad, Long idPublicacion) {
+        Pageable pageable = PageRequest.of(pagina, cantidad);
+        return comentarioRepository.findByPublicacionId(idPublicacion, pageable).map(Comentario::mapToDto);
     }
 }
