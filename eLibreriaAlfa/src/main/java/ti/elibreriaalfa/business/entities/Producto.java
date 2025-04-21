@@ -24,11 +24,7 @@ public class Producto {
     @Column(nullable = false)
     private String descripcion;
 
-    @Column(nullable = false)
     private String[] imagenes;
-
-    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Producto_Encargue> encargues;
 
     @ManyToMany
     @JoinTable(

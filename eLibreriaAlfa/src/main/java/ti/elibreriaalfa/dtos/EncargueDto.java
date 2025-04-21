@@ -1,17 +1,32 @@
 package ti.elibreriaalfa.dtos;
 
 import lombok.Data;
-import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
+import lombok.NoArgsConstructor;
+import ti.elibreriaalfa.business.entities.Encargue;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 public class EncargueDto {
     private Long id;
 
-    private Integer total;
+    private Float total;
 
-    private UsuarioDto usuario;
+    private Long IdUsuarioComprador;
 
     private List<Producto_EncargueDto> productos;
+
+    public EncargueDto(Encargue encargue) {
+        this.id = encargue.getId();
+        this.total = encargue.getTotal();
+        this.IdUsuarioComprador = encargue.getUsuario().getId();
+
+        if (encargue.getProductos() != null) {
+            this.productos = encargue.getProductos().stream()
+                    .map(Producto_EncargueDto::new)
+                    .collect(Collectors.toList());
+        }
+    }
 }

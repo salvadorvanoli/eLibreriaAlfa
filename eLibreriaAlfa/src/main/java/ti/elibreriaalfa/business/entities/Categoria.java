@@ -26,4 +26,9 @@ public class Categoria {
 
     @OneToMany(mappedBy = "padre", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Categoria> hijos;
+
+    public void agregarHijo(Categoria hijo) {
+        this.hijos.add(hijo);
+        hijo.setPadre(this);
+    }
 }
