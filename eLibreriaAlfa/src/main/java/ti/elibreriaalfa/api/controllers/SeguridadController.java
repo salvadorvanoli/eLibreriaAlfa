@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ti.elibreriaalfa.api.requests.usuario.RequestAccesoUsuario;
 import ti.elibreriaalfa.business.entities.Usuario;
-import ti.elibreriaalfa.dtos.usuario.AccesoUsuarioDto;
 import ti.elibreriaalfa.security.SeguridadService;
 
 import java.util.Date;
@@ -33,13 +33,13 @@ public class SeguridadController {
 
     @PostMapping("/auth")
     @Transactional(readOnly = true)
-    public ResponseEntity<String> authenticateUser(@RequestBody AccesoUsuarioDto datosUsuario) {
+    public ResponseEntity<String> authenticateUser(@RequestBody RequestAccesoUsuario datosUsuario) {
         try {
             Usuario usuario = seguridadService.authenticateUsuario(datosUsuario);
             String token = generateToken(usuario);
             return new ResponseEntity<>(token, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }
