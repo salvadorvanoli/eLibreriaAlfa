@@ -16,8 +16,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FiltroJWTAutorizacion extends OncePerRequestFilter {
-    @Value("${JWT_KEY}")
-    private String key;
+
+    private final String key;
+
+    public FiltroJWTAutorizacion(String key) {
+        this.key = key;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

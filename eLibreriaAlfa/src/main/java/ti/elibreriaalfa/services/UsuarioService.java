@@ -11,8 +11,7 @@ import ti.elibreriaalfa.api.responses.usuario.ResponseListadoUsuarios;
 import ti.elibreriaalfa.api.responses.usuario.ResponseUsuario;
 import ti.elibreriaalfa.business.entities.Usuario;
 import ti.elibreriaalfa.business.repositories.UsuarioRepository;
-import ti.elibreriaalfa.dtos.usuario.AccesoUsuarioDto;
-import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
+import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
 
 @Service
 public class UsuarioService {
@@ -27,15 +26,15 @@ public class UsuarioService {
 
     public ResponseListadoUsuarios getAllUsuarios() {
         ResponseListadoUsuarios response = new ResponseListadoUsuarios();
-        response.setUsuarios(usuarioRepository.findAll().stream().map(Usuario::mapToDto).toList());
+        response.setUsuarios(usuarioRepository.findAll().stream().map(Usuario::mapToDtoSimple).toList());
         return response;
     }
 
-    public Page<UsuarioDto> getUsuariosPage(Integer pagina, Integer cantidad) {
+    public Page<UsuarioSimpleDto> getUsuariosPage(Integer pagina, Integer cantidad) {
         PageRequest pageRequest = PageRequest.of(pagina, cantidad);
         Sort sort = Sort.by(Sort.Direction.DESC, "email");
 
-        return usuarioRepository.findAll(pageRequest.withSort(sort)).map(Usuario::mapToDto);
+        return usuarioRepository.findAll(pageRequest.withSort(sort)).map(Usuario::mapToDtoSimple);
     }
 
     public ResponseUsuario getUsuarioByEmail(String usuarioEmail) {
@@ -43,7 +42,7 @@ public class UsuarioService {
         if (usuario == null) throw new IllegalArgumentException("No existe un usuario con el correo electrónico especificado");
 
         ResponseUsuario response = new ResponseUsuario();
-        response.setUsuario(usuario.mapToDto());
+        response.setUsuario(usuario.mapToDtoSimple());
         return response;
     }
 

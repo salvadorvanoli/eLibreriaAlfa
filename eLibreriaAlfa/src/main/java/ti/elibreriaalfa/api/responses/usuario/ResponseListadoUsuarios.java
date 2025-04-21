@@ -1,11 +1,11 @@
 package ti.elibreriaalfa.api.responses.usuario;
 
 import lombok.Data;
-import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
+import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
 
 import java.util.List;
 
 @Data
 public class ResponseListadoUsuarios {
-    private List<UsuarioDto> usuarios;
+    private List<UsuarioSimpleDto> usuarios;
 }
