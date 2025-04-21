@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.security.core.parameters.P;
 import ti.elibreriaalfa.dtos.Comentario.ComentarioDto;
 import ti.elibreriaalfa.dtos.Publicacion.PublicacionDto;
+import ti.elibreriaalfa.dtos.Publicacion.PublicacionSimpleDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -48,13 +49,30 @@ public class Publicacion {
         publicacionDto.setContenido(this.getContenido());
         publicacionDto.setTitulo(this.getTitulo());
         publicacionDto.setFechaCreacion(this.getFechaCreacion());
-        publicacionDto.setComentarios(
-            this.getComentarios()
-                .stream()
-                .map(Comentario::mapToDto)
-                .collect(Collectors.toList())
-        );
+        if(!this.getComentarios().isEmpty()) {
+            publicacionDto.setComentarios(
+                    this.getComentarios()
+                            .stream()
+                            .map(Comentario::mapToDto)
+                            .collect(Collectors.toList())
+            );
+        } else {
+            publicacionDto.setComentarios(null);
+        }
+
 
         return publicacionDto;
     }
+
+    public PublicacionSimpleDto mapToDtoSimple() {
+        PublicacionSimpleDto publicacionDto = new PublicacionSimpleDto();
+
+        publicacionDto.setId(this.getId());
+        publicacionDto.setContenido(this.getContenido());
+        publicacionDto.setTitulo(this.getTitulo());
+        publicacionDto.setFechaCreacion(this.getFechaCreacion());
+
+        return publicacionDto;
+    }
+
 }

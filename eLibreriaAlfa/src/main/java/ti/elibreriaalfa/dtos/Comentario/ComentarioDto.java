@@ -4,6 +4,7 @@ import lombok.Data;
 import ti.elibreriaalfa.business.entities.Comentario;
 import ti.elibreriaalfa.business.entities.Publicacion;
 import ti.elibreriaalfa.dtos.Publicacion.PublicacionDto;
+import ti.elibreriaalfa.dtos.Publicacion.PublicacionSimpleDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
 
@@ -21,7 +22,7 @@ public class ComentarioDto {
 
     private String texto;
 
-    private PublicacionDto publicacion;
+    private PublicacionSimpleDto publicacion;
 
     public Comentario mapToEntity() {
         Comentario comentario = new Comentario();
@@ -31,7 +32,6 @@ public class ComentarioDto {
         comentario.setTitulo(this.getTitulo());
         comentario.setFechaCreacion(this.getFechaCreacion());
         comentario.setUsuario(this.getUsuario().mapToEntity());
-        //comentario.setPublicacion(this.getPublicacion().mapToEntity());
         comentario.setPublicacion(new Publicacion(this.getPublicacion().getId()));
 
         return comentario;

@@ -42,7 +42,7 @@ public class Comentario {
         comentarioDto.setUsuario(this.getUsuario().mapToDtoSimple());
         comentarioDto.setTitulo(this.getTitulo());
         comentarioDto.setFechaCreacion(this.getFechaCreacion());
-        comentarioDto.setPublicacion(this.getPublicacion().mapToDto());
+        comentarioDto.setPublicacion(this.getPublicacion().mapToDtoSimple());
 
         return comentarioDto;
     }
