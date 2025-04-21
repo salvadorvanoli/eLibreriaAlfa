@@ -1,9 +1,12 @@
-package ti.elibreriaalfa.dtos;
+package ti.elibreriaalfa.dtos.usuario;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ti.elibreriaalfa.business.entities.Rol;
 import ti.elibreriaalfa.business.entities.Usuario;
+import ti.elibreriaalfa.dtos.Comentario.ComentarioDto;
+import ti.elibreriaalfa.dtos.EncargueDto;
+import ti.elibreriaalfa.dtos.impresion.ImpresionDto;
 
 import java.util.List;
 
