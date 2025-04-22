@@ -3,7 +3,7 @@ package ti.elibreriaalfa.dtos.productoDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ti.elibreriaalfa.business.entities.Producto;
-import ti.elibreriaalfa.dtos.categoriaDto.CategoriaSimpleDto;
+import ti.elibreriaalfa.dtos.categoria.CategoriaSimpleDto;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

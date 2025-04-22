@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ti.elibreriaalfa.api.respones.ResponseListadoEncargues;
-import ti.elibreriaalfa.dtos.EncargueDto;
+import ti.elibreriaalfa.api.responses.encargue.ResponseListadoEncargues;
+import ti.elibreriaalfa.dtos.encargue.EncargueDto;
 import ti.elibreriaalfa.services.EncargueService;
 
 @RestController

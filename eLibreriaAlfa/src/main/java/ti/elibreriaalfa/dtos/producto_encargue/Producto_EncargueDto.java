@@ -1,4 +1,4 @@
-package ti.elibreriaalfa.dtos;
+package ti.elibreriaalfa.dtos.producto_encargue;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

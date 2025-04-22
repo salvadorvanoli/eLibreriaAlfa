@@ -1,8 +1,9 @@
-package ti.elibreriaalfa.dtos;
+package ti.elibreriaalfa.dtos.encargue;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ti.elibreriaalfa.business.entities.Encargue;
+import ti.elibreriaalfa.dtos.producto_encargue.Producto_EncargueDto;
 
 import java.util.List;
 import java.util.stream.Collectors;

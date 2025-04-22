@@ -1,10 +1,8 @@
 package ti.elibreriaalfa.business.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import ti.elibreriaalfa.dtos.Comentario.ComentarioDto;
-import ti.elibreriaalfa.dtos.Publicacion.PublicacionDto;
+import ti.elibreriaalfa.dtos.comentario.ComentarioDto;
 
 import java.time.LocalDateTime;
 

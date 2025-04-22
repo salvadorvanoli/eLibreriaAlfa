@@ -1,4 +1,4 @@
-package ti.elibreriaalfa.api.respones;
+package ti.elibreriaalfa.api.responses.producto;
 
 import lombok.Data;
 import ti.elibreriaalfa.dtos.productoDto.ProductoDto;

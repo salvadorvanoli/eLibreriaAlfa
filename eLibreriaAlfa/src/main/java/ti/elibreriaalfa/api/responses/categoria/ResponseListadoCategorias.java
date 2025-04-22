@@ -1,7 +1,7 @@
-package ti.elibreriaalfa.api.respones;
+package ti.elibreriaalfa.api.responses.categoria;
 
 import lombok.Data;
-import ti.elibreriaalfa.dtos.categoriaDto.CategoriaDto;
+import ti.elibreriaalfa.dtos.categoria.CategoriaDto;
 
 import java.util.List;
 

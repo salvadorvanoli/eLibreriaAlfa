@@ -1,4 +1,4 @@
-package ti.elibreriaalfa.dtos.categoriaDto;
+package ti.elibreriaalfa.dtos.categoria;
 
 import lombok.Data;
 import ti.elibreriaalfa.business.entities.Categoria;
@@ -8,11 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
-import java.util.Collections;
-import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor // Constructor sin argumentos (OBLIGATORIO para Jackson)

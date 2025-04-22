@@ -1,7 +1,7 @@
-package ti.elibreriaalfa.api.respones;
+package ti.elibreriaalfa.api.responses.encargue;
 
 import lombok.Data;
-import ti.elibreriaalfa.dtos.EncargueDto;
+import ti.elibreriaalfa.dtos.encargue.EncargueDto;
 
 import java.util.List;
 

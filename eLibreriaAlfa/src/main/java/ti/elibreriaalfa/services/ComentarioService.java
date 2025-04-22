@@ -4,20 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ti.elibreriaalfa.api.responses.usuario.ResponseListadoPublicaciones;
-import ti.elibreriaalfa.api.responses.usuario.ResponsePublicacion;
 import ti.elibreriaalfa.business.entities.Comentario;
-import ti.elibreriaalfa.business.entities.Publicacion;
 import ti.elibreriaalfa.business.repositories.ComentarioRepository;
 import ti.elibreriaalfa.business.repositories.PublicacionRepository;
-import ti.elibreriaalfa.dtos.Comentario.ComentarioDto;
-import ti.elibreriaalfa.dtos.Publicacion.PublicacionDto;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import ti.elibreriaalfa.dtos.comentario.ComentarioDto;
 
 @Service
 public class ComentarioService {

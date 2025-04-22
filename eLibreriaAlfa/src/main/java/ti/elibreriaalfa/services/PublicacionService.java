@@ -5,13 +5,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ti.elibreriaalfa.api.responses.usuario.ResponseListadoPublicaciones;
-import ti.elibreriaalfa.api.responses.usuario.ResponsePublicacion;
+import ti.elibreriaalfa.api.responses.publicacion.ResponseListadoPublicaciones;
+import ti.elibreriaalfa.api.responses.publicacion.ResponsePublicacion;
 import ti.elibreriaalfa.business.entities.Publicacion;
 import ti.elibreriaalfa.business.repositories.PublicacionRepository;
 import ti.elibreriaalfa.business.repositories.UsuarioRepository;
-import ti.elibreriaalfa.dtos.Comentario.ComentarioDto;
-import ti.elibreriaalfa.dtos.Publicacion.PublicacionDto;
+import ti.elibreriaalfa.dtos.comentario.ComentarioDto;
+import ti.elibreriaalfa.dtos.publicacion.PublicacionDto;
 
 import java.util.Optional;
 import java.util.stream.Collectors;

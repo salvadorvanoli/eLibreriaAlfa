@@ -5,7 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ti.elibreriaalfa.api.respones.ResponseListadoProductos;
+import ti.elibreriaalfa.api.responses.producto.ResponseListadoProductos;
 import ti.elibreriaalfa.dtos.productoDto.ProductoDto;
 import ti.elibreriaalfa.services.ProductoService;
 

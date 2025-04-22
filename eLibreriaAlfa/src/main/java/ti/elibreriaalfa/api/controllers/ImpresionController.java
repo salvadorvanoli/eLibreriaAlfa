@@ -1,13 +1,11 @@
 package ti.elibreriaalfa.api.controllers;
 
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ti.elibreriaalfa.api.responses.usuario.ResponseImpresion;
-import ti.elibreriaalfa.api.responses.usuario.ResponseListadoImpresiones;
+import ti.elibreriaalfa.api.responses.impresion.ResponseImpresion;
+import ti.elibreriaalfa.api.responses.impresion.ResponseListadoImpresiones;
 import ti.elibreriaalfa.dtos.impresion.ImpresionDto;
 import ti.elibreriaalfa.services.ImpresionService;
 

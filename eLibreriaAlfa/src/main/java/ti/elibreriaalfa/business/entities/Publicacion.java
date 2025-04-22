@@ -3,10 +3,8 @@ package ti.elibreriaalfa.business.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.security.core.parameters.P;
-import ti.elibreriaalfa.dtos.Comentario.ComentarioDto;
-import ti.elibreriaalfa.dtos.Publicacion.PublicacionDto;
-import ti.elibreriaalfa.dtos.Publicacion.PublicacionSimpleDto;
+import ti.elibreriaalfa.dtos.publicacion.PublicacionDto;
+import ti.elibreriaalfa.dtos.publicacion.PublicacionSimpleDto;
 
 import java.time.LocalDateTime;
 import java.util.List;

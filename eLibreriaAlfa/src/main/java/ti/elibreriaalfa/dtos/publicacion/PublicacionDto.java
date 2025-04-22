@@ -1,12 +1,10 @@
-package ti.elibreriaalfa.dtos.Publicacion;
+package ti.elibreriaalfa.dtos.publicacion;
 
 import lombok.Data;
-import ti.elibreriaalfa.business.entities.Impresion;
 import ti.elibreriaalfa.business.entities.Publicacion;
-import ti.elibreriaalfa.dtos.Comentario.ComentarioDto;
+import ti.elibreriaalfa.dtos.comentario.ComentarioDto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

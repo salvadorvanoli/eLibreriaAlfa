@@ -8,13 +8,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import ti.elibreriaalfa.api.respones.ResponseListadoCategorias;
+import ti.elibreriaalfa.api.responses.categoria.ResponseListadoCategorias;
 import ti.elibreriaalfa.business.repositories.CategoriaRepository;
 import ti.elibreriaalfa.business.repositories.ProductoRepository;
 import ti.elibreriaalfa.business.entities.Categoria;
 import ti.elibreriaalfa.business.entities.Producto;
-import ti.elibreriaalfa.dtos.categoriaDto.CategoriaDto;
-import ti.elibreriaalfa.dtos.categoriaDto.CategoriaCreateDto;
+import ti.elibreriaalfa.dtos.categoria.CategoriaDto;
+import ti.elibreriaalfa.dtos.categoria.CategoriaCreateDto;
 import ti.elibreriaalfa.dtos.productoDto.ProductoSimpleDto;
 
 import java.util.ArrayList;

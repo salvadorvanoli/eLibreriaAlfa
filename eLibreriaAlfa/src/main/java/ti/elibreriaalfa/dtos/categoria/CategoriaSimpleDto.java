@@ -1,4 +1,4 @@
-package ti.elibreriaalfa.dtos.categoriaDto;
+package ti.elibreriaalfa.dtos.categoria;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

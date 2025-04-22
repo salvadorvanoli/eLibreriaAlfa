@@ -8,11 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ti.elibreriaalfa.api.respones.ResponseListadoEncargues;
+import ti.elibreriaalfa.api.responses.encargue.ResponseListadoEncargues;
 import ti.elibreriaalfa.business.entities.*;
 import ti.elibreriaalfa.business.repositories.*;
-import ti.elibreriaalfa.dtos.EncargueDto;
-import ti.elibreriaalfa.dtos.Producto_EncargueDto;
+import ti.elibreriaalfa.dtos.encargue.EncargueDto;
+import ti.elibreriaalfa.dtos.producto_encargue.Producto_EncargueDto;
 import java.util.*;
 
 @Service

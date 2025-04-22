@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ti.elibreriaalfa.api.respones.ResponseListadoCategorias;
-import ti.elibreriaalfa.dtos.categoriaDto.CategoriaCreateDto;
-import ti.elibreriaalfa.dtos.categoriaDto.CategoriaDto;
+import ti.elibreriaalfa.api.responses.categoria.ResponseListadoCategorias;
+import ti.elibreriaalfa.dtos.categoria.CategoriaCreateDto;
+import ti.elibreriaalfa.dtos.categoria.CategoriaDto;
 import ti.elibreriaalfa.services.CategoriaService;
 import org.springframework.data.domain.Page;
 

@@ -4,11 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ti.elibreriaalfa.api.responses.usuario.ResponseListadoPublicaciones;
-import ti.elibreriaalfa.api.responses.usuario.ResponsePublicacion;
-import ti.elibreriaalfa.business.entities.Comentario;
-import ti.elibreriaalfa.dtos.Comentario.ComentarioDto;
-import ti.elibreriaalfa.dtos.Publicacion.PublicacionDto;
+import ti.elibreriaalfa.api.responses.publicacion.ResponseListadoPublicaciones;
+import ti.elibreriaalfa.api.responses.publicacion.ResponsePublicacion;
+import ti.elibreriaalfa.dtos.comentario.ComentarioDto;
+import ti.elibreriaalfa.dtos.publicacion.PublicacionDto;
 import ti.elibreriaalfa.services.ComentarioService;
 import ti.elibreriaalfa.services.PublicacionService;
 
