@@ -3,6 +3,7 @@ package ti.elibreriaalfa.api.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ti.elibreriaalfa.api.responses.categoria.ResponseListadoCategorias;
 import ti.elibreriaalfa.dtos.categoria.CategoriaCreateDto;
@@ -21,7 +22,6 @@ public class CategoriaController {
     }
 
     @GetMapping
-    // @Secured({"ADMIN"})
     public ResponseEntity<ResponseListadoCategorias> getCategorias() {
 
 
@@ -32,6 +32,7 @@ public class CategoriaController {
 
     @PostMapping
     @Operation(description = "Esta función crea una nueva categoria")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<String> createCategoria(@RequestBody CategoriaCreateDto categoria) {
         String response = categoriaService.crearCategoria(categoria);
         if (response == null) {
@@ -42,12 +43,14 @@ public class CategoriaController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Void> borrarCategoria(@PathVariable(name = "id") Long idCategoria) {
         categoriaService.borrarCategoria(idCategoria);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<String> modificarCategoria(
             @PathVariable(name = "id") Long idCategoria,
             @RequestBody CategoriaDto categoriaDto) {
@@ -62,7 +65,6 @@ public class CategoriaController {
         }
     }
 
-    //http://localhost:8080/category/paginado?pagina=0&cantidad=10
     @GetMapping("/paginado")
     public ResponseEntity<Page<CategoriaDto>> categoriasPaginadas(
             @RequestParam("pagina")  Integer pagina,
@@ -72,6 +74,8 @@ public class CategoriaController {
     }
 
     /* Ejemplos de Json para probar:
+
+    http://localhost:8080/category/paginado?pagina=0&cantidad=10
 
     CREAR
 

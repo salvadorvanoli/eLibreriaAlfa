@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ti.elibreriaalfa.api.responses.producto.ResponseListadoProductos;
 import ti.elibreriaalfa.dtos.productoDto.ProductoDto;
@@ -20,7 +21,6 @@ public class ProductoController {
     }
 
     @GetMapping
-    // @Secured({"ADMIN"})
     public ResponseEntity<ResponseListadoProductos> getCProductos() {
 
 
@@ -31,6 +31,7 @@ public class ProductoController {
 
     @PostMapping
     @Operation(description = "Esta función crea una nueva categoria")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<String> createCategoria(@RequestBody ProductoDto producto) {
         String response = productoService.crearProducto(producto);
         if (response == null) {
@@ -41,12 +42,14 @@ public class ProductoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Void> borrarCategoria(@PathVariable(name = "id") Long idProducto) {
         productoService.borrarProducto(idProducto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<String> modificarProducto(
             @PathVariable(name = "id") Long idProducto,
             @RequestBody ProductoDto productoDto) {

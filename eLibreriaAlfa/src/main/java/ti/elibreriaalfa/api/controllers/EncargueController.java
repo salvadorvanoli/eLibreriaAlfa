@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ti.elibreriaalfa.api.responses.encargue.ResponseListadoEncargues;
 import ti.elibreriaalfa.dtos.encargue.EncargueDto;
@@ -22,7 +23,7 @@ public class EncargueController {
     }
 
     @GetMapping
-    // @Secured({"ADMIN"})
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<ResponseListadoEncargues> getEncargues() {
         ResponseListadoEncargues response = encargueService.listadoEncargues();
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -68,8 +69,8 @@ public class EncargueController {
         }
     }
 
-    //http://localhost:8080/order/paginado?pagina=0&cantidad=10
     @GetMapping("/paginado")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Page<EncargueDto>> encarguesPaginados(
             @RequestParam("pagina")  Integer pagina,
             @RequestParam("cantidad") Integer cantidad) {
@@ -77,6 +78,8 @@ public class EncargueController {
         return new ResponseEntity<>(encargueService.listadoEncarguePage(pagina, cantidad), HttpStatus.OK);
     }
 /* Ejemplos de Json para probar:
+
+    //http://localhost:8080/order/paginado?pagina=0&cantidad=10
 
     CREAR
 

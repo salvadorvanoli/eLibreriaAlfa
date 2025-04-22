@@ -3,6 +3,7 @@ package ti.elibreriaalfa.api.controllers;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ti.elibreriaalfa.api.responses.publicacion.ResponseListadoPublicaciones;
 import ti.elibreriaalfa.api.responses.publicacion.ResponsePublicacion;
@@ -49,6 +50,7 @@ public class PublicacionController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<String> createPublicacion(@RequestBody PublicacionDto publicacionDto) {
         String response = publicacionService.crearPublicacion(publicacionDto);
 
@@ -60,6 +62,7 @@ public class PublicacionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Void> borrarPublicacion(@PathVariable(name = "id") Long idPublicacion) {
         publicacionService.borrarPublicacion(idPublicacion);
 
