@@ -2,7 +2,7 @@ package ti.elibreriaalfa.dtos.categoria;
 
 import lombok.Data;
 import ti.elibreriaalfa.business.entities.Categoria;
-import ti.elibreriaalfa.dtos.productoDto.ProductoSimpleDto;
+import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
 
 import java.util.Collections;
 import java.util.List;

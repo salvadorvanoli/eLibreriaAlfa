@@ -15,7 +15,7 @@ import ti.elibreriaalfa.business.entities.Categoria;
 import ti.elibreriaalfa.business.entities.Producto;
 import ti.elibreriaalfa.dtos.categoria.CategoriaDto;
 import ti.elibreriaalfa.dtos.categoria.CategoriaCreateDto;
-import ti.elibreriaalfa.dtos.productoDto.ProductoSimpleDto;
+import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -13,7 +13,7 @@ import ti.elibreriaalfa.business.entities.Producto;
 import ti.elibreriaalfa.business.repositories.CategoriaRepository;
 import ti.elibreriaalfa.business.repositories.ProductoRepository;
 import ti.elibreriaalfa.dtos.categoria.CategoriaSimpleDto;
-import ti.elibreriaalfa.dtos.productoDto.ProductoDto;
+import ti.elibreriaalfa.dtos.producto.ProductoDto;
 
 import java.util.ArrayList;
 import java.util.List;

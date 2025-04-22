@@ -1,7 +1,7 @@
 package ti.elibreriaalfa.api.responses.producto;
 
 import lombok.Data;
-import ti.elibreriaalfa.dtos.productoDto.ProductoDto;
+import ti.elibreriaalfa.dtos.producto.ProductoDto;
 import java.util.List;
 
 @Data

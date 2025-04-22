@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ti.elibreriaalfa.api.responses.producto.ResponseListadoProductos;
-import ti.elibreriaalfa.dtos.productoDto.ProductoDto;
+import ti.elibreriaalfa.dtos.producto.ProductoDto;
 import ti.elibreriaalfa.services.ProductoService;
 
 @RestController

@@ -1,10 +1,8 @@
-package ti.elibreriaalfa.dtos.productoDto;
+package ti.elibreriaalfa.dtos.producto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ti.elibreriaalfa.business.entities.Producto;
-
-import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
