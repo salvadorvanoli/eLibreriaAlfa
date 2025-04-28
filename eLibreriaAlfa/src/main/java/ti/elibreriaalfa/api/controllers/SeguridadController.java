@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ti.elibreriaalfa.api.requests.usuario.RequestAccesoUsuario;
 import ti.elibreriaalfa.business.entities.Usuario;
+import ti.elibreriaalfa.dtos.usuario.AccesoUsuarioDto;
 import ti.elibreriaalfa.security.SeguridadService;
 
 import java.util.Date;
@@ -33,7 +33,7 @@ public class SeguridadController {
 
     @PostMapping("/auth")
     @Transactional(readOnly = true)
-    public ResponseEntity<String> authenticateUser(@RequestBody RequestAccesoUsuario datosUsuario) {
+    public ResponseEntity<String> authenticateUser(@RequestBody AccesoUsuarioDto datosUsuario) {
         try {
             Usuario usuario = seguridadService.authenticateUsuario(datosUsuario);
             String token = generateToken(usuario);

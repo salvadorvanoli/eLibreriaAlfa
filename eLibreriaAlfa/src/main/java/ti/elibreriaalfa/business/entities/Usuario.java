@@ -3,6 +3,7 @@ package ti.elibreriaalfa.business.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import ti.elibreriaalfa.dtos.usuario.ModificarPerfilUsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
 
@@ -79,5 +80,11 @@ public class Usuario {
         usuarioSimpleDto.setTelefono(this.getTelefono());
 
         return usuarioSimpleDto;
+    }
+
+    public void setDatosPerfil(ModificarPerfilUsuarioDto perfilUsuario) {
+        this.nombre = perfilUsuario.getNombre();
+        this.apellido = perfilUsuario.getApellido();
+        this.telefono = perfilUsuario.getTelefono();
     }
 }

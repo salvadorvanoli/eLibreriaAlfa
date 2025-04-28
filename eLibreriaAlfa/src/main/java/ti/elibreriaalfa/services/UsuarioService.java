@@ -6,12 +6,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ti.elibreriaalfa.api.requests.usuario.RequestAccesoUsuario;
-import ti.elibreriaalfa.api.responses.usuario.ResponseListadoUsuarios;
-import ti.elibreriaalfa.api.responses.usuario.ResponseUsuario;
 import ti.elibreriaalfa.business.entities.Usuario;
 import ti.elibreriaalfa.business.repositories.UsuarioRepository;
+import ti.elibreriaalfa.dtos.usuario.AccesoUsuarioDto;
+import ti.elibreriaalfa.dtos.usuario.ModificarPerfilUsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
+import ti.elibreriaalfa.exceptions.usuario.UsuarioException;
+import ti.elibreriaalfa.exceptions.usuario.UsuarioNoEncontradoException;
+
+import java.util.List;
 
 @Service
 public class UsuarioService {
@@ -24,10 +27,8 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseListadoUsuarios getAllUsuarios() {
-        ResponseListadoUsuarios response = new ResponseListadoUsuarios();
-        response.setUsuarios(usuarioRepository.findAll().stream().map(Usuario::mapToDtoSimple).toList());
-        return response;
+    public List<UsuarioSimpleDto> getAllUsuarios() {
+        return usuarioRepository.findAll().stream().map(Usuario::mapToDtoSimple).toList();
     }
 
     public Page<UsuarioSimpleDto> getUsuariosPage(Integer pagina, Integer cantidad) {
@@ -37,16 +38,11 @@ public class UsuarioService {
         return usuarioRepository.findAll(pageRequest.withSort(sort)).map(Usuario::mapToDtoSimple);
     }
 
-    public ResponseUsuario getUsuarioByEmail(String usuarioEmail) {
-        Usuario usuario = usuarioRepository.findByEmail(usuarioEmail);
-        if (usuario == null) throw new IllegalArgumentException("No existe un usuario con el correo electrónico especificado");
-
-        ResponseUsuario response = new ResponseUsuario();
-        response.setUsuario(usuario.mapToDtoSimple());
-        return response;
+    public UsuarioSimpleDto getUsuarioByEmail(String usuarioEmail) {
+        return getUsuarioEntityByEmail(usuarioEmail).mapToDtoSimple();
     }
 
-    public String registerUsuario(RequestAccesoUsuario usuario) {
+    public UsuarioSimpleDto registerUsuario(AccesoUsuarioDto usuario) {
         validateRegistroUsuarioDto(usuario);
 
         Usuario nuevoUsuario = usuario.mapToEntity();
@@ -56,7 +52,7 @@ public class UsuarioService {
 
         usuarioRepository.save(nuevoUsuario);
 
-        return "Usuario registrado exitosamente!";
+        return nuevoUsuario.mapToDtoSimple();
         /*
         try {
             usuarioRepository.save(nuevoUsuario);
@@ -68,13 +64,33 @@ public class UsuarioService {
         */
     }
 
-    private Usuario getUsuarioEntityById(Long usuarioId) throws IllegalArgumentException {
+    public UsuarioSimpleDto patchPerfilUsuario(String usuarioEmail, ModificarPerfilUsuarioDto perfilUsuario) {
+        Usuario usuario = getUsuarioEntityByEmail(usuarioEmail);
+
+        usuario.setDatosPerfil(perfilUsuario);
+        usuarioRepository.save(usuario);
+
+        return usuario.mapToDtoSimple();
+    }
+
+    private Usuario getUsuarioEntityById(Long usuarioId) throws UsuarioNoEncontradoException {
         return usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new IllegalArgumentException("No existe un usuario con el ID especificado"));
     }
 
-    private void validateRegistroUsuarioDto(RequestAccesoUsuario usuario) {
-        // TODO: Implementar validación de los datos del usuario (email y contraseña válidos)
+    private Usuario getUsuarioEntityByEmail(String email) throws UsuarioNoEncontradoException {
+        Usuario usuario = usuarioRepository.findByEmail(email);
+        if (usuario != null)
+            return usuario;
+        else
+            throw new UsuarioNoEncontradoException("No existe un usuario con el correo electrónico especificado");
+    }
+
+    private void validateRegistroUsuarioDto(AccesoUsuarioDto usuario) {
+        if (usuario.getEmail() == null || usuario.getEmail().isBlank())
+            throw new UsuarioException("El correo electrónico no puede estar vacío");
+        else if (usuario.getContrasenia() == null || usuario.getContrasenia().length() < 6)
+            throw new UsuarioException("La contraseña debe tener al menos 6 caracteres");
     }
 
 }
