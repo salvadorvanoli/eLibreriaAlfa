@@ -22,6 +22,7 @@ import { BadgeModule } from 'primeng/badge';
 })
 export class NavbarComponent {
 
+  userName = "Juan";
   items = [
     {
       label: 'Inicio',
@@ -30,13 +31,23 @@ export class NavbarComponent {
     },
     {
       label: 'Catálogo',
-      icon: 'pi pi-book',
+      icon: 'pi pi-shop',
       routerLink: '/catalogo'
     },
     {
       label: 'Foro',
-      icon: 'pi pi-user',
+      icon: 'pi pi-book',
       routerLink: '/foro'
+    },
+    {
+      label: 'Impresiones',
+      icon: 'pi pi-print',
+      routerLink: '/impresion'
+    },
+    {
+      label: 'Contáctanos',
+      icon: 'pi pi-envelope',
+      routerLink: '/contacto'
     }
   ];
 
