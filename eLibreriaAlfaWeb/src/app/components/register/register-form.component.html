@@ -1,0 +1,29 @@
+<div class="card p-10 mx-auto border-solid rounded-md border-sky-500 bg-sky-50 my-10">
+    <form action="" method="post" class="mx-auto flex flex-col items-center gap-4 w-full max-w-md">
+        <input pInputText [(ngModel)]="email" [ngModelOptions]="{standalone: true}" type="text" placeholder="Email" class="w-full" />
+        <p-password
+            class="w-full"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            [ngModelOptions]="{standalone: true}"
+            [(ngModel)]="password"
+            promptLabel="Ingresa una contraseña"
+            weakLabel="Débil"
+            mediumLabel="Media"
+            strongLabel="Fuerte"
+            [mediumRegex]="mediumRegex"
+            [strongRegex]="strongRegex"
+            autocomplete="off"
+            placeholder="Contraseña"
+            [toggleMask]="true"
+        >
+            <ng-template #footer>
+                <p-divider />
+                <ul class="my-0 leading-normal">
+                    <li>Al menos 6 caracteres</li>
+                </ul>
+            </ng-template>
+        </p-password>
+        <p-button type="submit" label="Registrarse" />
+    </form>
+</div>
