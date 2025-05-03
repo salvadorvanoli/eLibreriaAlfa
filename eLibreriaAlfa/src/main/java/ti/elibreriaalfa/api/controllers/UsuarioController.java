@@ -53,7 +53,7 @@ public class UsuarioController {
         }*/
     }
 
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<Object> registerUsuario(@RequestBody AccesoUsuarioDto usuario) {
         // try {
             return new ResponseEntity<>(usuarioService.registerUsuario(usuario), HttpStatus.CREATED);

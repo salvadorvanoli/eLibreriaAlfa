@@ -13,6 +13,7 @@ import ti.elibreriaalfa.dtos.usuario.ModificarPerfilUsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
 import ti.elibreriaalfa.exceptions.usuario.UsuarioException;
 import ti.elibreriaalfa.exceptions.usuario.UsuarioNoEncontradoException;
+import ti.elibreriaalfa.exceptions.usuario.UsuarioYaExisteException;
 
 import java.util.List;
 
@@ -46,6 +47,8 @@ public class UsuarioService {
         validateRegistroUsuarioDto(usuario);
 
         Usuario nuevoUsuario = usuario.mapToEntity();
+
+        if (usuarioRepository.existsByEmail(usuario.getEmail())) throw new UsuarioYaExisteException("El correo electrónico ya está registrado");
 
         String contraseniaEncriptada = passwordEncoder.encode(nuevoUsuario.getContrasenia());
         nuevoUsuario.setContrasenia(contraseniaEncriptada);

@@ -7,4 +7,6 @@ import ti.elibreriaalfa.business.entities.Usuario;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     @Nullable
     Usuario findByEmail(String email);
+
+    boolean existsByEmail(String email);
 }
