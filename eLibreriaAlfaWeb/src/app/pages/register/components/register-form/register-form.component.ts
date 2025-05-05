@@ -7,8 +7,8 @@ import { ButtonModule } from 'primeng/button';
 import { Message } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
-import { UsuarioService } from '../../services/usuario.service';
-import { AccesoUsuario, UsuarioSimple } from '../../models/usuario';
+import { UsuarioService } from '../../../../core/services/usuario.service';
+import { AccesoUsuario, UsuarioSimple } from '../../../../core/models/usuario';
 
 @Component({
   selector: 'app-register-form',
@@ -47,13 +47,13 @@ export class RegisterFormComponent {
     return this.validateConfirmarContrasenia();
   });
 
+  mediumRegex: string = '^.{6,}$';
+  strongRegex: string = '^(?=.*\\d)(?=.*[!@#$%^&*()_+\\=\\[\\]{};\'":\\\\|,.<>\\/?-]).{8,}$';
+
   constructor(
     private messageService: MessageService,
     private usuarioService: UsuarioService
   ) {}
-
-  mediumRegex: string = '^.{6,}$';
-  strongRegex: string = '^(?=.*\\d)(?=.*[!@#$%^&*()_+\\=\\[\\]{};\'":\\\\|,.<>\\/?-]).{8,}$';
 
   register() {
     this.formSubmitted.set(true);
@@ -69,7 +69,11 @@ export class RegisterFormComponent {
           this.messageService.add({ severity: 'success', summary: 'Registro exitoso', detail: "¡Usuario creado exitosamente!", life: 3000 });
         },
         error: (err) => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.error, life: 4000 });
+          if (err.error.error !== undefined) {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.error, life: 4000 });
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: "No fue posible conectar con el servidor", life: 4000 });
+          }
         }
       });
 
