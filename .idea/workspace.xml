@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0c558653-c790-42b9-849a-383512f382e3" name="Changes" comment="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha">
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/home/home.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/home/home.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/home/home.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/home/home.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/tsconfig.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Valentin" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;salvadorvanoli&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/salvadorvanoli/eLibreriaAlfa.git&quot;,
+    &quot;accountId&quot;: &quot;e6ca89a4-e83e-43e7-a4b4-bf95b4b9dd9e&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2we356yOE8ytBKplhrLF2YhWaNE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.eLibreriaAlfa.executor": "Run",
+    "Maven.elibreriaalfa [clean].executor": "Run",
+    "Maven.elibreriaalfa [install].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "SalvadorDesdeValentin",
+    "junie.onboarding.icon.badge.shown": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Application.eLibreriaAlfa">
+    <configuration name="eLibreriaAlfa" type="Application" factoryName="Application">
+      <option name="ALTERNATIVE_JRE_PATH" value="21" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <envs>
+        <env name="DB_USER" value="postgres" />
+        <env name="DB_PASS" value="12560" />
+        <env name="JWT_EXPIRATION" value="86400000" />
+        <env name="JWT_KEY" value="nierybiensegura" />
+      </envs>
+      <option name="MAIN_CLASS_NAME" value="ti.elibreriaalfa.ELibreriaAlfaApplication" />
+      <module name="elibreriaalfa" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ELibreriaAlfaApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="elibreriaalfa" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="ti.elibreriaalfa.ELibreriaAlfaApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0c558653-c790-42b9-849a-383512f382e3" name="Changes" comment="" />
+      <created>1746388026192</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1746388026192</updated>
+      <workItem from="1746388027602" duration="3570000" />
+      <workItem from="1746722376057" duration="4336000" />
+    </task>
+    <task id="LOCAL-00001" summary="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha">
+      <option name="closed" value="true" />
+      <created>1746728880689</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1746728880689</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha" />
+    <option name="LAST_COMMIT_MESSAGE" value="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha" />
+  </component>
+</project>
