@@ -91,4 +91,12 @@ public class PublicacionService {
 
         return publicacionRepository.findAll(pageRequest.withSort(sort)).map(Publicacion::mapToDto);
     }
+
+    public Page<PublicacionDto> listadoPublicacionPageByFechaDESC(Integer pagina, Integer cantidad) {
+        PageRequest pageRequest = PageRequest.of(pagina, cantidad);
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "fechaCreacion");
+
+        return publicacionRepository.findAll(pageRequest.withSort(sort)).map(Publicacion::mapToDto);
+    }
 }
