@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ti.elibreriaalfa.business.entities.Rol;
 import ti.elibreriaalfa.business.entities.Usuario;
 import ti.elibreriaalfa.business.repositories.UsuarioRepository;
 import ti.elibreriaalfa.dtos.usuario.AccesoUsuarioDto;
@@ -56,16 +57,25 @@ public class UsuarioService {
         usuarioRepository.save(nuevoUsuario);
 
         return nuevoUsuario.mapToDtoSimple();
-        /*
-        try {
-            usuarioRepository.save(nuevoUsuario);
-        } catch (DataIntegrityViolationException e) {
-            throw new UsuarioException("Ya existe un usuario registrado con ese correo electrónico");
-        }
-
-        return nuevoUsuario.mapToDto();
-        */
     }
+
+    /*
+    public UsuarioSimpleDto registerUsuarioEmpleado(AccesoUsuarioDto usuario) {
+        validateRegistroUsuarioDto(usuario);
+
+        Usuario nuevoUsuario = usuario.mapToEntity();
+        nuevoUsuario.setRol(Rol.EMPLEADO);
+
+        if (usuarioRepository.existsByEmail(usuario.getEmail())) throw new UsuarioYaExisteException("El correo electrónico ya está registrado");
+
+        String contraseniaEncriptada = passwordEncoder.encode(nuevoUsuario.getContrasenia());
+        nuevoUsuario.setContrasenia(contraseniaEncriptada);
+
+        usuarioRepository.save(nuevoUsuario);
+
+        return nuevoUsuario.mapToDtoSimple();
+    }
+    */
 
     public UsuarioSimpleDto patchPerfilUsuario(String usuarioEmail, ModificarPerfilUsuarioDto perfilUsuario) {
         Usuario usuario = getUsuarioEntityByEmail(usuarioEmail);

@@ -67,6 +67,22 @@ public class UsuarioController {
         */
     }
 
+    /*
+    @PostMapping("/employee")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<Object> registerUsuarioEmpleado(@RequestBody AccesoUsuarioDto usuario) {
+        // try {
+        return new ResponseEntity<>(usuarioService.registerUsuarioEmpleado(usuario), HttpStatus.CREATED);
+        /*} catch (UsuarioBadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (UsuarioException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Algo ha salido mal", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    */
+
     @PatchMapping("/{usuarioEmail}/profile")
     @PreAuthorize("#email == authentication.name")
     public ResponseEntity<Object> patchPerfilUsuario(@PathVariable (name = "usuarioEmail") String usuarioEmail,

@@ -1,60 +1,52 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { UsuarioService } from '../../../../core/services/usuario.service';
+import { SeguridadService } from '../../../../core/services/seguridad.service';
 import { AccesoUsuario, UsuarioSimple } from '../../../../core/models/usuario';
 
-import { FormTextInputComponent } from '../../../../shared/components/inputs/form-text-input/form-text-input.component';
-import { InteractivePasswordInputComponent } from '../interactive-password-input/interactive-password-input.component';
-import { FormPasswordInputComponent } from '../../../../shared/components/inputs/form-password-input/form-password-input.component';
-import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
+import { FormTextInputComponent } from "../../../../shared/components/inputs/form-text-input/form-text-input.component";
+import { FormPasswordInputComponent } from "../../../../shared/components/inputs/form-password-input/form-password-input.component";
+import { PrimaryButtonComponent } from "../../../../shared/components/buttons/primary-button/primary-button.component";
 
 @Component({
-  selector: 'app-register-form',
-  standalone: true,
+  selector: 'app-login-form',
   imports: [
     Toast,
     FormTextInputComponent,
-    InteractivePasswordInputComponent,
     FormPasswordInputComponent,
     PrimaryButtonComponent
   ],
   providers: [MessageService],
-  templateUrl: './register-form.component.html',
-  styleUrl: './register-form.component.scss'
+  templateUrl: './login-form.component.html',
+  styleUrl: './login-form.component.scss'
 })
-export class RegisterFormComponent {
+export class LoginFormComponent {
 
   email: string = '';
-  password = signal('');
-  confirmPassword = signal('');
+  password: string = '';
   formSubmitted = signal(false);
 
   isEmailInvalid: boolean = false;
   isPasswordInvalid: boolean = false;
 
-  arePasswordsDifferent = computed(() => {
-    return this.formSubmitted() && this.validatePasswordsAreDifferent();
-  });
-
   emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   constructor(
     private messageService: MessageService,
-    private usuarioService: UsuarioService
+    private seguridadService: SeguridadService
   ) {}
 
-  register() {
+  login() { // TODO: Realizar la lógica de login
     this.formSubmitted.set(true);
     if (!this.validateForm()) {
 
       const usuario: AccesoUsuario = {
         email: this.email,
-        contrasenia: this.password()
+        contrasenia: this.password
       };
       
-      this.usuarioService.post(usuario).subscribe({
-        next: (response: UsuarioSimple) => {
+      this.seguridadService.auth(usuario).subscribe({
+        next: (response: void) => {
           this.messageService.add({ severity: 'success', summary: 'Registro exitoso', detail: "¡Usuario creado exitosamente!", life: 3000 });
           console.log(response);
         },
@@ -72,11 +64,7 @@ export class RegisterFormComponent {
     }
   }
 
-  validatePasswordsAreDifferent() {
-    return this.password() !== this.confirmPassword();
-  }
-
   validateForm() {
-    return this.isEmailInvalid || this.isPasswordInvalid || this.arePasswordsDifferent();
+    return this.isEmailInvalid || this.isPasswordInvalid;
   }
 }

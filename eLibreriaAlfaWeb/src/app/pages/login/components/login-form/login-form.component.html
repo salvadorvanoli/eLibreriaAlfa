@@ -2,7 +2,7 @@
     <p-toast />
     <form novalidate action="" method="post" class="mx-auto flex flex-col items-center gap-4 w-full max-w-md">
         <app-form-text-input 
-            class="w-full" 
+            class="w-full"
             placeholder="Email"
             [formSubmitted]="formSubmitted"
             [textPattern]="emailPattern"
@@ -10,28 +10,20 @@
             (textValue)="email = $event"
             (isInputInvalid)="isEmailInvalid = $event"
         />
-        <app-interactive-password-input
+        <app-form-password-input
             class="w-full" 
             placeholder="Contraseña"
             [formSubmitted]="formSubmitted"
-            errorMessage="La contraseña debe tener al menos 6 caracteres"
-            (passwordValue)="password.set($event);"
-            (isPasswordInvalid)="isPasswordInvalid = $event"
-        />
-        <app-form-password-input
-            class="w-full" 
-            placeholder="Confirmar contraseña"
-            [formSubmitted]="formSubmitted"
-            errorMessage="Las contraseñas deben coincidir"
-            (passwordValue)="confirmPassword.set($event);"
-            [isPasswordWrong]="arePasswordsDifferent()"
+            errorMessage="Contraseña incorrecta"
+            (passwordValue)="password = $event;"
+            [isPasswordWrong]="false"
         />
         <app-primary-button
             class="w-full"
             styleClass="w-full"
             [classes]="'w-full'"
-            [label]="'Registrarse'"
-            (onClick)="register()"
+            [label]="'Iniciar sesión'"
+            (onClick)="login()"
         />
     </form>
 </div>

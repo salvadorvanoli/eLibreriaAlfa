@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
-import { RegisterComponent } from './pages/register/register.component';
 import { HomeComponent } from './pages/home/home.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { LoginComponent } from './pages/login/login.component';
 
 export const routes: Routes = [
     { path: 'inicio', component: HomeComponent },
     { path: 'registro', component: RegisterComponent },
-    { path: '', redirectTo: '/inicio', pathMatch: 'full' }, // si querés que sea la ruta principal
-    { path: '**', redirectTo: '/inicio' } // ruta por defecto
+    { path: 'inicio-sesion', component: LoginComponent },
+    { path: '', redirectTo: '/inicio', pathMatch: 'full' },
+    { path: '**', redirectTo: '/inicio' }
 ];
