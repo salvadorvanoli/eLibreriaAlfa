@@ -19,7 +19,9 @@ import { PrimaryButtonComponent } from '../../../../shared/components/buttons/pr
     FormPasswordInputComponent,
     PrimaryButtonComponent
   ],
-  providers: [MessageService],
+  providers: [
+    MessageService
+  ],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.scss'
 })
@@ -55,7 +57,7 @@ export class RegisterFormComponent {
       
       this.usuarioService.post(usuario).subscribe({
         next: (response: UsuarioSimple) => {
-          this.messageService.add({ severity: 'success', summary: 'Registro exitoso', detail: "¡Usuario creado exitosamente!", life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Usuario creado exitosamente!", life: 4000 });
           console.log(response);
         },
         error: (err) => {

@@ -22,7 +22,8 @@ export class FormPasswordInputComponent {
   @Input() placeholder: string = "";
   @Input() errorMessage: string = "";
   @Input() formSubmitted = signal(false);
-  @Input() isPasswordWrong = false;
+  @Input() resetErrorMessageOnChange: boolean = false;
+  @Input() isPasswordWrong: boolean = false;
 
   @Output() passwordValue = new EventEmitter<string>();
 }

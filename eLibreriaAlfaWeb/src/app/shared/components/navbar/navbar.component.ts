@@ -5,6 +5,10 @@ import { MenubarModule } from 'primeng/menubar';
 import { AvatarModule } from 'primeng/avatar';
 import { InputTextModule } from 'primeng/inputtext';
 import { BadgeModule } from 'primeng/badge';
+import { SeguridadService } from '../../../core/services/seguridad.service';
+import { Observable } from 'rxjs';
+import { UsuarioSimple } from '../../../core/models/usuario';
+import { NavbarItem } from '../../../core/models/navbar-item';
 
 @Component({
   selector: 'app-navbar',
@@ -22,76 +26,44 @@ import { BadgeModule } from 'primeng/badge';
 })
 export class NavbarComponent {
 
-  userName = "Juan";
-  items = [
-    {
-      label: 'Inicio',
-      icon: 'pi pi-home',
-      routerLink: '/'
-    },
-    {
-      label: 'Catálogo',
-      icon: 'pi pi-shop',
-      routerLink: '/catalogo'
-    },
-    {
-      label: 'Foro',
-      icon: 'pi pi-book',
-      routerLink: '/foro'
-    },
-    {
-      label: 'Impresiones',
-      icon: 'pi pi-print',
-      routerLink: '/impresion'
-    },
-    {
-      label: 'Contáctanos',
-      icon: 'pi pi-envelope',
-      routerLink: '/contacto'
-    },
-    {
-      label: 'Iniciar sesión',
-      icon: 'pi pi-sign-in',
-      routerLink: '/inicio-sesion',
-      classes: 'bg-blue-200 hover:bg-blue-300 rounded-md',
-      textColor: 'white'
-    },
-    {
-      label: 'Registrarse',
-      icon: 'pi pi-user-plus',
-      routerLink: '/registro',
-      classes: 'bg-pink-200 hover:bg-pink-300 rounded-md',
-      textColor: 'white'
-    },
-    {
-      label: 'Mi cuenta',
-      icon: 'pi pi-user',
-      routerLink: '/perfil'
-    },
-    {
-      label: 'Cerrar sesión',
-      icon: 'pi pi-sign-out',
-      command: () => this.logout()
-    }
-  ];
+  user!: Observable<UsuarioSimple | null>;
+  items!: NavbarItem[];
+
+  constructor(private seguridadService: SeguridadService) {}
 
   ngOnInit() {
-    if (this.isAuthenticated()) {
-      this.items = this.items.filter(item => item.label !== 'Iniciar sesión' && item.label !== 'Registrarse');
-    } else {
-      this.items = this.items.filter(item => item.label !== 'Mi cuenta' && item.label !== 'Cerrar sesión');
-    }
-  }
+    this.user = this.seguridadService.user;
 
-  isAuthenticated(): boolean {
-    // Aquí puedes implementar la lógica para verificar si el usuario está autenticado
-    // Por ejemplo, podrías verificar si hay un token de sesión en una cookie.
-    // Si el usuario está autenticado, devuelve true; de lo contrario, devuelve false.
-    // return this.authService.isAuthenticated();
-    return false;
+    this.user.subscribe(userEntity => {
+
+      this.items = [
+        { label: 'Inicio', icon: 'pi pi-home', routerLink: '/' },
+        { label: 'Catálogo', icon: 'pi pi-shop', routerLink: '/catalogo' },
+        { label: 'Foro', icon: 'pi pi-book', routerLink: '/foro' },
+        { label: 'Impresiones', icon: 'pi pi-print', routerLink: '/impresion' },
+        { label: 'Contáctanos', icon: 'pi pi-envelope', routerLink: '/contacto' }
+      ];
+
+      if (userEntity) {
+        this.items.push(
+          { label: 'Mi cuenta', icon: 'pi pi-user', routerLink: '/perfil' },
+          { label: 'Cerrar sesión', icon: 'pi pi-sign-out', routerLink: '', command: () => this.logout() }
+        );
+
+        if (userEntity.rol === "ADMINISTRADOR") {
+          this.items.push({ label: 'Panel de control', icon: 'pi pi-cog', routerLink: '/panel-de-control' });
+        }
+      } else {
+        this.items.push(
+          { label: 'Iniciar sesión', icon: 'pi pi-sign-in', routerLink: '/inicio-sesion', classes: 'bg-blue-200 hover:bg-blue-300 rounded-md' },
+          { label: 'Registrarse', icon: 'pi pi-user-plus', routerLink: '/registro', classes: 'bg-pink-200 hover:bg-pink-300 rounded-md' }
+        );
+      }
+      
+    });
   }
 
   logout() {
-    console.log('Cerrando sesión...');
+    this.seguridadService.logout().subscribe();
   }
 }

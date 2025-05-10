@@ -72,11 +72,11 @@ public class Usuario {
     public UsuarioSimpleDto mapToDtoSimple() {
         UsuarioSimpleDto usuarioSimpleDto = new UsuarioSimpleDto();
 
-        usuarioSimpleDto.setApellido(this.getApellido());
-        usuarioSimpleDto.setEmail(this.getEmail());
         usuarioSimpleDto.setId(this.getId());
+        usuarioSimpleDto.setEmail(this.getEmail());
         usuarioSimpleDto.setRol(this.getRol());
         usuarioSimpleDto.setNombre(this.getNombre());
+        usuarioSimpleDto.setApellido(this.getApellido());
         usuarioSimpleDto.setTelefono(this.getTelefono());
 
         return usuarioSimpleDto;

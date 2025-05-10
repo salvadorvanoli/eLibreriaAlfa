@@ -16,7 +16,8 @@
             [formSubmitted]="formSubmitted"
             errorMessage="Contraseña incorrecta"
             (passwordValue)="password = $event;"
-            [isPasswordWrong]="false"
+            [resetErrorMessageOnChange]="true"
+            [isPasswordWrong]="isPasswordInvalid"
         />
         <app-primary-button
             class="w-full"

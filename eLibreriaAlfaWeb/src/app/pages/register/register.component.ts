@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
-import { FooterComponent } from "../../shared/components/footer/footer.component";
 import { RegisterFormComponent } from './components/register-form/register-form.component';
 
 @Component({
@@ -9,8 +7,6 @@ import { RegisterFormComponent } from './components/register-form/register-form.
   standalone: true,
   imports: [
     RouterModule,
-    NavbarComponent,
-    FooterComponent,
     RegisterFormComponent
   ],
   templateUrl: './register.component.html',

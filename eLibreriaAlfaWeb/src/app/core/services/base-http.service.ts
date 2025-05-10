@@ -19,14 +19,14 @@ export abstract class BaseHttpService<TRequest, TResponse> {
   }
 
   post(item: TRequest): Observable<TResponse> {
-    return this.http.post<TResponse>(`${this.baseUrl}${this.end}`, item);
+    return this.http.post<TResponse>(`${this.baseUrl}${this.end}`, item, { withCredentials: true });
   }
 
   put(id: number, item: TResponse): Observable<TResponse> {
-    return this.http.put<TResponse>(`${this.baseUrl}${this.end}/${id}`, item);
+    return this.http.put<TResponse>(`${this.baseUrl}${this.end}/${id}`, item, { withCredentials: true });
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}${this.end}/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}${this.end}/${id}`, { withCredentials: true });
   }
 }

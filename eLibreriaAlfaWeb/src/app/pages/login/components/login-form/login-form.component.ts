@@ -38,6 +38,7 @@ export class LoginFormComponent {
 
   login() { // TODO: Realizar la lógica de login
     this.formSubmitted.set(true);
+    this.isPasswordInvalid = false;
     if (!this.validateForm()) {
 
       const usuario: AccesoUsuario = {
@@ -47,12 +48,14 @@ export class LoginFormComponent {
       
       this.seguridadService.auth(usuario).subscribe({
         next: (response: void) => {
-          this.messageService.add({ severity: 'success', summary: 'Registro exitoso', detail: "¡Usuario creado exitosamente!", life: 3000 });
-          console.log(response);
+          this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Has iniciado sesión exitosamente!", life: 4000 });
         },
         error: (err) => {
           if (err.error.error !== undefined) {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.error, life: 4000 });
+            if (err.error.error === "Contraseña incorrecta") {
+              this.isPasswordInvalid = true;
+            }
           } else {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: "No fue posible conectar con el servidor", life: 4000 });
           }
@@ -65,6 +68,6 @@ export class LoginFormComponent {
   }
 
   validateForm() {
-    return this.isEmailInvalid || this.isPasswordInvalid;
+    return this.isEmailInvalid;
   }
 }

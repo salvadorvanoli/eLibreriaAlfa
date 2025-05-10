@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ti.elibreriaalfa.business.entities.Rol;
 import ti.elibreriaalfa.business.entities.Usuario;
 import ti.elibreriaalfa.business.repositories.UsuarioRepository;
 import ti.elibreriaalfa.dtos.usuario.AccesoUsuarioDto;
@@ -96,7 +95,7 @@ public class UsuarioService {
         if (usuario != null)
             return usuario;
         else
-            throw new UsuarioNoEncontradoException("No existe un usuario con el correo electrónico especificado");
+            throw new UsuarioNoEncontradoException("No existe un usuario con ese correo electrónico");
     }
 
     private void validateRegistroUsuarioDto(AccesoUsuarioDto usuario) {

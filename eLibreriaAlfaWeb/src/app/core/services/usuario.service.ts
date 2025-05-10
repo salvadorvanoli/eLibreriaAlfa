@@ -14,4 +14,16 @@ export class UsuarioService extends BaseHttpService<AccesoUsuario, UsuarioSimple
   constructor(http: HttpClient) {
     super(http, '/user');
   }
+
+  override getAll(): Observable<UsuarioSimple[]> {
+    return this.http.get<UsuarioSimple[]>(`${this.baseUrl}${this.apiUrl}`, { withCredentials: true });
+  }
+
+  override getById(id: number): Observable<UsuarioSimple> {
+    return this.http.get<UsuarioSimple>(`${this.baseUrl}${this.apiUrl}/${id}`, { withCredentials: true });
+  }
+
+  override post(user: AccesoUsuario): Observable<UsuarioSimple> {
+    return this.http.post<UsuarioSimple>(`${this.baseUrl}${this.apiUrl}`, user);
+  }
 }
