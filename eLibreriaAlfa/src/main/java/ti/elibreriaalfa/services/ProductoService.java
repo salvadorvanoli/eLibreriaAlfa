@@ -41,6 +41,12 @@ public class ProductoService {
         return responseListadoProductos;
     }
 
+    public ProductoDto obtenerProductoPorId(Long id) {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+        return new ProductoDto(producto);
+    }
+
     @Transactional
     public String crearProducto(ProductoDto productoDto) {
         if (productoDto.getNombre() == null || productoDto.getNombre().trim().isEmpty()) {
@@ -51,6 +57,7 @@ public class ProductoService {
         nuevoProducto.setNombre(productoDto.getNombre());
         nuevoProducto.setPrecio(productoDto.getPrecio());
         nuevoProducto.setDescripcion(productoDto.getDescripcion());
+        nuevoProducto.setImagenes(productoDto.getImagenes()); // Agregada esta línea para incluir las imágenes
 
         if (productoDto.getCategorias() != null && !productoDto.getCategorias().isEmpty()) {
             List<Long> categoriaIds = productoDto.getCategorias().stream()
@@ -95,6 +102,7 @@ public class ProductoService {
         producto.setNombre(productoDto.getNombre());
         producto.setPrecio(productoDto.getPrecio());
         producto.setDescripcion(productoDto.getDescripcion());
+        producto.setImagenes(productoDto.getImagenes()); // Agregada esta línea para incluir las imágenes
 
         if (productoDto.getCategorias() != null) {
             Set<Long> categoriaIds = productoDto.getCategorias().stream()

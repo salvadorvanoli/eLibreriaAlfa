@@ -45,6 +45,12 @@ public class CategoriaService {
         return responseListadoCategorias;
     }
 
+    public CategoriaDto obtenerCategoriaPorId(Long id) {
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + id));
+        return new CategoriaDto(categoria);
+    }
+
     @Transactional
     public String crearCategoria(CategoriaCreateDto categoriaDto) {
         // Validación básica
