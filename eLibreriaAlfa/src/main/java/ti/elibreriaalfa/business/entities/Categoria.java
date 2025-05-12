@@ -3,7 +3,9 @@ package ti.elibreriaalfa.business.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import ti.elibreriaalfa.dtos.categoria.CategoriaNodoDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -30,5 +32,15 @@ public class Categoria {
     public void agregarHijo(Categoria hijo) {
         this.hijos.add(hijo);
         hijo.setPadre(this);
+    }
+
+    public CategoriaNodoDto mapToNodoDto() {
+        CategoriaNodoDto categoriaNodoDto = new CategoriaNodoDto();
+        categoriaNodoDto.setId(this.id);
+        categoriaNodoDto.setNombre(this.nombre);
+        List<CategoriaNodoDto> hijos = this.hijos.stream().map(Categoria::mapToNodoDto).toList();
+        categoriaNodoDto.setHijos(hijos);
+        List<Long> productos = this.productos.stream().map(Producto::getId).toList();
+        return categoriaNodoDto;
     }
 }

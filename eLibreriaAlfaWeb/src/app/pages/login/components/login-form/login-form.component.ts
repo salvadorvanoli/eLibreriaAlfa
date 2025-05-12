@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { SeguridadService } from '../../../../core/services/seguridad.service';
-import { AccesoUsuario, UsuarioSimple } from '../../../../core/models/usuario';
+import { SecurityService } from '../../../../core/services/security.service';
+import { AccesoUsuario } from '../../../../core/models/usuario';
 
 import { FormTextInputComponent } from "../../../../shared/components/inputs/form-text-input/form-text-input.component";
 import { FormPasswordInputComponent } from "../../../../shared/components/inputs/form-password-input/form-password-input.component";
@@ -33,7 +33,7 @@ export class LoginFormComponent {
 
   constructor(
     private messageService: MessageService,
-    private seguridadService: SeguridadService
+    private securityService: SecurityService
   ) {}
 
   login() { // TODO: Realizar la lógica de login
@@ -46,8 +46,8 @@ export class LoginFormComponent {
         contrasenia: this.password
       };
       
-      this.seguridadService.auth(usuario).subscribe({
-        next: (response: void) => {
+      this.securityService.auth(usuario).subscribe({
+        next: () => {
           this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Has iniciado sesión exitosamente!", life: 4000 });
         },
         error: (err) => {

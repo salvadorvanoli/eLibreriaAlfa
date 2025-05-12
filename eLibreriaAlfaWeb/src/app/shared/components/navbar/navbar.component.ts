@@ -2,10 +2,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Component } from '@angular/core';
 import { MenubarModule } from 'primeng/menubar';
-import { AvatarModule } from 'primeng/avatar';
-import { InputTextModule } from 'primeng/inputtext';
-import { BadgeModule } from 'primeng/badge';
-import { SeguridadService } from '../../../core/services/seguridad.service';
+import { SecurityService } from '../../../core/services/security.service';
 import { Observable } from 'rxjs';
 import { UsuarioSimple } from '../../../core/models/usuario';
 import { NavbarItem } from '../../../core/models/navbar-item';
@@ -16,10 +13,7 @@ import { NavbarItem } from '../../../core/models/navbar-item';
   imports: [
     CommonModule,
     RouterModule,
-    MenubarModule,
-    AvatarModule,
-    InputTextModule,
-    BadgeModule
+    MenubarModule
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
@@ -29,10 +23,10 @@ export class NavbarComponent {
   user!: Observable<UsuarioSimple | null>;
   items!: NavbarItem[];
 
-  constructor(private seguridadService: SeguridadService) {}
+  constructor(private securityService: SecurityService) {}
 
   ngOnInit() {
-    this.user = this.seguridadService.user;
+    this.user = this.securityService.user;
 
     this.user.subscribe(userEntity => {
 
@@ -46,13 +40,16 @@ export class NavbarComponent {
 
       if (userEntity) {
         this.items.push(
-          { label: 'Mi cuenta', icon: 'pi pi-user', routerLink: '/perfil' },
-          { label: 'Cerrar sesión', icon: 'pi pi-sign-out', routerLink: '', command: () => this.logout() }
+          { label: 'Mi cuenta', icon: 'pi pi-user', routerLink: '/perfil' }
         );
 
         if (userEntity.rol === "ADMINISTRADOR") {
           this.items.push({ label: 'Panel de control', icon: 'pi pi-cog', routerLink: '/panel-de-control' });
         }
+
+        this.items.push(
+          { label: 'Cerrar sesión', icon: 'pi pi-sign-out', routerLink: '', command: () => this.logout() }
+        );
       } else {
         this.items.push(
           { label: 'Iniciar sesión', icon: 'pi pi-sign-in', routerLink: '/inicio-sesion', classes: 'bg-blue-200 hover:bg-blue-300 rounded-md' },
@@ -64,6 +61,6 @@ export class NavbarComponent {
   }
 
   logout() {
-    this.seguridadService.logout().subscribe();
+    this.securityService.logout().subscribe();
   }
 }

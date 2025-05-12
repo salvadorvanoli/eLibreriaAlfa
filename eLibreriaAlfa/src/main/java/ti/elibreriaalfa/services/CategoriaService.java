@@ -15,6 +15,8 @@ import ti.elibreriaalfa.business.entities.Categoria;
 import ti.elibreriaalfa.business.entities.Producto;
 import ti.elibreriaalfa.dtos.categoria.CategoriaDto;
 import ti.elibreriaalfa.dtos.categoria.CategoriaCreateDto;
+import ti.elibreriaalfa.dtos.categoria.CategoriaNodoDto;
+import ti.elibreriaalfa.dtos.categoria.CategoriaSimpleDto;
 import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
 
 import java.util.ArrayList;
@@ -36,13 +38,28 @@ public class CategoriaService {
         this.productoRepository = productoRepository;
     }
 
-    public ResponseListadoCategorias listadoCategorias() {
+    public ResponseListadoCategorias listadoCategorias() { // Modificar esta función para que, por cada categoría, también agregue a los hijos y productos
         ResponseListadoCategorias responseListadoCategorias = new ResponseListadoCategorias();
 
         responseListadoCategorias.setCategorias(categoriaRepository.findAll().stream()
                 .map(this::mapToDto).toList());
 
         return responseListadoCategorias;
+    }
+
+    public List<CategoriaNodoDto> getAllCategoriasTree() {
+        List<Categoria> categoriasRoot = categoriaRepository.findByPadreIsNull();
+        List<CategoriaNodoDto> nodos = new ArrayList<>();
+        categoriasRoot.forEach(categoriaRoot -> {
+            nodos.add(categoriaRoot.mapToNodoDto());
+        });
+        return nodos;
+    }
+
+    public CategoriaDto obtenerCategoriaPorId(Long id) {
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + id));
+        return new CategoriaDto(categoria);
     }
 
     @Transactional

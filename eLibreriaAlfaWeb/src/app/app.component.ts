@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SeguridadService } from './core/services/seguridad.service';
+import { SecurityService } from './core/services/security.service';
 import { NavbarComponent } from "./shared/components/navbar/navbar.component";
 import { FooterComponent } from "./shared/components/footer/footer.component";
 
@@ -19,14 +19,10 @@ export class AppComponent {
   title = 'eLibreriaAlfaWeb';
 
   constructor(
-    private seguridadService: SeguridadService
+    private securityService: SecurityService
   ) {}
 
   ngOnInit() {
-    // Inicializa el estado del usuario al cargar la aplicación
-    this.seguridadService.getActualUser().subscribe(user => {
-      console.log('Usuario inicializado:', user);
-    });
+    this.securityService.getActualUser().subscribe();
   }
-
 }

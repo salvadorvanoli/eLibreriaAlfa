@@ -1,1 +1,19 @@
-<p>product-card works!</p>
+<div class="mb-4 p-8 flex items-center justify-center">
+    <a routerLink="/producto/{{ product.id }}">
+        <p-card [style]="{ width: '25rem', overflow: 'hidden' }">
+            <ng-template #header>
+                <img alt="Card" class="w-full" [src]="product.imagenes[0]" />
+            </ng-template>
+            <ng-template #title>{{ product.nombre }}</ng-template>
+            <ng-template #subtitle>${{ product.precio }}</ng-template>
+            <!--
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore sed consequuntur error repudiandae numquam deserunt
+                quisquam repellat libero asperiores earum nam nobis, culpa ratione quam perferendis esse, cupiditate neque quas!
+            </p>
+            <ng-template #footer>
+            </ng-template>
+            -->
+        </p-card>
+    </a>
+</div>

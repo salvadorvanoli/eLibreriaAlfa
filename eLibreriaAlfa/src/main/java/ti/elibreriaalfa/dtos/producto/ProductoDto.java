@@ -13,14 +13,16 @@ import java.util.stream.Collectors;
 public class ProductoDto {
     private Long id;
     private String nombre;
-    private List<CategoriaSimpleDto> categorias; // Usamos el DTO simple
+    private List<CategoriaSimpleDto> categorias;
     private Float precio;
     private String descripcion;
+    private  String[] imagenes;
 
     public ProductoDto(Producto producto) {
         this.id = producto.getId();
         this.nombre = producto.getNombre();
         this.precio = producto.getPrecio();
+        this.imagenes = producto.getImagenes();
         this.descripcion = producto.getDescripcion();
         this.categorias = (producto.getCategorias() != null)
                 ? producto.getCategorias().stream()

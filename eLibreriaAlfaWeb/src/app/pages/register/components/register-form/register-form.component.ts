@@ -1,7 +1,7 @@
 import { Component, computed, signal } from '@angular/core';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { UsuarioService } from '../../../../core/services/usuario.service';
+import { UserService } from '../../../../core/services/user.service';
 import { AccesoUsuario, UsuarioSimple } from '../../../../core/models/usuario';
 
 import { FormTextInputComponent } from '../../../../shared/components/inputs/form-text-input/form-text-input.component';
@@ -43,7 +43,7 @@ export class RegisterFormComponent {
 
   constructor(
     private messageService: MessageService,
-    private usuarioService: UsuarioService
+    private userService: UserService
   ) {}
 
   register() {
@@ -55,7 +55,7 @@ export class RegisterFormComponent {
         contrasenia: this.password()
       };
       
-      this.usuarioService.post(usuario).subscribe({
+      this.userService.post(usuario).subscribe({
         next: (response: UsuarioSimple) => {
           this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Usuario creado exitosamente!", life: 4000 });
           console.log(response);

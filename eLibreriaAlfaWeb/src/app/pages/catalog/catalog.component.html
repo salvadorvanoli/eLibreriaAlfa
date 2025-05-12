@@ -1,1 +1,10 @@
-<p>catalog works!</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div>
+        <app-category-tree />
+    </div>
+    <div class="col-span-1 md:col-span-2 lg:col-span-3">
+        <app-search-bar />
+        <app-products-catalog />
+    </div>
+</div>
+<app-paginator [totalRecords]="products.length" [rowsPerPageOptions]="rowsPerPageOptions" />

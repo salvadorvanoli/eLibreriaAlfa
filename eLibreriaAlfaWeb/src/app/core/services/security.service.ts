@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class SeguridadService {
+export class SecurityService {
 
   private apiUrl = 'http://localhost:8080/elibreriaalfa/security';
   private userSubject = new BehaviorSubject<UsuarioSimple | null>(null);
