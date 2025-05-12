@@ -4,8 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
 import { Producto } from '../../core/models/producto';
 import { CarouselComponent } from './components/carousel/carousel.component';
-import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
 
 @Component({
@@ -14,8 +12,6 @@ import { ModalComponent } from '../../shared/components/modal/modal.component';
   imports: [
     CommonModule, 
     CarouselComponent,
-    NavbarComponent,
-    FooterComponent,
     ModalComponent 
   ],
   templateUrl: './view-product.component.html',
