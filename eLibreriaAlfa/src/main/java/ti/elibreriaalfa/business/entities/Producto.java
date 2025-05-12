@@ -3,6 +3,7 @@ package ti.elibreriaalfa.business.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
 
 import java.util.List;
 
@@ -34,4 +35,8 @@ public class Producto {
     )
     @JsonBackReference
     private List<Categoria> categorias;
+
+    public ProductoSimpleDto mapToDtoSimple() {
+        return new ProductoSimpleDto(this);
+    }
 }

@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
-import { FooterComponent } from "../../shared/components/footer/footer.component";
 import { TitleAndDescriptionComponent } from '../../shared/components/title-and-description/title-and-description.component';
 import { TitleWithBackgroundImageAndButtonsComponent } from '../../shared/components/title-with-background-image-and-buttons/title-with-background-image-and-buttons.component';
 import { DynamicCarouselComponent } from '../../shared/components/dynamic-carousel/dynamic-carousel.component';
@@ -12,8 +10,6 @@ import { map } from 'rxjs/operators';
   selector: 'app-home',
   standalone: true,
   imports: [
-    NavbarComponent,
-    FooterComponent,
     TitleAndDescriptionComponent,
     TitleWithBackgroundImageAndButtonsComponent,
     DynamicCarouselComponent

@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public enum Rol {
     ADMINISTRADOR,
+    EMPLEADO,
     CLIENTE;
 
     public static Rol rolFromString(String rol) {

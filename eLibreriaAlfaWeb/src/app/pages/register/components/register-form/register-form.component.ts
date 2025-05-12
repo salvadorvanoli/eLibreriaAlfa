@@ -1,58 +1,49 @@
 import { Component, computed, signal } from '@angular/core';
-import { InputTextModule } from 'primeng/inputtext';
-import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
-import { PasswordModule } from 'primeng/password';
-import { DividerModule } from 'primeng/divider';
-import { ButtonModule } from 'primeng/button';
-import { Message } from 'primeng/message';
-import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
-import { UsuarioService } from '../../../../core/services/usuario.service';
+import { MessageService } from 'primeng/api';
+import { UserService } from '../../../../core/services/user.service';
 import { AccesoUsuario, UsuarioSimple } from '../../../../core/models/usuario';
+
+import { FormTextInputComponent } from '../../../../shared/components/inputs/form-text-input/form-text-input.component';
+import { InteractivePasswordInputComponent } from '../interactive-password-input/interactive-password-input.component';
+import { FormPasswordInputComponent } from '../../../../shared/components/inputs/form-password-input/form-password-input.component';
+import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
 
 @Component({
   selector: 'app-register-form',
   standalone: true,
   imports: [
-    InputTextModule,
-    PasswordModule,
-    ButtonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    PasswordModule,
-    DividerModule,
-    Message,
-    Toast
+    Toast,
+    FormTextInputComponent,
+    InteractivePasswordInputComponent,
+    FormPasswordInputComponent,
+    PrimaryButtonComponent
   ],
-  providers: [MessageService],
+  providers: [
+    MessageService
+  ],
   templateUrl: './register-form.component.html',
   styleUrl: './register-form.component.scss'
 })
 export class RegisterFormComponent {
 
-  email = signal('');
-  contrasenia = signal('');
-  confirmarContrasenia = signal('');
+  email: string = '';
+  password = signal('');
+  confirmPassword = signal('');
   formSubmitted = signal(false);
 
-  emailErrorMessage = computed(() => {
-    return this.validateEmail();
-  });
-  
-  contraseniaErrorMessage = computed(() => {
-    return this.validateContrasenia();
+  isEmailInvalid: boolean = false;
+  isPasswordInvalid: boolean = false;
+
+  arePasswordsDifferent = computed(() => {
+    return this.formSubmitted() && this.validatePasswordsAreDifferent();
   });
 
-  confirmarContraseniaErrorMessage = computed(() => {
-    return this.validateConfirmarContrasenia();
-  });
-
-  mediumRegex: string = '^.{6,}$';
-  strongRegex: string = '^(?=.*\\d)(?=.*[!@#$%^&*()_+\\=\\[\\]{};\'":\\\\|,.<>\\/?-]).{8,}$';
+  emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   constructor(
     private messageService: MessageService,
-    private usuarioService: UsuarioService
+    private userService: UserService
   ) {}
 
   register() {
@@ -60,13 +51,14 @@ export class RegisterFormComponent {
     if (!this.validateForm()) {
 
       const usuario: AccesoUsuario = {
-        email: this.email(),
-        contrasenia: this.contrasenia()
+        email: this.email,
+        contrasenia: this.password()
       };
       
-      this.usuarioService.post(usuario).subscribe({
+      this.userService.post(usuario).subscribe({
         next: (response: UsuarioSimple) => {
-          this.messageService.add({ severity: 'success', summary: 'Registro exitoso', detail: "¡Usuario creado exitosamente!", life: 3000 });
+          this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Usuario creado exitosamente!", life: 4000 });
+          console.log(response);
         },
         error: (err) => {
           if (err.error.error !== undefined) {
@@ -82,20 +74,11 @@ export class RegisterFormComponent {
     }
   }
 
-  validateEmail() {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return this.formSubmitted() && !emailPattern.test(this.email());
-  }
-
-  validateContrasenia() {
-    return this.formSubmitted() && this.contrasenia().length < 6;
-  }
-
-  validateConfirmarContrasenia() {
-    return this.formSubmitted() && this.contrasenia() !== this.confirmarContrasenia();
+  validatePasswordsAreDifferent() {
+    return this.password() !== this.confirmPassword();
   }
 
   validateForm() {
-    return this.emailErrorMessage() || this.contraseniaErrorMessage() || this.confirmarContraseniaErrorMessage();
+    return this.isEmailInvalid || this.isPasswordInvalid || this.arePasswordsDifferent();
   }
 }

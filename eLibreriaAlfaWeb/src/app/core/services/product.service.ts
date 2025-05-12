@@ -2,16 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseHttpService } from './base-http.service';
-import { UsuarioSimple, AccesoUsuario, ModificarPerfilUsuario } from '../models/usuario';
+import { Producto } from '../models/producto';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UsuarioService extends BaseHttpService<AccesoUsuario, UsuarioSimple> {
-
-  private apiUrl = '/user';
+export class ProductService extends BaseHttpService<Producto, Producto> {
 
   constructor(http: HttpClient) {
-    super(http, '/user');
+    super(http, '/product');
   }
 }

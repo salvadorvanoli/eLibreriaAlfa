@@ -1,53 +1,37 @@
-<div class="card p-10 mx-auto border-solid rounded-md border-sky-500 bg-sky-50 my-10">
+<div class="card md:w-150 sm:w-100 w-70 p-10 my-10 mx-auto rounded-md border-solid border-gray-200 border-2">
     <p-toast />
     <form novalidate action="" method="post" class="mx-auto flex flex-col items-center gap-4 w-full max-w-md">
-        <input pInputText [ngModel]="email()" (ngModelChange)="email.set($event)" [ngModelOptions]="{standalone: true}" type="text" placeholder="Email" class="w-full" />
-        @if (emailErrorMessage()) {
-            <p-message class="w-full" severity="error" variant="simple" size="small">Correo electrónico inválido</p-message>
-        }
-        <p-password
-            class="w-full"
-            styleClass="w-full"
-            inputStyleClass="w-full"
-            [ngModelOptions]="{standalone: true}"
-            [ngModel]="contrasenia()"
-            (ngModelChange)="contrasenia.set($event)"
-            promptLabel="Ingresa una contraseña"
-            weakLabel="Débil"
-            mediumLabel="Media"
-            strongLabel="Fuerte"
-            [mediumRegex]="mediumRegex"
-            [strongRegex]="strongRegex"
-            autocomplete="off"
+        <app-form-text-input 
+            class="w-full" 
+            placeholder="Email"
+            [formSubmitted]="formSubmitted"
+            [textPattern]="emailPattern"
+            errorMessage="Correo electrónico inválido"
+            (textValue)="email = $event"
+            (isInputInvalid)="isEmailInvalid = $event"
+        />
+        <app-interactive-password-input
+            class="w-full" 
             placeholder="Contraseña"
-            [toggleMask]="true"
-        >
-            <ng-template #footer>
-                <p-divider />
-                <ul class="my-0 leading-normal">
-                    <li>Al menos 6 caracteres</li>
-                </ul>
-            </ng-template>
-        </p-password>
-        @if (contraseniaErrorMessage()) {
-            <p-message class="w-full" severity="error" variant="simple" size="small">Contraseña muy corta</p-message>
-        }
-        <p-password
+            [formSubmitted]="formSubmitted"
+            errorMessage="La contraseña debe tener al menos 6 caracteres"
+            (passwordValue)="password.set($event);"
+            (isPasswordInvalid)="isPasswordInvalid = $event"
+        />
+        <app-form-password-input
+            class="w-full" 
+            placeholder="Confirmar contraseña"
+            [formSubmitted]="formSubmitted"
+            errorMessage="Las contraseñas deben coincidir"
+            (passwordValue)="confirmPassword.set($event);"
+            [isPasswordWrong]="arePasswordsDifferent()"
+        />
+        <app-primary-button
             class="w-full"
             styleClass="w-full"
-            inputStyleClass="w-full"
-            [ngModelOptions]="{standalone: true}"
-            [ngModel]="confirmarContrasenia()"
-            (ngModelChange)="confirmarContrasenia.set($event)"
-            autocomplete="off"
-            placeholder="Confirmar contraseña"
-            [toggleMask]="true"
-            [feedback]="false"
-        >
-        </p-password>
-        @if (confirmarContraseniaErrorMessage()) {
-            <p-message class="w-full" severity="error" variant="simple" size="small">Las contraseñas deben coincidir</p-message>
-        }
-        <p-button label="Registrarse" (onClick)="register()" />
+            [classes]="'w-full'"
+            [label]="'Registrarse'"
+            (onClick)="register()"
+        />
     </form>
 </div>
