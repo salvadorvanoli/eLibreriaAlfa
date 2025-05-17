@@ -2,6 +2,8 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Añade esta importación
 import { DataView } from 'primeng/dataview';
 import { ButtonModule } from 'primeng/button';
+import { PaginatorComponent } from "../../../../shared/components/paginator/paginator.component";
+import { ControlPanelService } from '../../../../core/services/control-panel.service';
 
 @Component({
   selector: 'app-data-panel',
@@ -9,16 +11,31 @@ import { ButtonModule } from 'primeng/button';
   imports: [
     CommonModule,
     DataView,
-    ButtonModule
-],
+    ButtonModule,
+    PaginatorComponent
+  ],
   templateUrl: './data-panel.component.html',
   styleUrl: './data-panel.component.scss'
 })
 export class DataPanelComponent {
 
-  @Input() items!: any[];
-  @Input() itemType!: string;
+  items!: any[];
 
+  @Input() itemType!: string;
+  @Input() page!: number;
+  @Input() size!: number;
+
+  constructor(
+    private controlPanelService: ControlPanelService
+  ) {}
+
+  ngOnInit() {
+    this.items = [];
+    this.controlPanelService.getDataByType(this.itemType, this.page, this.size)?.subscribe((data) => {
+      this.items = data;
+    });
+  }
+  
   getItemTitle(item: any): string {
     return this.itemType + " nro. " + item.id;  
   }

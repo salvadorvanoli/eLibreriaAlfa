@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { TitleAndDescriptionComponent } from '../../shared/components/title-and-description/title-and-description.component';
 import { OptionsPanelComponent } from "./components/options-panel/options-panel.component";
 import { DataPanelComponent } from "./components/data-panel/data-panel.component";
-import { ControlPanelService } from '../../core/services/control-panel.service';
 
 @Component({
   selector: 'app-control-panel',
@@ -18,10 +17,6 @@ import { ControlPanelService } from '../../core/services/control-panel.service';
 export class ControlPanelComponent {
 
   selectedDataType: string = 'Usuario';
-
-  constructor(
-    private controlPanelService: ControlPanelService
-  ) {}
 
   onDataTypeSelected(dataType: string) {
     this.selectedDataType = dataType;

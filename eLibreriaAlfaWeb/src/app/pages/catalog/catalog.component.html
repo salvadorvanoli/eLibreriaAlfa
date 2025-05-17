@@ -1,16 +1,15 @@
 <div class="">
     @if (products && products.length > 0) {
         <div class="py-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <div class="sm:pt-14">
+            <div class="sm:pt-12">
                 <app-category-tree />
             </div>
             <div class="col-span-1 md:col-span-2 lg:col-span-3">
-                <app-catalog-filter-controls />
                 <app-products-catalog [products]="filteredProducts" />
             </div>
         </div>
-        <app-paginator [totalRecords]="filteredProducts.length" [rowsPerPageOptions]="rowsPerPageOptions" />
     } @else {
         <app-message icon="pi pi-info-circle" message="No hay productos disponibles" />
     }
 </div>
+

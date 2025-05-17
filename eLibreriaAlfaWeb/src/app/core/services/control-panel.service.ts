@@ -18,18 +18,18 @@ export class ControlPanelService {
     //private orderService: OrderService
   ) {}
 
-  getDataByType(type: string): Observable<any[]> | null {
+  getDataByType(type: string, page: number, size: number): Observable<any[]> | null {
     switch(type) {
       case 'Usuario':
-        return this.userService.getAll();
+        return this.userService.getPaginated(page, size);
       case 'Categoria':
-        return this.categoryService.getAll();
+        return this.categoryService.getPaginated(page, size);
       case 'Producto':
-        return this.productService.getAll();
+        return this.productService.getPaginated(page, size);
       case 'Publicacion':
-        return this.publicationService.getAll();
+        return this.publicationService.getPaginated(page, size);
       //case 'Pedido':
-        //return this.orderService.getAll();
+        //return this.orderService.getPaginated(page, size);
       default:
         return null;
     }

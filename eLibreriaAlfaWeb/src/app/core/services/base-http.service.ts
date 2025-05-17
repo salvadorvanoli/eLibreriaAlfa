@@ -14,6 +14,10 @@ export abstract class BaseHttpService<TRequest, TResponse> {
     return this.http.get<TResponse[]>(`${this.baseUrl}${this.end}`);
   }
 
+  getPaginated(page: number, size: number): Observable<TResponse[]> {
+    return this.http.get<TResponse[]>(`${this.baseUrl}${this.end}/paginado?pagina=${page}&cantidad=${size}`);
+  }
+
   getById(id: number): Observable<TResponse> {
     return this.http.get<TResponse>(`${this.baseUrl}${this.end}/${id}`);
   }

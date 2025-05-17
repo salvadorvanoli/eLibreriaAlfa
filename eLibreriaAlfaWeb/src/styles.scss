@@ -2,6 +2,10 @@
 @use "primeicons/primeicons.css";
 @plugin "tailwindcss-primeui";
 
+@theme {
+  --breakpoint-xs: 22rem;
+}
+
 html {
   min-height: 100%;
   position: relative;
