@@ -11,8 +11,9 @@ import ti.elibreriaalfa.services.EmailService;
 @RequestMapping("email")
 public class EmailController {
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
+
+    public EmailController(EmailService emailService) { this.emailService = emailService; }
 
     @PostMapping("/send")
     public ResponseEntity<String> sendEmail(@RequestBody EmailRequest emailRequest) {
@@ -25,4 +26,6 @@ public class EmailController {
 
         return new ResponseEntity<>(response , HttpStatus.OK);
     }
+
+
 }

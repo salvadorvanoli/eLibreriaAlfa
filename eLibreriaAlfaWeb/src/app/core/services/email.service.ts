@@ -15,7 +15,9 @@ export class EmailService extends BaseHttpService<EmailRequest, EmailResponse> {
     super(http, '/email');
   }
 
-  sendEmail(emailRequest: EmailRequest): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl + this.apiUrl}/send`, emailRequest);
-  }
+  sendEmail(emailRequest: EmailRequest): Observable<string> {
+    return this.http.post<string>(`${this.baseUrl + this.apiUrl}/send`, emailRequest, { responseType: 'text' as 'json' }).pipe(
+        tap(response => console.log('Respuesta del backend:', response))
+    );
+}
 }

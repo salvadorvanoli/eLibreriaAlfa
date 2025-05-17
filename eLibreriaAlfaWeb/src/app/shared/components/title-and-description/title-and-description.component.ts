@@ -8,4 +8,5 @@ import { Component, Input } from '@angular/core';
 export class TitleAndDescriptionComponent {
   @Input() title?: string;
   @Input() description?: string;
+  @Input() center?: boolean = false;
 }
