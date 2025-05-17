@@ -16,9 +16,9 @@ import { CategoriaNodo } from '../../../core/models/categoria';
 export class CategoryTreeComponent {
 
   categories!: TreeNode[];
-  selectedCategories!: TreeNode[];
+  selectedCategories: CategoriaNodo[] = [];
   
-  @Output() categoriesSelected = new EventEmitter<TreeNode[]>();
+  @Output() selection = new EventEmitter<CategoriaNodo[]>();
 
   constructor(
     private categoryService: CategoryService
@@ -35,15 +35,13 @@ export class CategoryTreeComponent {
   }
 
   selectCategory(event: any) {
-    console.log("Selected: " + event.node);
-    // this.selectedCategories.push(event.node);
-    // this.categoriesSelected.emit(this.selectedCategories);
+    this.selectedCategories.push(event.node.data);
+    this.selection.emit(this.selectedCategories);
   }
 
   unselectCategory(event: any) {
-    console.log("Unselected: " + event.node);
-    // this.selectedCategories.filter(event.node);
-    // this.categoriesSelected.emit(this.selectedCategories);
+    this.selectedCategories = this.selectedCategories.filter((element) => element.id !== event.node.data.id);
+    this.selection.emit(this.selectedCategories);
   }
 
   private createTreeNode(category: CategoriaNodo): TreeNode {

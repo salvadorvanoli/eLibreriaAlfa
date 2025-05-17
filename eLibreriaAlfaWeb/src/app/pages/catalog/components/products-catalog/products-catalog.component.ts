@@ -15,4 +15,7 @@ export class ProductsCatalogComponent {
 
   @Input() products!: Producto[];
 
+  ngOnInit() {
+    console.log(this.products);
+  }
 }

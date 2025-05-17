@@ -14,7 +14,7 @@ import ti.elibreriaalfa.dtos.usuario.AccesoUsuarioDto;
 import ti.elibreriaalfa.security.SeguridadService;
 
 @RestController
-@RequestMapping("/security")
+@RequestMapping("security")
 public class SeguridadController {
 
     @Autowired

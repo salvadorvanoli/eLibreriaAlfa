@@ -44,7 +44,7 @@ export class NavbarComponent {
         );
 
         if (userEntity.rol === "ADMINISTRADOR") {
-          this.items.push({ label: 'Panel de control', icon: 'pi pi-cog', routerLink: '/panel-de-control' });
+          this.items.push({ label: 'Panel de control', icon: 'pi pi-cog', routerLink: '/panel' });
         }
 
         this.items.push(
