@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Producto } from '../../../../core/models/producto';
 
@@ -6,6 +7,7 @@ import { Producto } from '../../../../core/models/producto';
   selector: 'app-product-row',
   standalone: true,
   imports: [
+    RouterModule,
     CommonModule
   ],
   templateUrl: './product-row.component.html',

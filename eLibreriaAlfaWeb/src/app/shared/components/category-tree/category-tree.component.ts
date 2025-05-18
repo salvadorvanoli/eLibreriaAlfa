@@ -16,9 +16,10 @@ import { CategoriaNodo } from '../../../core/models/categoria';
 export class CategoryTreeComponent {
 
   categories!: TreeNode[];
-  selectedCategories: CategoriaNodo[] = [];
+  selectedCategories: TreeNode[] = [];
+  private lastEmittedIds: number[] = [];
   
-  @Output() selection = new EventEmitter<CategoriaNodo[]>();
+  @Output() selection = new EventEmitter<number[]>();
 
   constructor(
     private categoryService: CategoryService
@@ -34,14 +35,26 @@ export class CategoryTreeComponent {
     });
   }
 
-  selectCategory(event: any) {
-    this.selectedCategories.push(event.node.data);
-    this.selection.emit(this.selectedCategories);
+  changedSelectedCategories() {
+    const newSelectedIds = this.getProductIdsFromCategories(this.selectedCategories);
+
+    console.log('Selected categories:', newSelectedIds);
+  
+    if (!this.areArraysEqual(this.lastEmittedIds, newSelectedIds)) {
+      this.lastEmittedIds = [...newSelectedIds];
+      this.selection.emit(newSelectedIds);
+    }
   }
 
-  unselectCategory(event: any) {
-    this.selectedCategories = this.selectedCategories.filter((element) => element.id !== event.node.data.id);
-    this.selection.emit(this.selectedCategories);
+  private getProductIdsFromCategories(nodes: TreeNode[]): number[] {
+    return nodes
+      .filter(node => node?.data?.productos)
+      .flatMap(node => Array.isArray(node.data.productos) ? node.data.productos : []);
+  }
+  
+  private areArraysEqual(arr1: number[], arr2: number[]): boolean {
+    if (arr1.length !== arr2.length) return false;
+    return arr1.every((val, idx) => val === arr2[idx]);
   }
 
   private createTreeNode(category: CategoriaNodo): TreeNode {

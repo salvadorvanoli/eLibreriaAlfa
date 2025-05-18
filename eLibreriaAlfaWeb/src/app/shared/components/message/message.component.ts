@@ -14,4 +14,5 @@ export class MessageComponent {
   @Input() severity: string = 'info';
   @Input() icon?: string;
   @Input() message: string = "";
+  @Input() classes: string = "";
 }

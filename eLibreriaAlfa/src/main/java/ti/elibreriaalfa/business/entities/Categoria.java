@@ -41,6 +41,7 @@ public class Categoria {
         List<CategoriaNodoDto> hijos = this.hijos.stream().map(Categoria::mapToNodoDto).toList();
         categoriaNodoDto.setHijos(hijos);
         List<Long> productos = this.productos.stream().map(Producto::getId).toList();
+        categoriaNodoDto.setProductos(productos);
         return categoriaNodoDto;
     }
 }

@@ -20,6 +20,8 @@ export class CatalogComponent {
 
   products!: Producto[];
   filteredProducts: Producto[] = [];
+  selectedCategoriesProducts: number[] = [];
+  searchText: string = '';
 
   constructor(
     private productService: ProductService
@@ -30,6 +32,33 @@ export class CatalogComponent {
       this.products = data;
       this.filteredProducts = data;
     });
+  }
+
+  filterProducts() {
+    if (this.selectedCategoriesProducts.length > 0) {
+      this.filteredProducts = this.products.filter(product =>
+        this.selectedCategoriesProducts.some(productId => productId === product.id)
+      );
+    } else {
+      this.filteredProducts = this.products;
+    }
+
+    if (this.searchText) {
+      this.filteredProducts = this.filteredProducts.filter(product =>
+        product.nombre.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        product.descripcion.toLocaleLowerCase().includes(this.searchText.toLowerCase())
+      );
+    }
+  }
+
+  onCategorySelection(categoriesProducts: number[]) {
+    this.selectedCategoriesProducts = categoriesProducts;
+    this.filterProducts();
+  }
+
+  onSearchTextChange(searchText: string) {
+    this.searchText = searchText;
+    this.filterProducts();
   }
 
 }
