@@ -1,0 +1,70 @@
+<div class="flex flex-col gap-[5px] items-center">
+  <div class="w-full max-w-[1000px] flex flex-col">
+    <!-- Título arriba -->
+    <div class="text-black text-base font-semibold font-['Inter'] leading-snug mb-3">
+      Fecha de retiro
+    </div>
+    
+    <!-- Contenedor de los elementos con gap uniforme -->
+    <div class="flex items-center gap-2 justify-start">
+      <!-- Componente de calendario con ancho específico -->
+      <app-date-picker
+        [(ngModel)]="selectedDate"
+        (ngModelChange)="onDateChange($event)"
+        class="w-[306px]">
+      </app-date-picker>
+
+      <!-- Botón Vaciar con ancho específico -->
+      <div data-has-icon-end="false" data-has-icon-start="false" data-size="Medium" 
+          data-state="Default" data-variant="Subtle" 
+          class="h-[40px] px-3 rounded-lg inline-flex justify-center items-center cursor-pointer"
+          [class.opacity-50]="!selectedDate"
+          (click)="clearDate()">
+        <div class="text-black text-base font-normal font-['Inter'] leading-none">
+          Vaciar
+        </div>
+      </div>
+
+      <!-- Botón Realizar pedido (NEGRO) -->
+      <div data-has-icon-end="false" data-has-icon-start="false" data-size="Medium" 
+          data-state="Default" data-variant="Primary" 
+          class="h-[40px] px-3 bg-black rounded-lg outline outline-1 outline-offset-[-1px] outline-Border-Default-Default 
+                inline-flex justify-center items-center cursor-pointer"
+          (click)="realizarPedido()">
+        <div class="text-white text-base font-normal font-['Inter'] leading-none">
+          Realizar pedido
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal simple para fecha no seleccionada -->
+  <p-dialog 
+    [(visible)]="showDateAlert"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    header="Se necesita una fecha"
+    [style]="{width: '400px'}"
+    styleClass="date-alert-dialog">
+    
+    <div class="flex flex-col items-center p-3">
+      <div class="text-amber-500 mb-3">
+        <i class="pi pi-calendar text-4xl"></i>
+      </div>
+      <p class="text-center mb-2">
+        Por favor, seleccione una fecha de retiro para realizar el pedido.
+      </p>
+    </div>
+    
+    <ng-template pTemplate="footer">
+      <div class="flex justify-center">
+        <button 
+          (click)="showDateAlert = false"
+          class="px-3 py-2 bg-black text-white rounded-lg">
+          Aceptar
+        </button>
+      </div>
+    </ng-template>
+  </p-dialog>
+</div>

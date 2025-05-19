@@ -24,4 +24,13 @@ export class UserService extends BaseHttpService<AccesoUsuario, UsuarioSimple> {
   override post(user: AccesoUsuario): Observable<UsuarioSimple> {
     return this.http.post<UsuarioSimple>(`${this.baseUrl}${this.end}`, user);
   }
+  
+  // Método para actualizar el perfil del usuario
+  updateProfile(email: string, profileData: ModificarPerfilUsuario): Observable<UsuarioSimple> {
+    return this.http.patch<UsuarioSimple>(
+      `${this.baseUrl}${this.end}/${email}/profile`, 
+      profileData, 
+      { withCredentials: true }
+    );
+  }
 }

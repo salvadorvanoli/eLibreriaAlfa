@@ -1,0 +1,38 @@
+<div class="w-[1124px] bg-[#D9D9D9] border border-black p-6">
+  <!-- Estado de carga -->
+  <div *ngIf="loading" class="flex justify-center py-8">
+    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-900"></div>
+  </div>
+
+  <!-- Mensaje cuando no hay productos -->
+  <div *ngIf="!loading && productos.length === 0" class="text-center py-8">
+    <p class="text-gray-600">No hay productos en tu pedido actual.</p>
+  </div>
+  
+  <!-- Lista dinámica de productos -->
+  <div *ngFor="let producto of productos" class="mb-4">
+    <app-product-card 
+      [product]="{
+        id: producto.id,
+        title: producto.producto.nombre,
+        price: producto.producto.precio,
+        quantity: producto.cantidad,
+        imageUrl: producto.producto.imagenes && producto.producto.imagenes.length > 0 ? producto.producto.imagenes[0] : 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'
+      }"
+      [readOnly]="readOnly"
+      (removeProduct)="removeProduct($event)">
+    </app-product-card>
+  </div>
+  
+  <!-- Paginador -->
+  <div class="mt-6 mb-6" *ngIf="!loading && totalRecords > 0">
+    <app-paginator
+        [first]="first"
+        [rows]="rows"
+        [totalRecords]="totalRecords"
+        [rowsPerPageOptions]="rowsPerPageOptions"
+        (onPageChange)="onPageChange($event)"
+        styleClass="bg-[#D9D9D9]"
+    ></app-paginator>
+  </div>
+</div>

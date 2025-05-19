@@ -1,0 +1,85 @@
+.date-picker-container {
+  position: relative;
+  width: 100%;
+}
+
+.custom-date-field {
+  padding: 0.75rem 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  border: 1px solid #E0E0E0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  position: relative; // Añade esto para contexto de posicionamiento
+}
+
+.date-display {
+  flex: 1;
+  color: #1F2937;
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.calendar-icon {
+  margin-left: 0.5rem;
+  color: #6B7280;
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Estilos para el calendario de PrimeNG */
+:host ::ng-deep {
+  .p-calendar {
+    width: 100% !important;
+    
+    .p-inputtext {
+      position: absolute !important;
+      left: -9999px !important;
+      top: -9999px !important;
+      width: 1px !important;
+      height: 1px !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      z-index: -1 !important;
+    }
+    
+    .p-datepicker-trigger {
+      display: none !important;
+    }
+  }
+
+  .p-calendar .p-inputtext {
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+  }
+
+  .p-datepicker {
+    position: absolute !important;
+    z-index: 10000 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    margin-top: 5px;
+  }
+
+
+  .p-datepicker table td span {
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+}

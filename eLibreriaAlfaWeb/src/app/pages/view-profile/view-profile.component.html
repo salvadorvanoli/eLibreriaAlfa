@@ -1,0 +1,23 @@
+<app-title [text]="'Información personal'" [align]="'center'" class="mt-18"></app-title>
+<app-profile-form></app-profile-form>
+
+@switch (orderState) {
+  @case ('none') {
+    <app-no-order-yet class="mt-0"></app-no-order-yet>
+  }
+  @case ('in-progress') {
+    <app-order-in-progress 
+      (noProductsLeft)="updateToLoading()" 
+      (orderSubmitted)="updateToSubmitted()">
+    </app-order-in-progress>
+  }
+  @case ('submitted') {
+    <app-order-submitted></app-order-submitted>
+  }
+  @default {
+    <!-- Mientras se carga -->
+    <div class="w-[1124px] flex justify-center p-8">
+      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+    </div>
+  }
+}
