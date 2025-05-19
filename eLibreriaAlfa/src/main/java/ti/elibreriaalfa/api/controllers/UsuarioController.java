@@ -58,7 +58,6 @@ public class UsuarioController {
     */
 
     @PatchMapping("/{usuarioEmail}/profile")
-    @PreAuthorize("#email == authentication.name")
     public ResponseEntity<Object> patchPerfilUsuario(@PathVariable (name = "usuarioEmail") String usuarioEmail,
                                                      @RequestBody ModificarPerfilUsuarioDto perfilUsuario) {
         return new ResponseEntity<>(usuarioService.patchPerfilUsuario(usuarioEmail, perfilUsuario), HttpStatus.OK);

@@ -5,19 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c558653-c790-42b9-849a-383512f382e3" name="Changes" comment="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha">
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/home/home.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/home/home.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/home/home.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/home/home.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/tsconfig.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/entities/Encargue_Estado.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/CategoriaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/CategoriaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/EncargueController.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/EncargueController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/entities/Encargue.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/entities/Encargue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/entities/Producto_Encargue.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/entities/Producto_Encargue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/repositories/EncargueRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/repositories/EncargueRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/dtos/encargue/EncargueDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/dtos/encargue/EncargueDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/dtos/producto_encargue/Producto_EncargueDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/dtos/producto_encargue/Producto_EncargueDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/services/EncargueService.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/services/EncargueService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Valentin" />
+        <entry key="$PROJECT_DIR$" value="SegundoMerge" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -30,8 +44,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/salvadorvanoli/eLibreriaAlfa.git&quot;,
-    &quot;accountId&quot;: &quot;e6ca89a4-e83e-43e7-a4b4-bf95b4b9dd9e&quot;
+    &quot;url&quot;: &quot;https://github.com/salvadorvanoli/eLibreriaAlfa&quot;,
+    &quot;accountId&quot;: &quot;1f2b364c-241e-4b1d-a79c-31626a8699e0&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -39,6 +53,7 @@
   &quot;associatedIndex&quot;: 8
 }</component>
   <component name="ProjectId" id="2we356yOE8ytBKplhrLF2YhWaNE" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -51,8 +66,9 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "SalvadorDesdeValentin",
+    "git-widget-placeholder": "Joaquin3",
     "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -66,10 +82,10 @@
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <envs>
+        <env name="DB_PASS" value="1234" />
         <env name="DB_USER" value="postgres" />
-        <env name="DB_PASS" value="12560" />
         <env name="JWT_EXPIRATION" value="86400000" />
-        <env name="JWT_KEY" value="nierybiensegura" />
+        <env name="JWT_KEY" value="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111nierybiensegura" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="ti.elibreriaalfa.ELibreriaAlfaApplication" />
       <module name="elibreriaalfa" />
@@ -85,15 +101,11 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.eLibreriaAlfa" />
+    </list>
   </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
-        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
-      </set>
-    </attachedChunks>
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="0c558653-c790-42b9-849a-383512f382e3" name="Changes" comment="" />
@@ -120,6 +132,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha" />
-    <option name="LAST_COMMIT_MESSAGE" value="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha" />
+    <MESSAGE value="Endopints de buscar por id de categoria y producto." />
+    <option name="LAST_COMMIT_MESSAGE" value="Endopints de buscar por id de categoria y producto." />
   </component>
 </project>

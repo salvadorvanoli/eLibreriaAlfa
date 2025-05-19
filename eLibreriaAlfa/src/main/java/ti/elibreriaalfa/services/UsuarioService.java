@@ -6,8 +6,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ti.elibreriaalfa.business.entities.Encargue;
+import ti.elibreriaalfa.business.entities.Encargue_Estado;
 import ti.elibreriaalfa.business.entities.Usuario;
 import ti.elibreriaalfa.business.repositories.UsuarioRepository;
+import ti.elibreriaalfa.business.repositories.EncargueRepository;
 import ti.elibreriaalfa.dtos.usuario.AccesoUsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.ModificarPerfilUsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
@@ -15,6 +18,7 @@ import ti.elibreriaalfa.exceptions.usuario.UsuarioException;
 import ti.elibreriaalfa.exceptions.usuario.UsuarioNoEncontradoException;
 import ti.elibreriaalfa.exceptions.usuario.UsuarioYaExisteException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,10 +26,12 @@ public class UsuarioService {
     @Autowired
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EncargueRepository encargueRepository;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, EncargueRepository encargueRepository) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.encargueRepository = encargueRepository;
     }
 
     public List<UsuarioSimpleDto> getAllUsuarios() {
@@ -54,6 +60,16 @@ public class UsuarioService {
         nuevoUsuario.setContrasenia(contraseniaEncriptada);
 
         usuarioRepository.save(nuevoUsuario);
+
+        // Crear encargue vacío en estado EN_CREACION
+        Encargue nuevoEncargue = new Encargue();
+        nuevoEncargue.setUsuario(nuevoUsuario);
+        nuevoEncargue.setEstado(Encargue_Estado.EN_CREACION);
+        nuevoEncargue.setProductos(new ArrayList<>());
+        nuevoEncargue.setTotal(0f);
+        nuevoEncargue.setFecha(null);
+
+        encargueRepository.save(nuevoEncargue);
 
         return nuevoUsuario.mapToDtoSimple();
     }
