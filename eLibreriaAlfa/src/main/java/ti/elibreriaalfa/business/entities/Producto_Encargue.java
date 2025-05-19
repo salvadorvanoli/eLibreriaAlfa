@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "PEDIDOS")
+@Table(name = "PRODUCTO_ENCARGUE")
 public class Producto_Encargue {
 
     @Id
@@ -24,5 +24,8 @@ public class Producto_Encargue {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
+
+
+
 
 }

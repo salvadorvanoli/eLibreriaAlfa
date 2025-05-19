@@ -1,0 +1,17 @@
+<p-toast></p-toast>
+
+<div class="custom-form-container">
+    <div class="self-stretch flex flex-col gap-2 items-start">
+        <div class="form-label">Nombre</div>
+        <input type="text" [(ngModel)]="nombre" class="form-input">
+    </div>
+    <div class="self-stretch flex flex-col gap-2 items-start">
+        <div class="form-label">Apellido</div>
+        <input type="text" [(ngModel)]="apellido" class="form-input">
+    </div>
+    <div class="self-stretch inline-flex items-center gap-4">
+        <button (click)="updateProfile()" class="update-button" [disabled]="loading">
+            <div class="button-text">{{ loading ? 'Actualizando...' : 'Actualizar' }}</div>
+        </button>
+    </div>
+</div>

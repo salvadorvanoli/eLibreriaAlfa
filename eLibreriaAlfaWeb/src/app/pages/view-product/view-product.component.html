@@ -17,10 +17,23 @@
                     </div>
                 </div>
                 
-                <div class="w-full md:w-[484px]">
+                <div class="w-full md:w-[484px] mt-2">
                     <div class="text-Text-Default-Default text-sm md:text-base font-normal font-['Inter'] leading-snug">
                        {{producto?.descripcion}}
                     </div>
+                </div>
+
+                <!-- Campo para ingresar cantidad -->
+                <div class="flex items-center gap-3 mt-4">
+                    <label for="cantidad" class="text-Text-Default-Default text-sm font-medium font-['Inter']">Cantidad:</label>
+                    <input
+                        type="number"
+                        id="cantidad"
+                        name="cantidad"
+                        min="1"
+                        value="1" 
+                        class="w-20 h-10 p-2 border border-gray-300 rounded-md text-center text-Text-Default-Default font-['Inter'] focus:ring-Primary-Default-Default focus:border-Primary-Default-Default appearance-none [-moz-appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
                 </div>
             </div>
 

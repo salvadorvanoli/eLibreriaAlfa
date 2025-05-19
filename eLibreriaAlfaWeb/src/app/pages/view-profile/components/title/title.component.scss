@@ -1,0 +1,20 @@
+:host {
+  display: block;
+  width: 100%;
+  
+  .justify-center {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .justify-start {
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  .justify-end {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

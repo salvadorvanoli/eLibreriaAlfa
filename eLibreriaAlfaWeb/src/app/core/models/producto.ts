@@ -5,3 +5,11 @@ export interface Producto {
     imagenes: string[];
     descripcion: string;
 }
+
+export interface ProductoSimple {
+    id: number; 
+    nombre: string;
+    precio: number; 
+    descripcion: string;
+    imagenes: string[]; 
+}

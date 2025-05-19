@@ -1,0 +1,35 @@
+<p-toast></p-toast>
+
+<div class="w-[1124px] bg-white rounded-lg border border-gray-200 p-8 mx-auto">
+  <div class="flex flex-col items-center text-center">
+    <!-- Ícono de éxito (check-circle) en color verde -->
+    <div class="mb-6 text-green-500">
+      <i class="pi pi-check-circle" style="font-size: 4rem;"></i>
+    </div>
+    
+    <!-- Mensaje de pedido en proceso -->
+    <h3 class="text-xl font-semibold text-gray-900 mb-4">Su pedido ha sido recibido correctamente</h3>
+    <p class="text-gray-600 mb-8 max-w-2xl">
+      Le informaremos cuando su pedido esté listo para retirar. Cualquier cambio será notificado.
+    </p>
+    
+    <!-- Botones de acción -->
+    <div class="flex gap-4">
+      <button (click)="verPedido()" class="px-6 py-3 bg-gray-900 text-white font-normal rounded-lg border border-gray-900 hover:bg-gray-800 transition">
+        Ver pedido
+      </button>
+      <button (click)="cancelarPedido()" class="px-6 py-3 bg-white text-gray-700 font-normal rounded-lg border border-gray-300 hover:bg-gray-50 transition">
+        Cancelar pedido
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal component -->
+<app-order-modal
+  [visible]="showModal"
+  [modalType]="modalType"
+  [orderDetails]="orderDetails"
+  (close)="onModalClose()"
+  (confirm)="onModalConfirm()">
+</app-order-modal>
