@@ -139,6 +139,14 @@ public class EncargueController {
         return ResponseEntity.ok().build();
     }
 
+    // src/main/java/ti/elibreriaalfa/api/controllers/EncargueController.java
+
+    @PostMapping("/usuario/{usuarioId}/cancelar-enviado")
+    public ResponseEntity<Void> cancelarEnviadoYCrearNuevo(@PathVariable("usuarioId") Long usuarioId) {
+        encargueService.cancelarEncargueEnviadoYCrearNuevo(usuarioId);
+        return ResponseEntity.ok().build();
+    }
+
 /* Ejemplos de Json para probar:
 
     //http://localhost:8080/order/paginado?pagina=0&cantidad=10

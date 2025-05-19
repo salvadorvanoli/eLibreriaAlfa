@@ -250,4 +250,30 @@ public class EncargueService {
         encargueRepository.save(encargue);
     }
 
+    // src/main/java/ti/elibreriaalfa/services/EncargueService.java
+
+    @Transactional
+    public void cancelarEncargueEnviadoYCrearNuevo(Long usuarioId) {
+        // Buscar encargue ENVIADO del usuario
+        Encargue encargue = encargueRepository.findByUsuario_IdAndEstado(usuarioId, Encargue_Estado.ENVIADO)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró un encargue ENVIADO para el usuario"));
+
+        // Cambiar estado a CANCELADO
+        encargue.setEstado(Encargue_Estado.CANCELADO);
+        encargueRepository.save(encargue);
+
+        // Crear nuevo encargue vacío en EN_CREACION
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        Encargue nuevoEncargue = new Encargue();
+        nuevoEncargue.setUsuario(usuario);
+        nuevoEncargue.setEstado(Encargue_Estado.EN_CREACION);
+        nuevoEncargue.setProductos(new ArrayList<>());
+        nuevoEncargue.setTotal(0f);
+        nuevoEncargue.setFecha(null);
+
+        encargueRepository.save(nuevoEncargue);
+    }
+
 }
