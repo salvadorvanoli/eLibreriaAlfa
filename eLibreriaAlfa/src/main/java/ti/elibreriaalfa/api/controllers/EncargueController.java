@@ -9,8 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ti.elibreriaalfa.api.responses.encargue.ResponseListadoEncargues;
+import ti.elibreriaalfa.business.entities.Encargue_Estado;
 import ti.elibreriaalfa.dtos.encargue.EncargueDto;
+import ti.elibreriaalfa.dtos.producto_encargue.Producto_EncargueDto;
 import ti.elibreriaalfa.services.EncargueService;
+
+import java.time.LocalDate;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "order")
@@ -23,7 +28,6 @@ public class EncargueController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<ResponseListadoEncargues> getEncargues() {
         ResponseListadoEncargues response = encargueService.listadoEncargues();
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -77,6 +81,64 @@ public class EncargueController {
 
         return new ResponseEntity<>(encargueService.listadoEncarguePage(pagina, cantidad), HttpStatus.OK);
     }
+
+    // Agregar producto a un encargue
+    @PostMapping("/{id}/producto")
+    public ResponseEntity<Void> agregarProductoAEncargue(
+            @PathVariable("id") Long encargueId,
+            @RequestBody Producto_EncargueDto productoDto) {
+        encargueService.agregarProductoAEncargue(encargueId, productoDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    // Eliminar producto de un encargue
+    @DeleteMapping("/{id}/producto/{productoEncargueId}")
+    public ResponseEntity<Void> eliminarProductoDeEncargue(
+            @PathVariable("id") Long encargueId,
+            @PathVariable("productoEncargueId") Long productoEncargueId) {
+        encargueService.eliminarProductoDeEncargue(encargueId, productoEncargueId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // Obtener encargue por usuario y estado
+    @GetMapping("/usuario/{usuarioId}/estado/{estado}")
+    public ResponseEntity<EncargueDto> obtenerEncarguePorUsuarioYEstado(
+            @PathVariable("usuarioId") Long usuarioId,
+            @PathVariable("estado") Encargue_Estado estado) {
+        EncargueDto dto = encargueService.obtenerEncarguePorUsuarioYEstado(usuarioId, estado);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @GetMapping("/usuario/{usuarioId}/estado/{estado}/productos")
+    public ResponseEntity<Page<Producto_EncargueDto>> listarProductosEncarguePorUsuarioYEstado(
+            @PathVariable("usuarioId") Long usuarioId,
+            @PathVariable("estado") Encargue_Estado estado,
+            @RequestParam("pagina") Integer pagina,
+            @RequestParam("cantidad") Integer cantidad) {
+
+        Page<Producto_EncargueDto> page = encargueService.listarProductosEncarguePorUsuarioYEstado(usuarioId, estado, pagina, cantidad);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+
+    @GetMapping("/usuario/{usuarioId}/tiene-en-creacion")
+    public ResponseEntity<Boolean> usuarioTieneEncargueEnCreacion(@PathVariable("usuarioId") Long usuarioId) {
+        boolean tiene = encargueService.usuarioTieneEncargueEnCreacion(usuarioId);
+        return new ResponseEntity<>(tiene, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/enviar")
+    public ResponseEntity<Void> marcarComoEnviado(
+            @PathVariable("id") Long idEncargue,
+            @RequestBody Map<String, String> body) {
+        String fechaStr = body.get("fecha");
+        if (fechaStr == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        LocalDate fecha = LocalDate.parse(fechaStr);
+        encargueService.marcarEncargueComoEnviado(idEncargue, fecha);
+        return ResponseEntity.ok().build();
+    }
+
 /* Ejemplos de Json para probar:
 
     //http://localhost:8080/order/paginado?pagina=0&cantidad=10

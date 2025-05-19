@@ -13,6 +13,8 @@ import ti.elibreriaalfa.business.entities.*;
 import ti.elibreriaalfa.business.repositories.*;
 import ti.elibreriaalfa.dtos.encargue.EncargueDto;
 import ti.elibreriaalfa.dtos.producto_encargue.Producto_EncargueDto;
+
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -56,6 +58,7 @@ public class EncargueService {
         Encargue nuevoEncargue = new Encargue();
         nuevoEncargue.setUsuario(usuario);
         nuevoEncargue.setProductos(new ArrayList<>());
+        nuevoEncargue.setFecha(encargueDto.getFecha());
 
         float total = 0f;
         Set<Long> productoIds = new HashSet<>();
@@ -158,8 +161,93 @@ public class EncargueService {
         return encarguesPage.map(this::mapToDto);
     }
 
+    @Transactional
+    public void agregarProductoAEncargue(Long encargueId, Producto_EncargueDto productoDto) {
+        Encargue encargue = encargueRepository.findById(encargueId)
+                .orElseThrow(() -> new EntityNotFoundException("Encargue no encontrado"));
+
+        Producto producto = productoRepository.findById(productoDto.getProducto().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+
+        // Verifica si ya existe el producto en el encargue
+        boolean existe = encargue.getProductos().stream()
+                .anyMatch(pe -> pe.getProducto().getId().equals(producto.getId()));
+        if (existe) {
+            throw new IllegalArgumentException("El producto ya está en el encargue");
+        }
+
+        Producto_Encargue pe = new Producto_Encargue();
+        pe.setProducto(producto);
+        pe.setEncargue(encargue);
+        pe.setCantidad(productoDto.getCantidad());
+
+        productoEncargueRepository.save(pe);
+        encargue.getProductos().add(pe);
+
+        // Actualiza el total
+        encargue.setTotal(encargue.getTotal() + producto.getPrecio() * productoDto.getCantidad());
+        encargueRepository.save(encargue);
+    }
+
+    @Transactional
+    public void eliminarProductoDeEncargue(Long encargueId, Long productoEncargueId) {
+        Encargue encargue = encargueRepository.findById(encargueId)
+                .orElseThrow(() -> new EntityNotFoundException("Encargue no encontrado"));
+
+        Producto_Encargue pe = productoEncargueRepository.findById(productoEncargueId)
+                .orElseThrow(() -> new EntityNotFoundException("Producto_Encargue no encontrado"));
+
+        if (!pe.getEncargue().getId().equals(encargueId)) {
+            throw new IllegalArgumentException("El producto no pertenece a este encargue");
+        }
+
+        // Actualiza el total
+        encargue.setTotal(encargue.getTotal() - pe.getProducto().getPrecio() * pe.getCantidad());
+
+        encargue.getProductos().removeIf(p -> p.getId().equals(productoEncargueId));
+        productoEncargueRepository.delete(pe);
+        encargueRepository.save(encargue);
+    }
+
+    public EncargueDto obtenerEncarguePorUsuarioYEstado(Long usuarioId, Encargue_Estado estado) {
+        Encargue encargue = encargueRepository.findByUsuario_IdAndEstado(usuarioId, estado)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró un encargue para el usuario y estado dados"));
+        return new EncargueDto(encargue);
+    }
+
+    public Page<Producto_EncargueDto> listarProductosEncarguePorUsuarioYEstado(Long usuarioId, Encargue_Estado estado, int pagina, int cantidad) {
+        Encargue encargue = encargueRepository.findByUsuario_IdAndEstado(usuarioId, estado)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró un encargue para el usuario y estado dados"));
+
+        List<Producto_EncargueDto> productosDto = encargue.getProductos().stream()
+                .map(Producto_EncargueDto::new)
+                .toList();
+
+        int start = Math.min(pagina * cantidad, productosDto.size());
+        int end = Math.min(start + cantidad, productosDto.size());
+
+        List<Producto_EncargueDto> paged = productosDto.subList(start, end);
+
+        return new org.springframework.data.domain.PageImpl<>(paged, PageRequest.of(pagina, cantidad), productosDto.size());
+    }
+
     private EncargueDto mapToDto(Encargue encargue) {
         return new EncargueDto(encargue);
+    }
+
+    public boolean usuarioTieneEncargueEnCreacion(Long usuarioId) {
+        return encargueRepository.findByUsuario_IdAndEstado(usuarioId, Encargue_Estado.EN_CREACION).isPresent();
+    }
+
+    @Transactional
+    public void marcarEncargueComoEnviado(Long encargueId, LocalDate fechaEnvio) {
+        Encargue encargue = encargueRepository.findById(encargueId)
+                .orElseThrow(() -> new EntityNotFoundException("Encargue no encontrado con ID: " + encargueId));
+
+        encargue.setFecha(fechaEnvio);
+        encargue.setEstado(Encargue_Estado.ENVIADO);
+
+        encargueRepository.save(encargue);
     }
 
 }

@@ -82,6 +82,7 @@ public class CategoriaController {
         return new ResponseEntity<>(categoriaService.listadoCategoriaPage(pagina, cantidad), HttpStatus.OK);
     }
 
+
     /* Ejemplos de Json para probar:
 
     http://localhost:8080/category/paginado?pagina=0&cantidad=10

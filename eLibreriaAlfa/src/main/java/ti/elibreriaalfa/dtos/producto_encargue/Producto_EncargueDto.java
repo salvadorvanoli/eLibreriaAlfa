@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import ti.elibreriaalfa.business.entities.Producto_Encargue;
 import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
 
+
+
 @Data
 @NoArgsConstructor
 public class Producto_EncargueDto {
@@ -14,9 +16,12 @@ public class Producto_EncargueDto {
 
     private ProductoSimpleDto producto;
 
+    private Long EncargueId;
+
     public Producto_EncargueDto(Producto_Encargue pe) {
         this.id = pe.getId();
         this.cantidad = pe.getCantidad();
         this.producto = new ProductoSimpleDto(pe.getProducto());
+        this.EncargueId = pe.getEncargue().getId();
     }
 }
