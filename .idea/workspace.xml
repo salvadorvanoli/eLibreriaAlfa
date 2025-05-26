@@ -6,22 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0c558653-c790-42b9-849a-383512f382e3" name="Changes" comment="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/services/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/services/EmailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/contact-us/components/contact-us-form/contact-us-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/contact-us/components/contact-us-form/contact-us-form.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/contact-us/components/contact-us-form/contact-us-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/contact-us/components/contact-us-form/contact-us-form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/login/components/login-form/login-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/login/components/login-form/login-form.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/login/components/login-form/login-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/login/components/login-form/login-form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/interactive-password-input/interactive-password-input.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/interactive-password-input/interactive-password-input.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/interactive-password-input/interactive-password-input.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/interactive-password-input/interactive-password-input.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/register-form/register-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/register-form/register-form.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/register-form/register-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/register-form/register-form.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/view-profile/components/order-modal/order-modal.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/view-profile/components/order-modal/order-modal.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/view-profile/components/order-submitted/order-submitted.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/view-profile/components/order-submitted/order-submitted.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-password-input/form-password-input.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-password-input/form-password-input.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-password-input/form-password-input.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-password-input/form-password-input.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-select-input/form-select-input.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-select-input/form-select-input.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-text-input/form-text-input.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-text-input/form-text-input.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-text-input/form-text-input.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-text-input/form-text-input.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/PublicacionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/PublicacionController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,10 +75,10 @@
       <envs>
         <env name="DB_PASS" value="12560" />
         <env name="DB_USER" value="postgres" />
-        <env name="JWT_EXPIRATION" value="86400000" />
-        <env name="JWT_KEY" value="Q0zTYMrsIhLXz5Iw5acx3N91w6e8KdOS" />
-        <env name="EMAIL_USER" value="libreriaalfasantalucia@gmail.com" />
         <env name="EMAIL_PASS" value="ytcqfcadvnkcharr" />
+        <env name="EMAIL_USER" value="libreriaalfasantalucia@gmail.com" />
+        <env name="JWT_EXPIRATION" value="86400000" />
+        <env name="JWT_KEY" value="1111111111111111111111111111111111111111111Q0zTYMrsIhLXz5Iw5acx3N91w6e8KdOS1111111111111111111111111111111111111111111Q0zTYMrsIhLXz5Iw5acx3N91w6e8KdOS1111111111111111111111111111111111111111111Q0zTYMrsIhLXz5Iw5acx3N91w6e8KdOS" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="ti.elibreriaalfa.ELibreriaAlfaApplication" />
       <module name="elibreriaalfa" />
@@ -133,7 +118,7 @@
       <workItem from="1746388027602" duration="3570000" />
       <workItem from="1746722376057" duration="4336000" />
       <workItem from="1748270090794" duration="1481000" />
-      <workItem from="1748272595692" duration="1701000" />
+      <workItem from="1748272595692" duration="7084000" />
     </task>
     <task id="LOCAL-00001" summary="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha">
       <option name="closed" value="true" />

@@ -78,6 +78,8 @@ public class PublicacionController {
     public ResponseEntity<String> createComentarioEnPublicacion(@RequestBody ComentarioDto comentarioDto) {
         String response = comentarioService.crearComentario(comentarioDto);
 
+        System.out.println("Llegué a entrar");
+
         if(response == null) {
             return new ResponseEntity<>("Error al crear el comentario", HttpStatus.BAD_REQUEST);
         } else {

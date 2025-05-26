@@ -1,0 +1,35 @@
+<div class="card md:w-150 sm:w-100 w-70 p-10 my-10 mx-auto rounded-md border-solid border-gray-200 border-2">
+    <p-toast />
+    <form novalidate action="" method="post" class="mx-auto flex flex-col items-center gap-4 w-full max-w-md">
+
+        <app-form-text-input
+            #asuntoInput
+            class="w-full"
+            placeholder="Asunto"
+            [formSubmitted]="formSubmitted"
+            [textPattern]="textAreaPattern"
+            errorMessage="Asunto inválido"
+            (textValue)="titulo = $event"
+            (isInputInvalid)="isHeaderInvalid = $event"
+        />
+        
+        <app-form-textarea-input
+            #messageInput
+            class="w-full"
+            placeholder="Escribe tu mensaje aquí"
+            [formSubmitted]="formSubmitted"
+            [textPattern]="messagePattern"
+            errorMessage="Mensaje inválido"
+            (textValue)="texto = $event"
+            (isInputInvalid)="isTextInvalid = $event"
+        />
+
+        <app-primary-button
+            class="w-full"
+            styleClass="w-full"
+            [classes]="'w-full'"
+            [label]="'Enviar comentario'"
+            (onClick)="enviarComentario()"
+        />
+    </form>
+</div>

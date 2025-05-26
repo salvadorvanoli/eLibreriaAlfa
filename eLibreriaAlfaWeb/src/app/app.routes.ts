@@ -7,6 +7,8 @@ import { CatalogComponent } from './pages/catalog/catalog.component';
 import { ViewProductComponent } from './pages/view-product/view-product.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ViewProfileComponent } from './pages/view-profile/view-profile.component';
+import { ForumComponent } from './pages/forum/forum.component';
+import { PublicationComponent } from './pages/publication/publication.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 export const routes: Routes = [
@@ -18,6 +20,8 @@ export const routes: Routes = [
     { path: 'producto/:id', component: ViewProductComponent },
     { path: 'contacto', component: ContactUsComponent },
     { path: 'perfil', component: ViewProfileComponent },
+    { path: 'foro', component: ForumComponent },
+    { path: 'publicacion/:id', component: PublicationComponent },
     { path: '', redirectTo: '/inicio', pathMatch: 'full' },
     { path: '**', component: NotFoundComponent }
 ];

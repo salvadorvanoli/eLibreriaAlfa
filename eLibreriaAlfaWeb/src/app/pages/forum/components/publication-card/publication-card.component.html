@@ -1,0 +1,38 @@
+<div class="publication-card" (click)="onCardClick()">
+  
+  @if (hasImage()) {
+    <div class="publication-image-container">
+      <img 
+        [src]="imagenUrl" 
+        [alt]="publicacion.titulo"
+        class="publication-image"
+        (error)="onImageError($event)"
+        loading="lazy">
+    </div>
+  } @else {
+    <div class="publication-image-container">
+      <img 
+        [src]="defaultImageUrl" 
+        [alt]="publicacion.titulo"
+        class="publication-image"
+        (error)="onImageError($event)">
+    </div>
+  }
+  
+  <div class="publication-content-wrapper">
+    <div class="publication-header">
+      <h2 class="publication-title">{{ publicacion.titulo || 'Sin título' }}</h2>
+      <span class="publication-date">
+        {{ publicacion.fechaCreacion ? formatDate(publicacion.fechaCreacion) : 'Sin fecha' }}
+      </span>
+    </div>
+    
+    <div class="publication-content">
+      <p>{{ publicacion.contenido ? truncateContent(publicacion.contenido, maxContentLength) : 'Sin contenido disponible' }}</p>
+    </div>
+    
+    <div class="publication-footer">
+      <span class="read-more">Leer más →</span>
+    </div>
+  </div>
+</div>

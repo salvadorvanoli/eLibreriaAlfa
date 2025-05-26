@@ -19,5 +19,5 @@ export class EmailService extends BaseHttpService<EmailRequest, EmailResponse> {
     return this.http.post<string>(`${this.baseUrl + this.apiUrl}/send`, emailRequest, { responseType: 'text' as 'json' }).pipe(
         tap(response => console.log('Respuesta del backend:', response))
     );
-}
+  }
 }

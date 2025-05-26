@@ -1,0 +1,102 @@
+<div class="publication-container">
+
+  <button (click)="goBack()" class="back-btn">
+    ← Volver al foro
+  </button>
+
+  @if (loading) {
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Cargando publicación...</p>
+    </div>
+  }
+
+  @if (error && !loading) {
+    <div class="error-container">
+      <h3>Error</h3>
+      <p>{{ error }}</p>
+      <button (click)="loadPublication()" class="retry-btn">Reintentar</button>
+    </div>
+  }
+
+  @if (publicacion && !loading && !error) {
+    <div class="publication-content">
+      <article class="publication-article">
+        <header class="publication-header">
+          <h1 class="publication-title">{{ publicacion.titulo }}</h1>
+          <div class="publication-meta">
+            <span class="publication-date">{{ formatDate(publicacion.fechaCreacion) }}</span>
+            <span class="publication-author">Administrador</span>
+          </div>
+        </header>
+
+        @if (publicacion.imagenUrl) {
+          <div class="publication-image-container">
+            <img 
+              [src]="publicacion.imagenUrl" 
+              [alt]="publicacion.titulo"
+              class="publication-image"
+              loading="lazy">
+          </div>
+        } @else {
+          <div class="publication-image-container">
+            <img 
+              [src]="defaultImageUrl" 
+              [alt]="publicacion.titulo"
+              class="publication-image"
+            >
+          </div>
+        }
+
+        <div class="publication-body">
+          <div [innerHTML]="publicacion.contenido" class="publication-text"></div>
+        </div>
+      </article>
+
+      <section class="comments-section">        <h2 class="comments-title">
+          Comentarios 
+          <span class="comments-count">
+            ({{ totalComments }})
+          </span>
+        </h2>
+        
+        @if (isLoggedIn || checkAuthStatus()) {
+          <app-new-comment-form
+            [publicacionId]="publicacion.id"
+            [publicacionTitulo]="publicacion.titulo"
+          />
+        }
+
+        @if (!isLoggedIn && !checkAuthStatus()) {
+          <div class="login-prompt">
+            <p>
+              <a routerLink="/inicio-sesion">Inicia sesión</a> para participar en la discusión.
+            </p>
+          </div>
+        }
+        @if (paginatedComments && paginatedComments.length > 0) {
+          <div class="comments-list">
+            @for (comentario of paginatedComments; track comentario.id) {
+              <app-comment-card [comentario]="comentario"></app-comment-card>
+            }
+          </div>
+
+          @if (totalComments > commentsPerPage) {
+            <p-paginator 
+              [first]="currentPage * commentsPerPage"
+              [rows]="commentsPerPage"
+              [totalRecords]="totalComments"
+              [rowsPerPageOptions]="[5, 10, 20]"
+              (onPageChange)="onPageChange($event)"
+              styleClass="custom-paginator">
+            </p-paginator>
+          }
+        }        @if (totalComments === 0) {
+          <div class="no-comments">
+            <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
+          </div>
+        }
+      </section>
+    </div>
+  }
+</div>

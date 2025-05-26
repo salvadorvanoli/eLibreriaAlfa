@@ -44,7 +44,7 @@ export class ContactUsFormComponent {
     isMessageInvalid: boolean = false;
     isOptionInvalid: boolean = false;    emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     textAreaPattern = /^[a-zA-Z0-9\s.,;:!?'"(){}[\]<>%&$#@!^*+=áéíóúÁÉÍÓÚñÑüÜ-]+$/;
-    messagePattern = /^.{1,}$/; // Patrón más flexible para el mensaje (al menos 1 caracter)
+    messagePattern = /^.{1,}$/;
 
     constructor(
         private emailService: EmailService,
@@ -77,7 +77,9 @@ export class ContactUsFormComponent {
 
     validateForm() {
         return this.isEmailInvalid && this.isHeaderInvalid && this.isMessageInvalid && this.isOptionInvalid;
-    }    resetForm() {
+    }
+    
+    resetForm() {
         
         this.emailInput?.reset();
         this.asuntoInput?.reset();

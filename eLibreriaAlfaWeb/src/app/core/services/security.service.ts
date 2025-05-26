@@ -23,9 +23,12 @@ export class SecurityService {
       })
     );
   }
-
   get actualUser(): UsuarioSimple | null {
     return this.userSubject.value;
+  }
+
+  isAuthenticated(): boolean {
+    return this.userSubject.value !== null;
   }
 
   clearUser() {
