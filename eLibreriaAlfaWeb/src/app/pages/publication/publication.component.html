@@ -86,7 +86,6 @@
               [first]="currentPage * commentsPerPage"
               [rows]="commentsPerPage"
               [totalRecords]="totalComments"
-              [rowsPerPageOptions]="[5, 10, 20]"
               (onPageChange)="onPageChange($event)"
               styleClass="custom-paginator">
             </p-paginator>
