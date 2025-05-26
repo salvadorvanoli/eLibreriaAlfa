@@ -7,6 +7,7 @@ import { CatalogComponent } from './pages/catalog/catalog.component';
 import { ViewProductComponent } from './pages/view-product/view-product.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { ViewProfileComponent } from './pages/view-profile/view-profile.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 export const routes: Routes = [
     { path: 'inicio', component: HomeComponent },
@@ -18,5 +19,5 @@ export const routes: Routes = [
     { path: 'contacto', component: ContactUsComponent },
     { path: 'perfil', component: ViewProfileComponent },
     { path: '', redirectTo: '/inicio', pathMatch: 'full' },
-    { path: '**', redirectTo: '/inicio' }
+    { path: '**', component: NotFoundComponent }
 ];
