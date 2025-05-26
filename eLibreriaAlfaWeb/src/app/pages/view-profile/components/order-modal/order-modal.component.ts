@@ -7,7 +7,7 @@ import { OrderService, EncargueEstado } from '../../../../core/services/order.se
 @Component({
   selector: 'app-order-modal',
   standalone: true,
-  imports: [CommonModule, ProductContainerComponent, ProductCardComponent],
+  imports: [CommonModule, ProductContainerComponent],
   templateUrl: './order-modal.component.html',
   styleUrls: ['./order-modal.component.scss']
 })

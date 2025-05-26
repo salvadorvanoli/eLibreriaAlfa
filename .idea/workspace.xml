@@ -5,16 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c558653-c790-42b9-849a-383512f382e3" name="Changes" comment="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha">
-      <change afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/entities/Encargue_Estado.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/CategoriaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/CategoriaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/EncargueController.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/EncargueController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/entities/Encargue.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/entities/Encargue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/entities/Producto_Encargue.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/entities/Producto_Encargue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/repositories/EncargueRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/business/repositories/EncargueRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/dtos/encargue/EncargueDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/dtos/encargue/EncargueDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/dtos/producto_encargue/Producto_EncargueDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/dtos/producto_encargue/Producto_EncargueDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/services/EncargueService.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/services/EncargueService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/services/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/services/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/contact-us/components/contact-us-form/contact-us-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/contact-us/components/contact-us-form/contact-us-form.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/contact-us/components/contact-us-form/contact-us-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/contact-us/components/contact-us-form/contact-us-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/login/components/login-form/login-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/login/components/login-form/login-form.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/login/components/login-form/login-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/login/components/login-form/login-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/interactive-password-input/interactive-password-input.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/interactive-password-input/interactive-password-input.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/interactive-password-input/interactive-password-input.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/interactive-password-input/interactive-password-input.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/register-form/register-form.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/register-form/register-form.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/register-form/register-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/register/components/register-form/register-form.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/view-profile/components/order-modal/order-modal.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/view-profile/components/order-modal/order-modal.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/view-profile/components/order-submitted/order-submitted.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/pages/view-profile/components/order-submitted/order-submitted.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-password-input/form-password-input.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-password-input/form-password-input.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-password-input/form-password-input.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-password-input/form-password-input.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-select-input/form-select-input.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-select-input/form-select-input.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-text-input/form-text-input.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-text-input/form-text-input.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-text-input/form-text-input.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfaWeb/src/app/shared/components/inputs/form-text-input/form-text-input.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,8 +51,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/salvadorvanoli/eLibreriaAlfa&quot;,
-    &quot;accountId&quot;: &quot;1f2b364c-241e-4b1d-a79c-31626a8699e0&quot;
+    &quot;url&quot;: &quot;https://github.com/salvadorvanoli/eLibreriaAlfa.git&quot;,
+    &quot;accountId&quot;: &quot;e6ca89a4-e83e-43e7-a4b4-bf95b4b9dd9e&quot;
   }
 }</component>
   <component name="ProjectColorInfo">{
@@ -53,39 +60,40 @@
   &quot;associatedIndex&quot;: 8
 }</component>
   <component name="ProjectId" id="2we356yOE8ytBKplhrLF2YhWaNE" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.eLibreriaAlfa.executor": "Run",
-    "Maven.elibreriaalfa [clean].executor": "Run",
-    "Maven.elibreriaalfa [install].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Joaquin3",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.eLibreriaAlfa.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.elibreriaalfa [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.elibreriaalfa [install].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Salvador&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.eLibreriaAlfa">
     <configuration name="eLibreriaAlfa" type="Application" factoryName="Application">
       <option name="ALTERNATIVE_JRE_PATH" value="21" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <envs>
-        <env name="DB_PASS" value="1234" />
+        <env name="DB_PASS" value="12560" />
         <env name="DB_USER" value="postgres" />
         <env name="JWT_EXPIRATION" value="86400000" />
-        <env name="JWT_KEY" value="1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111nierybiensegura" />
+        <env name="JWT_KEY" value="Q0zTYMrsIhLXz5Iw5acx3N91w6e8KdOS" />
+        <env name="EMAIL_USER" value="libreriaalfasantalucia@gmail.com" />
+        <env name="EMAIL_PASS" value="ytcqfcadvnkcharr" />
       </envs>
       <option name="MAIN_CLASS_NAME" value="ti.elibreriaalfa.ELibreriaAlfaApplication" />
       <module name="elibreriaalfa" />
@@ -103,7 +111,16 @@
     </configuration>
     <list>
       <item itemvalue="Application.eLibreriaAlfa" />
+      <item itemvalue="Spring Boot.ELibreriaAlfaApplication" />
     </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -115,6 +132,8 @@
       <updated>1746388026192</updated>
       <workItem from="1746388027602" duration="3570000" />
       <workItem from="1746722376057" duration="4336000" />
+      <workItem from="1748270090794" duration="1481000" />
+      <workItem from="1748272595692" duration="1701000" />
     </task>
     <task id="LOCAL-00001" summary="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha">
       <option name="closed" value="true" />

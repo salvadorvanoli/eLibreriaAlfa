@@ -13,8 +13,7 @@ import { ToastModule } from 'primeng/toast';
   selector: 'app-order-submitted',
   standalone: true,
   imports: [
-    CommonModule, 
-    TitleComponent,
+    CommonModule,
     OrderModalComponent,
     ToastModule
   ],

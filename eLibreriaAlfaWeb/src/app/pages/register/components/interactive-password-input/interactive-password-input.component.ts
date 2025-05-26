@@ -3,6 +3,7 @@ import { PasswordModule } from 'primeng/password';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { Message } from 'primeng/message';
 import { DividerModule } from 'primeng/divider';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-interactive-password-input',
@@ -12,7 +13,8 @@ import { DividerModule } from 'primeng/divider';
     FormsModule,
     ReactiveFormsModule,
     Message,
-    DividerModule
+    DividerModule,
+    FloatLabelModule
   ],
   templateUrl: './interactive-password-input.component.html',
   styleUrl: './interactive-password-input.component.scss'
@@ -40,5 +42,12 @@ export class InteractivePasswordInputComponent {
     const isInvalid = (this.password().length < 6);
     this.isPasswordInvalid.emit(isInvalid);
     return isInvalid;
+  }
+
+  reset() {
+    this.password.set('');
+    this.formSubmitted.set(false);
+    this.passwordValue.emit('');
+    this.isPasswordInvalid.emit(false);
   }
 }

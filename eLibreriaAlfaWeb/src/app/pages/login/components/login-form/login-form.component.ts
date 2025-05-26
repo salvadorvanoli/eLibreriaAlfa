@@ -3,6 +3,7 @@ import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SecurityService } from '../../../../core/services/security.service';
 import { AccesoUsuario } from '../../../../core/models/usuario';
+import { ViewChild } from '@angular/core';
 
 import { FormTextInputComponent } from "../../../../shared/components/inputs/form-text-input/form-text-input.component";
 import { FormPasswordInputComponent } from "../../../../shared/components/inputs/form-password-input/form-password-input.component";
@@ -21,6 +22,9 @@ import { PrimaryButtonComponent } from "../../../../shared/components/buttons/pr
   styleUrl: './login-form.component.scss'
 })
 export class LoginFormComponent {
+
+  @ViewChild('emailInput') emailInput: any;
+  @ViewChild('passwordInput') passwordInput: any;
 
   email: string = '';
   password: string = '';
@@ -49,6 +53,7 @@ export class LoginFormComponent {
       this.securityService.auth(usuario).subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Has iniciado sesión exitosamente!", life: 4000 });
+          this.resetForm();
         },
         error: (err) => {
           if (err.error.error !== undefined) {
@@ -65,6 +70,15 @@ export class LoginFormComponent {
     } else {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: "Datos ingresados inválidos", life: 4000 });
     }
+  }
+
+  resetForm() {
+    this.emailInput?.reset();
+    this.passwordInput?.reset();
+    
+    this.email = '';
+    this.password = '';
+    this.formSubmitted.set(false);
   }
 
   validateForm() {

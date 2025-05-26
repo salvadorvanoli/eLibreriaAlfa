@@ -3,6 +3,7 @@ import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { UserService } from '../../../../core/services/user.service';
 import { AccesoUsuario, UsuarioSimple } from '../../../../core/models/usuario';
+import { ViewChild } from '@angular/core';
 
 import { FormTextInputComponent } from '../../../../shared/components/inputs/form-text-input/form-text-input.component';
 import { InteractivePasswordInputComponent } from '../interactive-password-input/interactive-password-input.component';
@@ -26,6 +27,10 @@ import { PrimaryButtonComponent } from '../../../../shared/components/buttons/pr
   styleUrl: './register-form.component.scss'
 })
 export class RegisterFormComponent {
+
+  @ViewChild('emailInput') emailInput: any;
+  @ViewChild('passwordInput') passwordInput: any;
+  @ViewChild('confirmPasswordInput') confirmPasswordInput: any;
 
   email: string = '';
   password = signal('');
@@ -58,7 +63,7 @@ export class RegisterFormComponent {
       this.userService.post(usuario).subscribe({
         next: (response: UsuarioSimple) => {
           this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Usuario creado exitosamente!", life: 4000 });
-          console.log(response);
+          this.resetForm();
         },
         error: (err) => {
           if (err.error.error !== undefined) {
@@ -80,5 +85,20 @@ export class RegisterFormComponent {
 
   validateForm() {
     return this.isEmailInvalid || this.isPasswordInvalid || this.arePasswordsDifferent();
+  }
+
+  resetForm() {
+    this.emailInput?.reset();
+    this.passwordInput?.reset();
+    this.confirmPasswordInput?.reset();
+
+    this.email = '';
+    this.password.set('');
+    this.confirmPassword.set('');
+    
+    this.formSubmitted.set(false);
+    
+    this.isEmailInvalid = false;
+    this.isPasswordInvalid = false;
   }
 }

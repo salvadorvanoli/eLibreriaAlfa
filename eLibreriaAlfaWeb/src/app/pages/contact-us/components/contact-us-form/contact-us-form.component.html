@@ -2,6 +2,7 @@
     <p-toast />
     <form novalidate action="" method="post" class="mx-auto flex flex-col items-center gap-4 w-full max-w-md">
         <app-form-text-input 
+            #emailInput
             class="w-full"
             placeholder="Email"
             [formSubmitted]="formSubmitted"
@@ -32,6 +33,7 @@
         />
 
         <app-form-text-input
+            #asuntoInput
             class="w-full"
             placeholder="Asunto"
             [formSubmitted]="formSubmitted"
@@ -39,14 +41,13 @@
             errorMessage="Asunto inválido"
             (textValue)="asunto = $event"
             (isInputInvalid)="isHeaderInvalid = $event"
-        />
-
-        <app-form-text-input
+        />        <app-form-textarea-input
+            #messageInput
             class="w-full"
-            placeholder="Consulta"
+            placeholder="Escribe tu mensaje aquí"
             [formSubmitted]="formSubmitted"
-            [textPattern]="textAreaPattern"
-            errorMessage="Consulta inválida"
+            [textPattern]="messagePattern"
+            errorMessage="Mensaje inválido"
             (textValue)="message = $event"
             (isInputInvalid)="isMessageInvalid = $event"
         />
