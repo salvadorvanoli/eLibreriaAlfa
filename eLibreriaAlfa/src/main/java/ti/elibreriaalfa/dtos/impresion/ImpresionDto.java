@@ -20,9 +20,14 @@ public class ImpresionDto {
 
     private UsuarioSimpleDto usuario;
 
+    private String nombreArchivo;
+
+    private String estado;
+
     public Impresion maptoEntity() {
         Impresion impresion = new Impresion();
 
+        impresion.setNombreArchivo(this.getNombreArchivo());
         impresion.setId(this.getId());
         impresion.setColor(this.getColor());
         impresion.setUsuario(this.getUsuario().mapToEntity());

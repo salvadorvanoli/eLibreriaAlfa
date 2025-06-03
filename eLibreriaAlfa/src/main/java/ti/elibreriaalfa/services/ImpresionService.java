@@ -13,6 +13,7 @@ import ti.elibreriaalfa.business.repositories.ImpresionRepository;
 import ti.elibreriaalfa.business.repositories.UsuarioRepository;
 import ti.elibreriaalfa.dtos.impresion.ImpresionDto;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -99,5 +100,12 @@ public class ImpresionService {
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
 
         return impresionRepository.findAll(pageRequest.withSort(sort)).map(Impresion::mapToDto);
+    }
+
+    public List<ImpresionDto> listarImpresionesPorUsuario(Long usuarioId) {
+        return impresionRepository.findAll().stream()
+                .filter(impresion -> impresion.getUsuario().getId().equals(usuarioId))
+                .map(Impresion::mapToDto)
+                .toList();
     }
 }

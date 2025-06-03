@@ -16,11 +16,13 @@ public class Impresion {
     @Column(nullable = false)
     private Boolean color;
 
-    @Column(nullable = false)
     private Boolean simple;
 
-    @Column(nullable = false)
     private Boolean vertical;
+
+    private String estado = "Pendiente";
+
+    private String nombreArchivo;
 
     @Column(length = 200)
     private String comentarioAdicional;
@@ -31,8 +33,9 @@ public class Impresion {
 
     public ImpresionDto mapToDto() {
         ImpresionDto impresionDto = new ImpresionDto();
-
+        impresionDto.setNombreArchivo(this.getNombreArchivo());
         impresionDto.setId(this.getId());
+        impresionDto.setEstado(this.getEstado());
         impresionDto.setUsuario(this.getUsuario().mapToDtoSimple());
         impresionDto.setColor(this.getColor());
         impresionDto.setVertical(this.getVertical());

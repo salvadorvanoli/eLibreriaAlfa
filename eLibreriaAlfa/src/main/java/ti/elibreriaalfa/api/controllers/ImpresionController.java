@@ -61,4 +61,9 @@ public class ImpresionController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/user/{usuarioId}")
+    public ResponseEntity<?> listarImpresionesPorUsuario(@PathVariable Long usuarioId) {
+        return ResponseEntity.ok(impresionService.listarImpresionesPorUsuario(usuarioId));
+    }
+
 }
