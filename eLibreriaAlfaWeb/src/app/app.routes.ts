@@ -10,6 +10,7 @@ import { ViewProfileComponent } from './pages/view-profile/view-profile.componen
 import { ForumComponent } from './pages/forum/forum.component';
 import { PublicationComponent } from './pages/publication/publication.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { PrintsComponent } from './pages/prints/prints.component';
 
 export const routes: Routes = [
     { path: 'inicio', component: HomeComponent },
@@ -22,6 +23,7 @@ export const routes: Routes = [
     { path: 'perfil', component: ViewProfileComponent },
     { path: 'foro', component: ForumComponent },
     { path: 'publicacion/:id', component: PublicationComponent },
+    { path: 'impresion', component: PrintsComponent },
     { path: '', redirectTo: '/inicio', pathMatch: 'full' },
     { path: '**', component: NotFoundComponent }
 ];

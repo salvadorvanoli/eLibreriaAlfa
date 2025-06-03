@@ -1,0 +1,79 @@
+<div class="flex flex-col items-center justify-center w-full">
+  <div class="bg-white p-4 rounded-lg w-full max-w-4xl">
+    
+    <!-- Título centrado -->
+    <div class="flex justify-center mt-6 mb-6">
+      <div class="justify-start text-black text-2xl font-semibold font-['Inter'] leading-7">Mis impresiones</div>
+    </div>
+    
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="flex justify-center items-center p-8">
+      <div class="text-gray-600">Cargando impresiones...</div>
+    </div>
+    
+    <!-- Error state -->
+    <div *ngIf="errorMessage && !isLoading" class="flex justify-center items-center p-8">
+      <div class="text-red-600">{{ errorMessage }}</div>
+    </div>
+    
+    <!-- Empty state -->
+    <div *ngIf="!isLoading && !errorMessage && files.length === 0" class="flex justify-center items-center p-8">
+      <div class="text-gray-600">No tienes impresiones registradas</div>
+    </div>
+    
+    <!-- Dropdown de archivos -->
+    <div *ngIf="!isLoading && !errorMessage && files.length > 0" class="flex flex-col justify-center items-center gap-4">
+      <div class="w-full max-w-md flex flex-col gap-2">
+        <label class="text-gray-800 text-base font-normal font-['Inter'] leading-snug">Seleccionar impresión:</label>
+        <p-dropdown 
+          [(ngModel)]="selectedFile"
+          [options]="files"
+          optionLabel="displayName"
+          placeholder="Selecciona una impresión"
+          [style]="{'width': '100%'}"
+          [showClear]="true"
+          (onChange)="onFileSelected($event.value)">
+          
+          <!-- Template personalizado para mostrar las opciones -->
+          <ng-template pTemplate="selectedItem">
+            <div class="flex align-items-center gap-2" *ngIf="selectedFile">
+              <i class="pi pi-file-pdf text-red-500"></i>
+              <span>{{ selectedFile.displayName }}</span>
+            </div>
+          </ng-template>
+          
+          <ng-template pTemplate="item" let-impresion>
+            <div class="flex align-items-center justify-between gap-2 w-full">
+              <div class="flex align-items-center gap-2">
+                <i class="pi pi-file-pdf text-red-500"></i>
+                <span>{{ impresion.displayName }}</span>
+              </div>
+              <div class="flex flex-col items-end">
+                <div class="flex align-items-center">
+                  <i [class]="getStatusIcon(impresion.estado)"></i>
+                  <span class="text-sm" [class]="getStatusClass(impresion.estado)">{{ impresion.estado }}</span>
+                </div>
+                <span class="text-xs text-gray-500">{{ getColorText(impresion.color) }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+      
+      <!-- Información del archivo seleccionado -->
+      <div *ngIf="selectedFile" class="w-full max-w-md p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-800 mb-2">Detalles de la impresión</h3>
+        <div class="space-y-2">
+          <p><strong>Archivo:</strong> {{ selectedFile.nombreArchivo }}</p>
+          <p><strong>Tipo:</strong> {{ getColorText(selectedFile.color) }}</p>
+          <p>
+            <strong>Estado:</strong> 
+            <i [class]="getStatusIcon(selectedFile.estado)"></i>
+            <span [class]="getStatusClass(selectedFile.estado)">{{ selectedFile.estado }}</span>
+          </p>
+          <p><strong>Comentario:</strong> {{ selectedFile.comentarioAdicional || 'Sin comentarios' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,147 @@
+<div class="flex flex-col justify-center items-center w-full gap-8 ">
+  <!-- Toast para mensajes -->
+  <p-toast></p-toast>
+  
+  <!-- Modal de confirmación -->
+  <p-dialog 
+    header="Confirmar solicitud de impresión" 
+    [(visible)]="showConfirmDialog" 
+    [modal]="true" 
+    [draggable]="false" 
+    [resizable]="false"
+    [style]="{width: '450px'}"
+    [closable]="!isSubmitting">
+    
+    <div class="flex flex-col gap-4">
+      <div class="text-gray-700">
+        <p><strong>Archivo:</strong> {{ selectedFile?.name }}</p>
+        <p><strong>Páginas:</strong> {{ totalPages }}</p>
+        <p><strong>Color:</strong> {{ selectedColor.label }}</p>
+        <p><strong>Precio total:</strong> ${{ estimatedPrice }}.00</p>
+      </div>
+      
+      <div class="flex flex-col gap-2">
+        <label for="comentario" class="text-gray-800 text-sm font-medium">Comentario adicional (opcional):</label>
+        <textarea 
+          id="comentario"
+          pInputTextarea 
+          [(ngModel)]="comentarioAdicional" 
+          rows="3" 
+          placeholder="Añade cualquier comentario o instrucción especial..."
+          [disabled]="isSubmitting"
+          class="w-full p-2 border border-gray-300 rounded-md">
+        </textarea>
+      </div>
+    </div>
+    
+    <ng-template pTemplate="footer">
+      <button 
+        pButton 
+        type="button" 
+        label="Cancelar" 
+        class="p-button-text p-button-secondary" 
+        (click)="cancelPrintRequest()"
+        [disabled]="isSubmitting">
+      </button>
+      <button 
+        pButton 
+        type="button" 
+        [label]="isSubmitting ? 'Enviando...' : 'Confirmar solicitud'" 
+        class="p-button p-button-primary" 
+        (click)="confirmPrintRequest()"
+        [disabled]="isSubmitting"
+        [loading]="isSubmitting">
+      </button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Contenedor del formulario -->
+  <div class="w-[500px] min-w-80 p-6 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex flex-col justify-start items-start gap-6">
+      <!-- Componente 1: Dropdown de PrimeNG (Selector de Color) -->
+      <div class="self-stretch flex flex-col justify-start items-start gap-2">
+          <label class="self-stretch text-gray-800 text-base font-normal font-['Inter'] leading-snug">Color de impresión</label>
+          <p-dropdown 
+            [(ngModel)]="selectedColor"
+            [options]="colors"
+            optionLabel="label"
+            placeholder="Selecciona el color"
+            [style]="{'width': '100%', 'min-width': '240px'}"
+            [panelStyle]="{'min-width': '240px'}"
+            [showClear]="false">
+            
+            <!-- Template personalizado para mostrar las opciones -->
+            <ng-template pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2" *ngIf="selectedColor">
+                <span>{{ selectedColor.label }}</span>
+              </div>
+            </ng-template>
+            
+            <ng-template pTemplate="item" let-color>
+              <div class="flex align-items-center gap-2">
+                <span>{{ color.label }}</span>
+                <span class="ml-auto text-sm text-gray-500">
+                  {{ color.value === 'color' ? '$2.00/página' : '$1.00/página' }}
+                </span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+      </div>
+
+      <!-- Componente 2: Uploader de archivo PDF + Botón -->
+      <div class="self-stretch w-full inline-flex justify-start items-start gap-3">
+          <div class="flex-1 inline-flex flex-col justify-start items-start gap-2">
+              <div class="self-stretch min-w-60 px-4 py-3 bg-white rounded-lg outline outline-1 outline-offset-[-0.50px] outline-gray-200 inline-flex justify-start items-center overflow-hidden">
+                  <div class="flex-1 text-gray-700 text-base font-normal font-['Inter'] leading-none">
+                    {{ selectedFile?.name || 'Ningún archivo PDF seleccionado' }}
+                  </div>
+              </div>
+              <!-- Solo acepta archivos PDF -->
+              <input type="file" id="fileInput" class="hidden" (change)="onFileSelected($event)" accept=".pdf,application/pdf">
+          </div>
+          <label for="fileInput" class="p-3 bg-black rounded-lg outline outline-1 outline-offset-[-1px] outline-black flex justify-center items-center gap-2 overflow-hidden cursor-pointer">
+              <div class="text-white text-base font-normal font-['Inter'] leading-none">Subir PDF</div>
+          </label>
+      </div>
+
+      <!-- Componente 3: Precio estimado -->
+      <div class="self-stretch w-full flex flex-col gap-3">
+          <!-- Indicador de precio -->
+          <div class="self-stretch p-3 bg-gray-50 rounded-lg border border-gray-200 flex justify-between items-center">
+              <div class="text-gray-800 text-base font-normal font-['Inter'] leading-none">Precio estimado:</div>
+              <div class="text-black text-lg font-semibold font-['Inter'] leading-none">
+                @if (estimatedPrice > 0) {
+                  ${{ estimatedPrice }}.00
+                } @else {
+                  $0.00
+                }
+              </div>
+          </div>
+          
+          <!-- Información adicional del precio -->
+          @if (selectedFile) {
+            <div class="self-stretch text-gray-600 text-sm font-normal font-['Inter'] leading-tight">
+              {{ totalPages }} página{{ totalPages !== 1 ? 's' : '' }} × ${{ pricePerPage }}.00 ({{ selectedColor.label }}) = ${{ estimatedPrice }}.00
+            </div>
+          }
+      </div>
+
+      <!-- Componente 4: Botones de acción -->
+      <div class="self-stretch w-full inline-flex justify-start items-center gap-4">
+          <button (click)="cancelPreview()" class="flex-1 p-3 rounded-lg flex justify-center items-center gap-2 overflow-hidden">
+              <div class="text-gray-700 text-base font-normal font-['Inter'] leading-none">Cancelar</div>
+          </button>
+          <button [disabled]="!selectedFile || estimatedPrice === 0" 
+                  (click)="proceedWithPrint()" 
+                  [class]="selectedFile && estimatedPrice > 0 ? 'flex-1 p-3 bg-black rounded-lg outline outline-1 outline-offset-[-1px] outline-black flex justify-center items-center gap-2 overflow-hidden' : 'flex-1 p-3 bg-gray-400 rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-400 flex justify-center items-center gap-2 overflow-hidden cursor-not-allowed'">
+              <div [class]="selectedFile && estimatedPrice > 0 ? 'text-white text-base font-normal font-[Inter] leading-none' : 'text-gray-200 text-base font-normal font-[Inter] leading-none'">
+                Solicitar impresión
+              </div>
+          </button>
+      </div>
+  </div>
+  
+  <!-- Componente de previsualización siempre visible -->
+  <div class="w-full">
+    <app-preview [file]="selectedFile" [selectedColor]="selectedColor.value"></app-preview>
+  </div>
+</div>
