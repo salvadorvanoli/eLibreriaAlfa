@@ -44,4 +44,13 @@ public class Categoria {
         categoriaNodoDto.setProductos(productos);
         return categoriaNodoDto;
     }
+
+    public List<Long> getIdsCategoriasHijas() {
+        List<Long> idsHijas = new ArrayList<>();
+        idsHijas.add(this.id);
+        for (Categoria hijo : this.hijos) {
+            idsHijas.addAll(hijo.getIdsCategoriasHijas());
+        }
+        return idsHijas;
+    }
 }

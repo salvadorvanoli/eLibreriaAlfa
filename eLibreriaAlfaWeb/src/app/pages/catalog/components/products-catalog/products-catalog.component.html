@@ -6,18 +6,12 @@
     [paginator]="products && products.length > 0"
     [rowsPerPageOptions]="rowsPerPageOptions"
     (onPage)="onPageChange($event)"
-    [sortField]="sortField"
-    [sortOrder]="sortOrder"
     emptyMessage=" "
 >
     <ng-template #header>
         <div class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <app-search-bar (textValue)="searchTextChange.emit($event)" />
-            <p-dropdown
-                [options]="sortOptions"
-                placeholder="Ordenar por precio"
-                (onChange)="onSortChange($event)"
-            />
+            <app-form-select-input [options]="sortByPriceOptions" placeholder="Ordenar por precio" (textValue)="sortChange.emit($event)" />
             <div class="flex justify-end sm:col-span-2 md:col-span-1">
                 <p-selectbutton [(ngModel)]="layout" [options]="options" [allowEmpty]="false">
                     <ng-template #item let-item>

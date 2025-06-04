@@ -85,6 +85,30 @@ public class SeguridadService {
         response.addHeader(HttpHeaders.SET_COOKIE, deleteTokenCookie.toString());
     }
 
+    public boolean isCurrentUserAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return false;
+        }
+
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(authority -> authority.equals("ADMINISTRADOR"));
+    }
+
+    public boolean hasRole(String rol) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return false;
+        }
+
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(authority -> authority.equals(rol));
+    }
+
     private String getRolByUsuario(Usuario usuario) {
         return usuario.getRol().name();
     }

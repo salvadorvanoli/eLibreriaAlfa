@@ -2,39 +2,30 @@ package ti.elibreriaalfa.dtos.usuario;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ti.elibreriaalfa.business.entities.Rol;
 import ti.elibreriaalfa.business.entities.Usuario;
-import ti.elibreriaalfa.dtos.comentario.ComentarioDto;
-import ti.elibreriaalfa.dtos.encargue.EncargueDto;
-import ti.elibreriaalfa.dtos.impresion.ImpresionDto;
-
-import java.util.List;
+import ti.elibreriaalfa.business.entities.Rol;
 
 @Data
 @NoArgsConstructor
 public class UsuarioDto {
     private Long id;
-
     private String email;
-
+    private String contrasenia;
+    private String nombre;
+    private String apellido;
+    private String telefono;
     private Rol rol;
 
-    private String contrasenia;
+    public Usuario mapToEntity() {
+        Usuario usuario = new Usuario();
 
-    private String nombre;
+        usuario.setEmail(email);
+        usuario.setContrasenia(contrasenia);
+        usuario.setNombre(nombre);
+        usuario.setApellido(apellido);
+        usuario.setTelefono(telefono);
+        usuario.setRol(this.rol);
 
-    private String apellido;
-
-    private String telefono;
-
-    private List<ComentarioDto> comentarios;
-
-    private List<ImpresionDto> impresiones;
-
-    private List<EncargueDto> encargues;
-
-    public UsuarioDto(Usuario usuario) {
-        this.id = usuario.getId();
-        this.nombre = usuario.getNombre();
+        return usuario;
     }
 }

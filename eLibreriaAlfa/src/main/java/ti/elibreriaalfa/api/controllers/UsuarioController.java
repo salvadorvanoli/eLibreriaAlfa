@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ti.elibreriaalfa.dtos.usuario.AccesoUsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.ModificarPerfilUsuarioDto;
+import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
 import ti.elibreriaalfa.services.UsuarioService;
 
 @RestController
@@ -23,6 +24,21 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioService.getAllUsuarios(), HttpStatus.OK);
     }
 
+    @GetMapping("/elements")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<Object> getElements() {
+        return new ResponseEntity<>(usuarioService.getElements(), HttpStatus.OK);
+    }
+
+    @GetMapping("/filteredElements")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<Object> getElementsFiltrados(
+            @RequestParam(name = "textoBusqueda", required = false) String textoBusqueda,
+            @RequestParam(name = "orden", required = false) String orden
+    ) {
+        return new ResponseEntity<>(usuarioService.getElementsFiltrados(textoBusqueda, orden), HttpStatus.OK);
+    }
+
     @GetMapping("/page")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Object> getUsuariosPage(@RequestParam(name = "pagina") Integer pagina,
@@ -36,26 +52,23 @@ public class UsuarioController {
         return new ResponseEntity<>(usuarioService.getUsuarioByEmail(usuarioEmail), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<Object> registerUsuario(@RequestBody AccesoUsuarioDto usuario) {
         return new ResponseEntity<>(usuarioService.registerUsuario(usuario), HttpStatus.CREATED);
     }
 
-    /*
-    @PostMapping("/employee")
+    @PostMapping()
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<Object> registerUsuarioEmpleado(@RequestBody AccesoUsuarioDto usuario) {
-        // try {
-        return new ResponseEntity<>(usuarioService.registerUsuarioEmpleado(usuario), HttpStatus.CREATED);
-        /*} catch (UsuarioBadRequestException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (UsuarioException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Algo ha salido mal", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<Object> createUsuario(@RequestBody UsuarioDto usuario) {
+        return new ResponseEntity<>(usuarioService.createUsuario(usuario), HttpStatus.CREATED);
     }
-    */
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<Object> modifyUsuario(@RequestBody UsuarioDto usuario) {
+        return new ResponseEntity<>(usuarioService.createUsuario(usuario), HttpStatus.CREATED);
+    }
+
 
     @PatchMapping("/{usuarioEmail}/profile")
     public ResponseEntity<Object> patchPerfilUsuario(@PathVariable (name = "usuarioEmail") String usuarioEmail,

@@ -46,4 +46,11 @@ export class FormSelectInputComponent {
     this.isInputInvalid.emit(isInvalid);
     return isInvalid;
   }
+
+  reset() {
+    this.value.set('');
+    this.selectedValue = null;
+    this.textValue.emit('');
+    this.isInputInvalid.emit(false);
+  }
 }

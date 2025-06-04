@@ -50,7 +50,7 @@
 </div>
 
 <!-- Modal -->
-<app-modal [visible]="modalVisible" (closed)="modalVisible = false">
+<app-modal [visible]="modalVisible" classes="mx-5" actionClasses="self-stretch flex justify-end items-center gap-4 mt-6" [style]="{ width: '466px', maxWidth: '600px' }" (closed)="modalVisible = false">
     <div modal-title>Producto agregado a su pedido</div>
     <div modal-action>
         <button 

@@ -7,16 +7,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ti.elibreriaalfa.api.responses.producto.ResponseListadoProductos;
 import ti.elibreriaalfa.business.entities.Categoria;
 import ti.elibreriaalfa.business.entities.Producto;
 import ti.elibreriaalfa.business.repositories.CategoriaRepository;
 import ti.elibreriaalfa.business.repositories.ProductoRepository;
 import ti.elibreriaalfa.dtos.categoria.CategoriaSimpleDto;
+import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
 import ti.elibreriaalfa.dtos.producto.ProductoDto;
 import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
 
+import org.springframework.data.jpa.domain.Specification;
+import jakarta.persistence.criteria.Join;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,17 +41,77 @@ public class ProductoService {
         return productoRepository.findAll().stream().map(Producto::mapToDtoSimple).collect(Collectors.toList());
     }
 
-    /*
-    public ResponseListadoProductos listadoProductos() {
-        ResponseListadoProductos responseListadoProductos = new ResponseListadoProductos();
+    public List<ProductoSimpleDto> getProductosFiltrados(Long idCategoria, String textoBusqueda, String orden) {
+        Specification<Producto> spec = Specification.where(null);
 
-        responseListadoProductos.setProductos(productoRepository.findAll().stream()
-                .map(this::mapToDto).toList());
+        if (idCategoria != null && idCategoria > 0) {
+            try {
+                List<Long> categoriaIds = getCategoriasHijas(idCategoria);
+                spec = spec.and((root, query, cb) -> {
+                    Join<Producto, Categoria> categoriaJoin = root.join("categorias");
+                    return categoriaJoin.get("id").in(categoriaIds);
+                });
+            } catch (RuntimeException e) {
+                log.warn("Categoría no encontrada con ID: {}", idCategoria);
+            }
+        }
 
-        return responseListadoProductos;
+        if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
+            String busqueda = "%" + textoBusqueda.toLowerCase().trim() + "%";
+            spec = spec.and((root, query, cb) -> cb.or(
+                    cb.like(cb.lower(root.get("nombre")), busqueda),
+                    cb.like(cb.lower(root.get("descripcion")), busqueda)
+            ));
+        }
+
+        Sort sort = Sort.unsorted();
+        if (orden != null && !orden.trim().isEmpty()) {
+            sort = switch (orden.toLowerCase()) {
+                case "asc" -> Sort.by(Sort.Direction.ASC, "precio");
+                case "desc" -> Sort.by(Sort.Direction.DESC, "precio");
+                default -> sort;
+            };
+        }
+
+        List<Producto> productos = productoRepository.findAll(spec, sort);
+
+        return productos.stream()
+                .map(Producto::mapToDtoSimple)
+                .collect(Collectors.toList());
     }
 
-     */
+    public List<ElementoListaDto> getElements() {
+        return productoRepository.findAll().stream()
+                .map(Producto::mapToElementoListaDto)
+                .toList();
+    }
+
+    public List<ElementoListaDto> getElementsFiltrados(String textoBusqueda, String orden) {
+        Specification<Producto> spec = Specification.where(null);
+
+        if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
+            String busqueda = "%" + textoBusqueda.toLowerCase().trim() + "%";
+            spec = spec.and((root, query, cb) -> cb.or(
+                    cb.like(cb.lower(root.get("nombre")), busqueda),
+                    cb.like(cb.lower(root.get("descripcion")), busqueda)
+            ));
+        }
+
+        Sort sort = Sort.unsorted();
+        if (orden != null && !orden.trim().isEmpty()) {
+            sort = switch (orden.toLowerCase()) {
+                case "asc" -> Sort.by(Sort.Direction.ASC, "id");
+                case "desc" -> Sort.by(Sort.Direction.DESC, "id");
+                default -> sort;
+            };
+        }
+
+        List<Producto> productos = productoRepository.findAll(spec, sort);
+
+        return productos.stream()
+                .map(Producto::mapToElementoListaDto)
+                .toList();
+    }
 
     public ProductoDto obtenerProductoPorId(Long id) {
         Producto producto = productoRepository.findById(id)
@@ -158,4 +222,11 @@ public class ProductoService {
         return new ProductoDto(producto);
     }
 
+    private List<Long> getCategoriasHijas(Long idCategoria) {
+        Categoria categoria = categoriaRepository.findById(idCategoria)
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + idCategoria));
+        return categoria.getIdsCategoriasHijas();
+    }
+
 }
+

@@ -2,7 +2,6 @@ package ti.elibreriaalfa.dtos.impresion;
 
 import lombok.Data;
 import ti.elibreriaalfa.business.entities.Impresion;
-import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
 
 @Data
@@ -20,7 +19,7 @@ public class ImpresionDto {
 
     private UsuarioSimpleDto usuario;
 
-    public Impresion maptoEntity() {
+    public Impresion mapToEntity() {
         Impresion impresion = new Impresion();
 
         impresion.setId(this.getId());

@@ -11,6 +11,14 @@
     />
     <label for="float_label">{{ placeholder }}</label>
 </p-floatLabel>
+
 @if (showErrorMessage()) {
-    <p-message class="w-full" severity="error" variant="simple" size="small">{{ errorMessage }}</p-message>
+    <p-message
+        class="w-full"
+        severity="error"
+        variant="simple"
+        size="small"
+    >
+        {{ errorMessage }}
+    </p-message>
 }

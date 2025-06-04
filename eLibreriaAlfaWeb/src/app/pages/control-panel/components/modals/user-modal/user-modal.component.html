@@ -1,0 +1,12 @@
+<app-modal
+    [visible]="visible"
+    [classes]="classes"
+    [style]="style"
+    (closed)="this.onClose.emit()"
+    [breakpoints]="breakpoints"
+>
+    <div modal-title>{{ title }}</div>
+    <div modal-action>
+        <app-user-modal-form class="w-full" />
+    </div>
+</app-modal>

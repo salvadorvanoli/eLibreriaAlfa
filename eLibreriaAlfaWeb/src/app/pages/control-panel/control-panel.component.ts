@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { TitleAndDescriptionComponent } from '../../shared/components/title-and-description/title-and-description.component';
 import { OptionsPanelComponent } from "./components/options-panel/options-panel.component";
 import { DataPanelComponent } from "./components/data-panel/data-panel.component";
+import { UserModalComponent } from './components/modals/user-modal/user-modal.component';
 
 @Component({
   selector: 'app-control-panel',
@@ -9,17 +10,25 @@ import { DataPanelComponent } from "./components/data-panel/data-panel.component
   imports: [
     TitleAndDescriptionComponent,
     OptionsPanelComponent,
-    DataPanelComponent
+    DataPanelComponent,
+    UserModalComponent
   ],
   templateUrl: './control-panel.component.html',
   styleUrl: './control-panel.component.scss'
 })
 export class ControlPanelComponent {
 
-  selectedDataType: string = 'Usuario';
+  modalIsVisible: boolean = false;
+
+  selectedDataType = signal('Usuario');
 
   onDataTypeSelected(dataType: string) {
-    this.selectedDataType = dataType;
+    this.selectedDataType.set(dataType);
+    this.closeModal();
+  }
+
+  closeModal() {
+    this.modalIsVisible = false;
   }
 
 }

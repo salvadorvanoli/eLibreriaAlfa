@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataView } from 'primeng/dataview';
 import { SelectButton } from 'primeng/selectbutton';
+import { FormSelectInputComponent } from '../../../../shared/components/inputs/form-select-input/form-select-input.component';
 import { FormsModule } from "@angular/forms";
 import { DropdownModule } from 'primeng/dropdown';
 import { SelectItem } from 'primeng/api';
@@ -17,6 +18,7 @@ import { Producto } from '../../../../core/models/producto';
     CommonModule,
     DataView,
     SelectButton,
+    FormSelectInputComponent,
     FormsModule,
     DropdownModule,
     SearchBarComponent,
@@ -37,17 +39,15 @@ export class ProductsCatalogComponent {
   first: number = 0;
   rowsPerPageOptions: number[] = [6, 12, 18];
 
-  // Attributes for sorting
-  sortOptions: SelectItem[] = [
-    { label: 'Precio ascendente', value: '!precio' },
-    { label: 'Precio descendente', value: 'precio' },
+  sortByPriceOptions: { label: string, value: string }[] = [
+    { label: 'Precio ascendente', value: 'asc' },
+    { label: 'Precio descendente', value: 'desc' },
   ];
-  sortOrder!: number;
-  sortField!: string;
 
   @Input() products!: Producto[];
 
   @Output() searchTextChange = new EventEmitter<string>();
+  @Output() sortChange = new EventEmitter<string>();
 
   onPageChange(event: any) {
     this.first = event.first;
@@ -57,16 +57,4 @@ export class ProductsCatalogComponent {
   onRowsChange(event: any) {
     this.rows = event.value;
   }
-
-  onSortChange(event: any) {
-    let value = event.value;
-
-    if (value.indexOf('!') === 0) {
-        this.sortOrder = -1;
-        this.sortField = value.substring(1, value.length);
-    } else {
-        this.sortOrder = 1;
-        this.sortField = value;
-    }
-}
 }

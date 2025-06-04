@@ -11,8 +11,13 @@ import { CommonModule } from '@angular/common';
 })
 export class ModalComponent {
     @Input() visible: boolean = false;
+    @Input() style: any = {};
+    @Input() breakpoints: any = {};
+    @Input() classes: string = '';
+    @Input() actionClasses: string = '';
+    
     @Output() closed = new EventEmitter<void>();
-
+    
     close() {
         this.closed.emit();
     }

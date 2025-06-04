@@ -2,10 +2,12 @@ package ti.elibreriaalfa.business.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
 import ti.elibreriaalfa.dtos.usuario.ModificarPerfilUsuarioDto;
-import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
+import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
 
 import java.util.List;
 
@@ -28,8 +30,10 @@ public class Usuario {
     @Column(nullable = false)
     private String contrasenia;
 
+    @Size(min = 1, max = 40, message = "El nombre debe tener entre 1 y 40 caracteres")
     private String nombre;
 
+    @Size(min = 1, max = 40, message = "El apellido debe tener entre 1 y 40 caracteres")
     private String apellido;
 
     private String telefono;
@@ -49,26 +53,6 @@ public class Usuario {
     @JsonBackReference
     private List<Encargue> encargues;
 
-    public UsuarioDto mapToDto() {
-        UsuarioDto usuarioDto = new UsuarioDto();
-        usuarioDto.setId(id);
-        usuarioDto.setEmail(email);
-        usuarioDto.setRol(rol);
-        usuarioDto.setContrasenia(contrasenia);
-        usuarioDto.setNombre(nombre);
-        usuarioDto.setApellido(apellido);
-        usuarioDto.setTelefono(telefono);
-        /*
-        List<ComentarioDto> comentariosDto = comentarios.forEach(comentario -> comentario.mapToDto());
-        usuarioDto.setComentarios(comentariosDto);
-        List<ImpresionDto> impresionesDto = impresiones.forEach(impresion -> impresion.mapToDto());
-        usuarioDto.setImpresiones(impresionesDto);
-        List<EncargueDto> encarguesDto = impresiones.forEach(encargue -> encargue.mapToDto());
-        usuarioDto.setEncargues(encarguesDto);
-        */
-        return usuarioDto;
-    }
-
     public UsuarioSimpleDto mapToDtoSimple() {
         UsuarioSimpleDto usuarioSimpleDto = new UsuarioSimpleDto();
 
@@ -86,5 +70,28 @@ public class Usuario {
         this.nombre = perfilUsuario.getNombre();
         this.apellido = perfilUsuario.getApellido();
         this.telefono = perfilUsuario.getTelefono();
+    }
+
+    public UsuarioDto mapToDto() {
+        UsuarioDto usuarioDto = new UsuarioDto();
+        usuarioDto.setId(this.id);
+        usuarioDto.setEmail(this.email);
+        usuarioDto.setContrasenia(this.contrasenia);
+        usuarioDto.setRol(this.rol);
+        usuarioDto.setNombre(this.nombre);
+        usuarioDto.setApellido(this.apellido);
+        usuarioDto.setTelefono(this.telefono);
+        return usuarioDto;
+    }
+
+    public ElementoListaDto mapToElementoListaDto() {
+        ElementoListaDto elementoListaDto = new ElementoListaDto();
+        elementoListaDto.setId(this.id);
+        elementoListaDto.setTexto1(this.rol.toString());
+        elementoListaDto.setTexto2(this.email);
+        String texto3 = (this.nombre != null && this.apellido != null) ? this.nombre + " " + this.apellido : "Sin nombre completo";
+        elementoListaDto.setTexto3(texto3);
+        elementoListaDto.setTexto4(this.telefono != null ? this.telefono : "Sin teléfono");
+        return elementoListaDto;
     }
 }
