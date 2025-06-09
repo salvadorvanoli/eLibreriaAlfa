@@ -25,7 +25,7 @@ export class OptionsPanelComponent {
     {
       label: 'Categorías',
       icon: 'pi pi-sitemap',
-      command: () => this.sendDataType('Categoria')
+      command: () => this.sendDataType('Categoría')
     },
     {
       label: 'Productos',
@@ -35,7 +35,7 @@ export class OptionsPanelComponent {
     {
       label: 'Publicaciones',
       icon: 'pi pi-book',
-      command: () => this.sendDataType('Publicacion')
+      command: () => this.sendDataType('Publicación')
     },
     {
       label: 'Pedidos',

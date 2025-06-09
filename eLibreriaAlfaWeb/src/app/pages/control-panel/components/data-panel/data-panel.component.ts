@@ -1,4 +1,4 @@
-import { Component, effect, Input, signal, ViewChild } from '@angular/core';
+import { Component, effect, EventEmitter, Input, Output, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
@@ -52,6 +52,8 @@ export class DataPanelComponent {
   @Input() itemType = signal('Usuario');
   @Input() page!: number;
   @Input() size!: number;
+
+  @Output() itemSelected = new EventEmitter<any>();
 
   constructor(
     private messageService: MessageService,
@@ -118,59 +120,18 @@ export class DataPanelComponent {
       this.filterItems();
     }
   }
-  
-  getItemTitle(item: any): string {
-    return this.itemType + " nro. " + item.id;  
-  }
 
-  getItemFirstAttribute(item: any): string {
-    switch (this.itemType()) {
-      case 'Usuario':
-        return item.email;
-      case 'Categoria':
-      case 'Producto':
-        return item.nombre;
-      case 'Publicacion':
-        return item.titulo;
-      // case 'Pedido':
-      //   return item.usuario.nombre;
-      default:
-        return '';
-    }
-  }
-
-  getItemSecondAttribute(item: any): string {
-    switch (this.itemType()) {
-      case 'Usuario':
-        return item.nombre + ' ' + item.apellido;
-      case 'Categoria':
-        return "";
-      case 'Producto':
-        return '$' + item.precio;
-      case 'Publicacion':
-        return item.titulo;
-      // case 'Pedido':
-      //   return item.usuario.nombre;
-      default:
-        return '';
-    }
-  }
-
-  getItemImage(item: any): string {
-    switch (this.itemType()) {
-      case 'Usuario':
-      case 'Categoria':
-      // case 'Pedido':
-        return ""
-      case 'Producto':
-        return item.imagenes ? item.imagenes[0] : '';
-      case 'Publicacion':
-        return item.imagen ? item.imagen : '';
-      // case 'Pedido':
-      //   return item.usuario.nombre;
-      default:
-        return '';
-    }
+  sendDetails(item: ElementoLista) {
+    const id = this.itemType() === 'Usuario' ? item.texto2 : item.id;
+    this.controlPanelService.getElementByTypeAndId(this.itemType(), id)?.subscribe({
+      next: (response: any) => {
+        this.itemSelected.emit(response);
+      },
+      error: (error: any) => {
+        this.messageService.clear();
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: "No se pudo obtener el elemento seleccionado", life: 4000 });
+      }
+    });
   }
 
   onPageChange(event: any) {

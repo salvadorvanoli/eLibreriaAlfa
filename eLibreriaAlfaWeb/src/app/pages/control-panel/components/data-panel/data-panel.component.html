@@ -24,6 +24,7 @@
                 <app-item-row
                     [item]="item"
                     [first]="first"
+                    (details)="sendDetails($event)"
                 />
             </div>
         </ng-template>

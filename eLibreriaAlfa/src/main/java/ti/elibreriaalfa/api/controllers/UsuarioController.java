@@ -65,8 +65,11 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<Object> modifyUsuario(@RequestBody UsuarioDto usuario) {
-        return new ResponseEntity<>(usuarioService.createUsuario(usuario), HttpStatus.CREATED);
+    public ResponseEntity<Object> modifyUsuario(
+            @PathVariable(name = "id") Long id,
+            @RequestBody UsuarioDto usuario
+    ) {
+        return new ResponseEntity<>(usuarioService.modifyUsuario(id, usuario), HttpStatus.OK);
     }
 
 

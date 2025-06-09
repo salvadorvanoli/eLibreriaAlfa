@@ -18,22 +18,19 @@ import { Message } from 'primeng/message';
   styleUrls: ['./form-select-input.component.scss']
 })
 export class FormSelectInputComponent {
+
+  value: string | null = '';
+
   @Input() options: { label: string, value: any }[] = [];
   @Input() placeholder: string = '';
-  @Input() selectedValue: any;
   @Input() errorMessage: string = "";
   @Input() formSubmitted = signal(false);
 
   @Output() textValue = new EventEmitter<string>();
   @Output() isInputInvalid = new EventEmitter<boolean>();
 
-  value = signal('');
-
-  onValueChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    const value: string = target.value;
-    this.value.set(value);
-    this.textValue.emit(value);
+  onValueChange(event: any) {
+    this.textValue.emit(event);
     this.validateText();
   }
 
@@ -42,14 +39,18 @@ export class FormSelectInputComponent {
   });
 
   validateText() {
-    const isInvalid = !this.value() || this.value() === '';
+    const isInvalid = !this.value || this.value === '';
     this.isInputInvalid.emit(isInvalid);
     return isInvalid;
   }
 
+  setValue(value: string) {
+    this.value = value;
+    this.textValue.emit(value);
+  }
+
   reset() {
-    this.value.set('');
-    this.selectedValue = null;
+    this.value = '';
     this.textValue.emit('');
     this.isInputInvalid.emit(false);
   }

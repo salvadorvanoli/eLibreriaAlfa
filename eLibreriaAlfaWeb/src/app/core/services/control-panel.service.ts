@@ -22,11 +22,11 @@ export class ControlPanelService {
     switch(type) {
       case 'Usuario':
         return this.userService.getElements();
-      case 'Categoria':
+      case 'Categoría':
         return this.categoryService.getElements();
       case 'Producto':
         return this.productService.getElements();
-      case 'Publicacion':
+      case 'Publicación':
         return this.publicationService.getElements();
       //case 'Pedido':
         //return this.orderService.getElements();
@@ -39,11 +39,11 @@ export class ControlPanelService {
     switch(type) {
       case 'Usuario':
         return this.userService.getFiltered(searchText, order);
-      case 'Categoria':
+      case 'Categoría':
         return this.categoryService.getFiltered(searchText, order);
       case 'Producto':
         return this.productService.getFiltered(searchText, order);
-      case 'Publicacion':
+      case 'Publicación':
         return this.publicationService.getFiltered(searchText, order);
       //case 'Pedido':
         //return this.orderService.getFiltered(searchText, order);
@@ -56,11 +56,11 @@ export class ControlPanelService {
     switch(type) {
       case 'Usuario':
         return this.userService.getUserByEmail(id);
-      case 'Categoria':
+      case 'Categoría':
         return this.categoryService.getById(id);
       case 'Producto':
         return this.productService.getById(id);
-      case 'Publicacion':
+      case 'Publicación':
         return this.publicationService.getById(id);
       //case 'Pedido':
         //return this.orderService.getById(id);

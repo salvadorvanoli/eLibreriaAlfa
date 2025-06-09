@@ -1,8 +1,8 @@
 <p-floatLabel variant="on" class="w-full">
     <input
         pInputText
-        [ngModel]="text()"
-        (ngModelChange)="text.set($event); textValue.emit($event);"
+        [(ngModel)]="text"
+        (ngModelChange)="onTextChange($event);"
         [ngModelOptions]="{standalone: true}"
         type="text"
         id="float_label"

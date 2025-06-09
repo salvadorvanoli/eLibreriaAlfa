@@ -8,6 +8,7 @@ import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
 import ti.elibreriaalfa.dtos.usuario.ModificarPerfilUsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
+import ti.elibreriaalfa.utils.Constants;
 
 import java.util.List;
 
@@ -30,10 +31,10 @@ public class Usuario {
     @Column(nullable = false)
     private String contrasenia;
 
-    @Size(min = 1, max = 40, message = "El nombre debe tener entre 1 y 40 caracteres")
+    @Size(min = Constants.MIN_NOMBRE_LENGTH, max = Constants.MAX_NOMBRE_LENGTH, message = "El nombre debe tener entre " + Constants.MIN_NOMBRE_LENGTH + " y " + Constants.MAX_NOMBRE_LENGTH + " caracteres")
     private String nombre;
 
-    @Size(min = 1, max = 40, message = "El apellido debe tener entre 1 y 40 caracteres")
+    @Size(min = Constants.MIN_NOMBRE_LENGTH, max = Constants.MAX_NOMBRE_LENGTH, message = "El apellido debe tener entre " + Constants.MIN_NOMBRE_LENGTH + " y " + Constants.MAX_NOMBRE_LENGTH + " caracteres")
     private String apellido;
 
     private String telefono;
@@ -72,16 +73,12 @@ public class Usuario {
         this.telefono = perfilUsuario.getTelefono();
     }
 
-    public UsuarioDto mapToDto() {
-        UsuarioDto usuarioDto = new UsuarioDto();
-        usuarioDto.setId(this.id);
-        usuarioDto.setEmail(this.email);
-        usuarioDto.setContrasenia(this.contrasenia);
-        usuarioDto.setRol(this.rol);
-        usuarioDto.setNombre(this.nombre);
-        usuarioDto.setApellido(this.apellido);
-        usuarioDto.setTelefono(this.telefono);
-        return usuarioDto;
+    public void setDatosUsuario(UsuarioDto usuarioDto) {
+        this.email = usuarioDto.getEmail();
+        this.nombre = usuarioDto.getNombre();
+        this.apellido = usuarioDto.getApellido();
+        this.telefono = usuarioDto.getTelefono();
+        this.rol = usuarioDto.getRol();
     }
 
     public ElementoListaDto mapToElementoListaDto() {

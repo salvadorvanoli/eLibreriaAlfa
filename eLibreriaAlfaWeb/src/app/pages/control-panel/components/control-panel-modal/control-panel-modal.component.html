@@ -1,0 +1,23 @@
+<app-modal
+    [visible]="visible"
+    [classes]="classes"
+    [style]="style"
+    (closed)="this.onClose.emit()"
+    [breakpoints]="breakpoints"
+>
+    <div modal-title>{{ title }}</div>
+    <div modal-action>
+        @if (dataType === 'Usuario') {
+            <app-user-form class="w-full" [user]="item" />
+        }
+        <!-- @else if (dataType === 'Categoría') {
+            <app-category-form class="w-full" />
+        } @else if (dataType === 'Producto') {
+            <app-product-form class="w-full" />
+        } @else if (dataType === 'Publicación') {
+            <app-publication-form class="w-full" />
+        } @else if (dataType === 'Pedido') {
+            <app-order-form class="w-full" />
+        } -->
+    </div>
+</app-modal>

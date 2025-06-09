@@ -4,15 +4,17 @@
         <app-options-panel (dataType)="onDataTypeSelected($event)" (modalIsVisible)="modalIsVisible = $event" />
     </div>
     <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
-        <app-data-panel [itemType]="selectedDataType" />
+        <app-data-panel [itemType]="selectedDataType" (itemSelected)="onItemSelected($event)" />
     </div>
 </div>
 
 
-<app-user-modal
-    [visible]="modalIsVisible && selectedDataType() === 'Usuario'"
+<app-control-panel-modal
+    [visible]="modalIsVisible"
+    [dataType]="selectedDataType()"
+    [item]="selectedItem"
     (onClose)="closeModal()"
-    title="Crea un usuario"
+    [title]="this.selectedItem ? 'Editar ' + selectedDataType() : 'Crear ' + selectedDataType()"
     classes="mx-5 w-150"
 />
 

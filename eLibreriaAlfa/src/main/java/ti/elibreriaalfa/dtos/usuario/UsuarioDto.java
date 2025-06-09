@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ti.elibreriaalfa.business.entities.Usuario;
 import ti.elibreriaalfa.business.entities.Rol;
+import ti.elibreriaalfa.exceptions.usuario.UsuarioException;
+import ti.elibreriaalfa.utils.Constants;
 
 @Data
 @NoArgsConstructor
@@ -27,5 +29,27 @@ public class UsuarioDto {
         usuario.setRol(this.rol);
 
         return usuario;
+    }
+
+    public void validateUsuarioDto() {
+        if (this.email == null || this.email.isBlank()) {
+            throw new UsuarioException(Constants.ERROR_EMAIL_VACIO);
+        } else if (!this.email.matches(Constants.EMAIL_REGEX)) {
+            throw new UsuarioException(Constants.ERROR_EMAIL_FORMATO);
+        }
+
+        if (this.contrasenia == null || this.contrasenia.isBlank() || this.contrasenia.length() < Constants.MIN_CONTRASENIA_LENGTH) {
+            throw new UsuarioException(Constants.ERROR_CONTRASENIA_LENGTH);
+        }
+
+        if (this.rol == null) {
+            throw new UsuarioException(Constants.ERROR_ROL_NULO);
+        }
+
+        if (this.telefono == null || this.telefono.isBlank()) {
+            throw new UsuarioException(Constants.ERROR_TELEFONO_VACIO);
+        } else if (!this.telefono.matches(Constants.TELEFONO_REGEX)) {
+            throw new UsuarioException(Constants.ERROR_TELEFONO_FORMATO);
+        }
     }
 }

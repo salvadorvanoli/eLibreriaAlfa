@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Tag } from 'primeng/tag';
@@ -21,5 +21,7 @@ export class ItemRowComponent {
 
   @Input() item!: ElementoLista;
   @Input() first!: boolean;
+
+  @Output() details = new EventEmitter<ElementoLista>();
 
 }

@@ -17,10 +17,9 @@ import ti.elibreriaalfa.dtos.usuario.AccesoUsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.ModificarPerfilUsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
-import ti.elibreriaalfa.exceptions.usuario.UsuarioException;
 import ti.elibreriaalfa.exceptions.usuario.UsuarioNoEncontradoException;
 import ti.elibreriaalfa.exceptions.usuario.UsuarioYaExisteException;
-import ti.elibreriaalfa.security.SeguridadService;
+import ti.elibreriaalfa.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +30,11 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final EncargueRepository encargueRepository;
-    private final SeguridadService seguridadService;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, EncargueRepository encargueRepository, SeguridadService seguridadService) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, EncargueRepository encargueRepository) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.encargueRepository = encargueRepository;
-        this.seguridadService = seguridadService;
     }
 
     public List<UsuarioSimpleDto> getAllUsuarios() {
@@ -87,20 +84,18 @@ public class UsuarioService {
         return usuarioRepository.findAll(pageRequest.withSort(sort)).map(Usuario::mapToDtoSimple);
     }
 
-    public Object getUsuarioByEmail(String usuarioEmail) {
+    public UsuarioSimpleDto getUsuarioByEmail(String usuarioEmail) {
         Usuario usuario = getUsuarioEntityByEmail(usuarioEmail);
-        return this.seguridadService.isCurrentUserAdmin()
-                ? usuario.mapToDto()
-                : usuario.mapToDtoSimple();
+        return usuario.mapToDtoSimple();
     }
 
     public UsuarioSimpleDto registerUsuario(AccesoUsuarioDto usuario) {
-        validateRegistroUsuarioDto(usuario);
+        usuario.validateAccesoUsuarioDto();
 
         Usuario nuevoUsuario = usuario.mapToEntity();
 
         if (usuarioRepository.existsByEmail(usuario.getEmail()))
-            throw new UsuarioYaExisteException("El correo electrónico ya está registrado");
+            throw new UsuarioYaExisteException(Constants.ERROR_EMAIL_YA_EXISTE);
 
         String contraseniaEncriptada = passwordEncoder.encode(nuevoUsuario.getContrasenia());
         nuevoUsuario.setContrasenia(contraseniaEncriptada);
@@ -111,7 +106,7 @@ public class UsuarioService {
         nuevoEncargue.setUsuario(nuevoUsuario);
         nuevoEncargue.setEstado(Encargue_Estado.EN_CREACION);
         nuevoEncargue.setProductos(new ArrayList<>());
-        nuevoEncargue.setTotal(0f);
+        nuevoEncargue.setTotal(Constants.ENCARGUE_INICIAL_TOTAL);
         nuevoEncargue.setFecha(null);
 
         encargueRepository.save(nuevoEncargue);
@@ -120,10 +115,10 @@ public class UsuarioService {
     }
 
     public UsuarioSimpleDto createUsuario(UsuarioDto usuarioDto) {
-        validateUsuarioCompletoDto(usuarioDto);
+        usuarioDto.validateUsuarioDto();
 
         if (usuarioRepository.existsByEmail(usuarioDto.getEmail()))
-            throw new UsuarioYaExisteException("El correo electrónico ya está registrado");
+            throw new UsuarioYaExisteException(Constants.ERROR_EMAIL_YA_EXISTE);
 
         Usuario nuevoUsuario = usuarioDto.mapToEntity();
         String contraseniaEncriptada = passwordEncoder.encode(nuevoUsuario.getContrasenia());
@@ -135,12 +130,30 @@ public class UsuarioService {
         nuevoEncargue.setUsuario(nuevoUsuario);
         nuevoEncargue.setEstado(Encargue_Estado.EN_CREACION);
         nuevoEncargue.setProductos(new ArrayList<>());
-        nuevoEncargue.setTotal(0f);
+        nuevoEncargue.setTotal(Constants.ENCARGUE_INICIAL_TOTAL);
         nuevoEncargue.setFecha(null);
 
         encargueRepository.save(nuevoEncargue);
 
         return nuevoUsuario.mapToDtoSimple();
+    }
+
+    public UsuarioSimpleDto modifyUsuario(Long id, UsuarioDto usuarioDto) {
+        usuarioDto.validateUsuarioDto();
+
+        Usuario usuarioExistente = getUsuarioEntityById(id);
+
+        if (!usuarioExistente.getEmail().equals(usuarioDto.getEmail()) && usuarioRepository.existsByEmail(usuarioDto.getEmail())) {
+            throw new UsuarioYaExisteException(Constants.ERROR_EMAIL_YA_EXISTE);
+        }
+
+        usuarioExistente.setDatosUsuario(usuarioDto);
+        String contraseniaEncriptada = passwordEncoder.encode(usuarioDto.getContrasenia());
+        usuarioExistente.setContrasenia(contraseniaEncriptada);
+
+        usuarioRepository.save(usuarioExistente);
+
+        return usuarioExistente.mapToDtoSimple();
     }
 
     public UsuarioSimpleDto patchPerfilUsuario(String usuarioEmail, ModificarPerfilUsuarioDto perfilUsuario) {
@@ -154,7 +167,7 @@ public class UsuarioService {
 
     private Usuario getUsuarioEntityById(Long usuarioId) throws UsuarioNoEncontradoException {
         return usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new IllegalArgumentException("No existe un usuario con el ID especificado"));
+                .orElseThrow(() -> new UsuarioNoEncontradoException(Constants.ERROR_USUARIO_NO_ENCONTRADO_ID));
     }
 
     private Usuario getUsuarioEntityByEmail(String email) throws UsuarioNoEncontradoException {
@@ -162,41 +175,6 @@ public class UsuarioService {
         if (usuario != null)
             return usuario;
         else
-            throw new UsuarioNoEncontradoException("No existe un usuario con ese correo electrónico");
+            throw new UsuarioNoEncontradoException(Constants.ERROR_USUARIO_NO_ENCONTRADO_EMAIL);
     }
-
-    private void validateRegistroUsuarioDto(AccesoUsuarioDto usuario) {
-        if (usuario.getEmail() == null || usuario.getEmail().isBlank()) {
-            throw new UsuarioException("El correo electrónico no puede estar vacío");
-        }
-        if (usuario.getContrasenia() == null || usuario.getContrasenia().length() < 6) {
-            throw new UsuarioException("La contraseña debe tener al menos 6 caracteres");
-        }
-    }
-
-    private void validateUsuarioCompletoDto(UsuarioDto usuarioDto) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        String telefonoRegex = "^(09[0-9]{7}|9[0-9]{7})$";
-
-        if (usuarioDto.getEmail() == null || usuarioDto.getEmail().isBlank()) {
-            throw new UsuarioException("El correo electrónico no puede estar vacío");
-        } else if (!usuarioDto.getEmail().matches(emailRegex)) {
-            throw new UsuarioException("El formato del correo electrónico no es válido");
-        }
-
-        if (usuarioDto.getContrasenia() == null || usuarioDto.getContrasenia().isBlank() || usuarioDto.getContrasenia().length() < 6) {
-            throw new UsuarioException("La contraseña debe tener al menos 6 caracteres");
-        }
-
-        if (usuarioDto.getRol() == null) {
-            throw new UsuarioException("El rol no puede ser nulo");
-        }
-
-        if (usuarioDto.getTelefono() == null || usuarioDto.getTelefono().isBlank()) {
-            throw new UsuarioException("El número de teléfono no puede estar vacío");
-        } else if (!usuarioDto.getTelefono().matches(telefonoRegex)) {
-            throw new UsuarioException("El formato del teléfono no es válido. Debe ser de 9 dígitos y empezar por 09, o de 8 dígitos y empezar por 9");
-        }
-    }
-
 }
