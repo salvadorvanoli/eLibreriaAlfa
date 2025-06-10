@@ -1,11 +1,13 @@
 <div class="card flex justify-center">
-    <p-dialog 
+    <p-dialog
+        [styleClass]="classes"
         [(visible)]="visible"
         [modal]="true"
         [closable]="false"
-        [style]="{ width: '466px', maxWidth: '600px' }"
+        [style]="style"
         [contentStyle]="{ padding: '0' }"
         [baseZIndex]="10000"
+        [breakpoints]="breakpoints"
         [draggable]="false"
         [resizable]="false"
         [showHeader]="false"
@@ -24,7 +26,7 @@
             </div>
             
             <!-- Botón de acción -->
-            <div class="self-stretch flex justify-end items-center gap-4 mt-6">
+            <div [class]="actionClasses">
                 <ng-content select="[modal-action]"></ng-content>
             </div>
             

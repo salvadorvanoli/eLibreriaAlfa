@@ -1,9 +1,85 @@
-<app-title-and-description title="Panel de control" description="Gestiona los datos de la aplicación" />
-<div class="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+<app-title-and-description [center]="true" title="Panel de control" description="Gestiona los datos de la aplicación" />
+<div class="p-4 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
     <div class="col-span-1">
-        <app-options-panel (dataType)="selectedDataType = $event" />
+        <app-options-panel (dataType)="onDataTypeSelected($event)" (modalIsVisible)="modalIsVisible = $event" />
     </div>
-    <div class="col-span-1 md:col-span-2 lg:col-span-3">
-        <app-data-panel [itemType]="selectedDataType" />
+    <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
+        <app-data-panel [itemType]="selectedDataType" (itemSelected)="onItemSelected($event)" />
     </div>
 </div>
+
+
+<app-control-panel-modal
+    [visible]="modalIsVisible"
+    [dataType]="selectedDataType()"
+    [item]="selectedItem"
+    (onClose)="closeModal()"
+    [title]="this.selectedItem ? 'Editar ' + selectedDataType() : 'Crear ' + selectedDataType()"
+    classes="mx-5 w-150"
+/>
+
+<!--
+
+<app-category-modal
+    [visible]="modalIsVisible && selectedDataType() === 'Categoria'"
+    (onClose)="closeModal()"
+/>
+
+<app-product-modal
+    [visible]="modalIsVisible && selectedDataType() === 'Producto'"
+    (onClose)="closeModal()"
+/>
+
+<app-publication-modal
+    [visible]="modalIsVisible && selectedDataType() === 'Publicacion'"
+    (onClose)="closeModal()"
+/>
+
+<app-order-modal
+    [visible]="modalIsVisible && selectedDataType() === 'Pedido'"
+    (onClose)="closeModal()"
+/>
+
+-->
+
+<!--
+
+@if (modalIsVisible) {
+    @if (selectedDataType() === 'Usuario') {
+        <app-user-modal
+            [visible]="modalVisible"
+            (onClose)="closeModal()"
+        />
+    }
+
+    @if (selectedDataType() === 'Categoria') {
+        <app-category-modal
+            [visible]="modalVisible"
+            (onClose)="closeModal()"
+        />
+    }
+
+    @if (selectedDataType() === 'Producto') {
+        <app-product-modal
+            [visible]="modalVisible"
+            (onClose)="closeModal()"
+        />
+    }
+
+    @if (selectedDataType() === 'Publicacion') {
+        <app-publication-modal
+            [visible]="modalVisible"
+            (onClose)="closeModal()"
+        />
+    }
+
+    @if (selectedDataType() === 'Pedido') {
+        <app-order-modal
+            [visible]="modalVisible"
+            (onClose)="closeModal()"
+        />
+    }
+
+}
+
+-->

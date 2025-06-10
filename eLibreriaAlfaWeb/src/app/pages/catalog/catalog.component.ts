@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { Toast } from 'primeng/toast';
 import { CategoryTreeComponent } from '../../shared/components/category-tree/category-tree.component';
 import { ProductsCatalogComponent } from './components/products-catalog/products-catalog.component';
 import { MessageComponent } from '../../shared/components/message/message.component';
@@ -9,9 +11,13 @@ import { Producto } from '../../core/models/producto';
   selector: 'app-catalog',
   standalone: true,
   imports: [
+    Toast,
     CategoryTreeComponent,
     ProductsCatalogComponent,
     MessageComponent
+  ],
+  providers: [
+    MessageService
   ],
   templateUrl: './catalog.component.html',
   styleUrl: './catalog.component.scss'
@@ -19,45 +25,57 @@ import { Producto } from '../../core/models/producto';
 export class CatalogComponent {
 
   products!: Producto[];
-  filteredProducts: Producto[] = [];
-  selectedCategoriesProducts: number[] = [];
+  selectedCategory: number = 0;
   searchText: string = '';
+  order: string = "";
 
   constructor(
+    private messageService: MessageService,
     private productService: ProductService
   ) {}
 
   ngOnInit() {
+    this.getProducts();
+  }
+
+  getProducts(): void {
     this.productService.getAll().subscribe((data) => {
       this.products = data;
-      this.filteredProducts = data;
+    });
+  }
+  
+  filterProducts() {
+    this.productService.getCatalogFiltered(
+      this.selectedCategory,
+      this.searchText,
+      this.order
+    ).subscribe({
+      next: (response: any) => {
+        if (response.length > 0) {
+          this.products = response;
+        } else {
+          this.messageService.clear();
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: "No se encontraron productos acordes los filtros especificados", life: 4000 });
+        }
+      },
+      error: (error: any) => {
+        console.error('Error fetching filtered products:', error);
+      }
     });
   }
 
-  filterProducts() {
-    if (this.selectedCategoriesProducts.length > 0) {
-      this.filteredProducts = this.products.filter(product =>
-        this.selectedCategoriesProducts.some(productId => productId === product.id)
-      );
-    } else {
-      this.filteredProducts = this.products;
-    }
-
-    if (this.searchText) {
-      this.filteredProducts = this.filteredProducts.filter(product =>
-        product.nombre.toLowerCase().includes(this.searchText.toLowerCase()) ||
-        product.descripcion.toLocaleLowerCase().includes(this.searchText.toLowerCase())
-      );
-    }
-  }
-
-  onCategorySelection(categoriesProducts: number[]) {
-    this.selectedCategoriesProducts = categoriesProducts;
+  onCategorySelection(category: number) {
+    this.selectedCategory = category;
     this.filterProducts();
   }
 
   onSearchTextChange(searchText: string) {
     this.searchText = searchText;
+    this.filterProducts();
+  }
+
+  onSortChange(order: string) {
+    this.order = order;
     this.filterProducts();
   }
 

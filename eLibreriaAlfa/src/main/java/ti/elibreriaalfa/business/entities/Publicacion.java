@@ -3,6 +3,7 @@ package ti.elibreriaalfa.business.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
 import ti.elibreriaalfa.dtos.publicacion.PublicacionDto;
 import ti.elibreriaalfa.dtos.publicacion.PublicacionSimpleDto;
 
@@ -71,6 +72,15 @@ public class Publicacion {
         publicacionDto.setFechaCreacion(this.getFechaCreacion());
 
         return publicacionDto;
+    }
+
+    public ElementoListaDto mapToElementoListaDto() {
+        ElementoListaDto elementoListaDto = new ElementoListaDto();
+        elementoListaDto.setId(this.id);
+        elementoListaDto.setTexto2(this.titulo);
+        elementoListaDto.setTexto3(this.comentarios.size() + " comentarios");
+        elementoListaDto.setTexto4("Creado el " + this.fechaCreacion.toString());
+        return elementoListaDto;
     }
 
 }

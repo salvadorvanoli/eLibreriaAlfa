@@ -29,6 +29,11 @@ export class FormTextInputComponent {
   @Output() textValue = new EventEmitter<string>();
   @Output() isInputInvalid = new EventEmitter<boolean>();
 
+  onTextChange(event: any) {
+    this.textValue.emit(event);
+    this.validateText();
+  }
+
   showErrorMessage = computed(() => {
     return this.validateText() && this.formSubmitted();
   });
@@ -37,6 +42,11 @@ export class FormTextInputComponent {
     const isInvalid = !this.textPattern.test(this.text());
     this.isInputInvalid.emit(isInvalid);
     return isInvalid;
+  }
+
+  setValue(value: string) {
+    this.text.set(value);
+    this.textValue.emit(value);
   }
 
   reset() {

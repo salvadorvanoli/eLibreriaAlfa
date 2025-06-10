@@ -34,7 +34,7 @@ public class ImpresionService {
             Optional<Usuario> usuario = usuarioRepository.findById(impresionDto.getUsuario().getId());
 
             if(usuario.isPresent()) {
-                Impresion impresion = impresionDto.maptoEntity();
+                Impresion impresion = impresionDto.mapToEntity();
 
                 impresion.setUsuario(usuario.get());
 

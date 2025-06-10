@@ -1,5 +1,15 @@
 import { Rol } from "./rol";
 
+export interface Usuario {
+    id?: string;
+    email: string;
+    contrasenia: string;
+    rol: Rol;
+    telefono: string;
+    nombre: string;
+    apellido: string;
+}
+
 export interface UsuarioSimple {
     id: number;
     email: string;

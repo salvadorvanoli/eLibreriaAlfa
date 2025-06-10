@@ -3,6 +3,7 @@ package ti.elibreriaalfa.business.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
+import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
 import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
 
 import java.util.List;
@@ -38,5 +39,18 @@ public class Producto {
 
     public ProductoSimpleDto mapToDtoSimple() {
         return new ProductoSimpleDto(this);
+    }
+
+    public ElementoListaDto mapToElementoListaDto() {
+        ElementoListaDto elementoListaDto = new ElementoListaDto();
+        elementoListaDto.setId(this.id);
+        String imagen = (this.imagenes != null && this.imagenes.length > 0) ? this.imagenes[0] : null;
+        elementoListaDto.setImagen(imagen);
+        String texto1 = (this.categorias != null && !this.categorias.isEmpty()) ?
+                this.categorias.stream().map(Categoria::getNombre).reduce((a, b) -> a + " - " + b).orElse("") : "Sin categorías";
+        elementoListaDto.setTexto1(texto1);
+        elementoListaDto.setTexto2(this.nombre);
+        elementoListaDto.setTexto4(this.precio.toString());
+        return elementoListaDto;
     }
 }

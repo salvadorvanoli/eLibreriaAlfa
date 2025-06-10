@@ -1,16 +1,20 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MenuModule } from 'primeng/menu';
+import { PrimaryButtonComponent } from "../../../../shared/components/buttons/primary-button/primary-button.component";
 
 @Component({
   selector: 'app-options-panel',
   standalone: true,
   imports: [
-    MenuModule
-  ],
+    MenuModule,
+    PrimaryButtonComponent
+],
   templateUrl: './options-panel.component.html',
   styleUrl: './options-panel.component.scss'
 })
 export class OptionsPanelComponent {
+
+  @Output() modalIsVisible = new EventEmitter<boolean>();
 
   items = [
     {
@@ -21,7 +25,7 @@ export class OptionsPanelComponent {
     {
       label: 'Categorías',
       icon: 'pi pi-sitemap',
-      command: () => this.sendDataType('Categoria')
+      command: () => this.sendDataType('Categoría')
     },
     {
       label: 'Productos',
@@ -31,7 +35,7 @@ export class OptionsPanelComponent {
     {
       label: 'Publicaciones',
       icon: 'pi pi-book',
-      command: () => this.sendDataType('Publicacion')
+      command: () => this.sendDataType('Publicación')
     },
     {
       label: 'Pedidos',
@@ -43,8 +47,11 @@ export class OptionsPanelComponent {
   @Output() dataType = new EventEmitter<string>();
 
   sendDataType(type: string) {
-    console.log(type);
     this.dataType.emit(type);
+  }
+
+  showModal() {
+    this.modalIsVisible.emit(true);
   }
 
 }

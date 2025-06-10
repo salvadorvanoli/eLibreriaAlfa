@@ -29,6 +29,21 @@ public class PublicacionController {
         return new ResponseEntity<>(publicacionService.getAllPublicaciones(), HttpStatus.OK);
     }
 
+    @GetMapping("/elements")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<Object> getElements() {
+        return new ResponseEntity<>(publicacionService.getElements(), HttpStatus.OK);
+    }
+
+    @GetMapping("/filteredElements")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<Object> getElementsFiltrados(
+            @RequestParam(name = "textoBusqueda", required = false) String textoBusqueda,
+            @RequestParam(name = "orden", required = false) String orden
+    ) {
+        return new ResponseEntity<>(publicacionService.getElementsFiltrados(textoBusqueda, orden), HttpStatus.OK);
+    }
+
     @GetMapping("/{idPublicacion}")
     public ResponseEntity<Object> getPublicacionById(@PathVariable(name = "idPublicacion") Long idPublicacion) {
         try {
