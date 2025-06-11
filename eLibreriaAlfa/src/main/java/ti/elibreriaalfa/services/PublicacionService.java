@@ -182,8 +182,7 @@ public class PublicacionService {
         if (publicacionDto == null) {
             throw new PublicacionValidacionException("Los datos de la publicación no pueden ser nulos");
         }
-        
-        // Validar título
+
         if (publicacionDto.getTitulo() == null || publicacionDto.getTitulo().trim().isEmpty()) {
             throw new PublicacionValidacionException(Constants.ERROR_TITULO_VACIO);
         }
@@ -192,8 +191,7 @@ public class PublicacionService {
             publicacionDto.getTitulo().trim().length() > Constants.MAX_TITULO_LENGTH) {
             throw new PublicacionValidacionException(Constants.ERROR_TITULO_LENGTH);
         }
-        
-        // Validar contenido
+
         if (publicacionDto.getContenido() == null || publicacionDto.getContenido().trim().isEmpty()) {
             throw new PublicacionValidacionException(Constants.ERROR_CONTENIDO_VACIO);
         }

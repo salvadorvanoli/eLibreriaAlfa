@@ -7,8 +7,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ti.elibreriaalfa.business.entities.Comentario;
+import ti.elibreriaalfa.business.entities.Usuario;
 import ti.elibreriaalfa.business.repositories.ComentarioRepository;
 import ti.elibreriaalfa.business.repositories.PublicacionRepository;
+import ti.elibreriaalfa.business.repositories.UsuarioRepository;
 import ti.elibreriaalfa.dtos.comentario.ComentarioDto;
 import ti.elibreriaalfa.exceptions.publicacion.*;
 import ti.elibreriaalfa.exceptions.publicacion.ComentarioValidacionException;
@@ -23,23 +25,24 @@ public class ComentarioService {
 
     private final PublicacionRepository publicacionRepository;
 
-    public ComentarioService(ComentarioRepository comentarioRepository, PublicacionRepository publicacionRepository) {
+    private final UsuarioRepository usuarioRepository;
+
+    public ComentarioService(ComentarioRepository comentarioRepository, PublicacionRepository publicacionRepository, UsuarioRepository usuarioRepository) {
         this.comentarioRepository = comentarioRepository;
         this.publicacionRepository = publicacionRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     public String crearComentario(ComentarioDto comentarioDto) {
         log.info("Iniciando creación de comentario");
         
         try {
-            // Validaciones
             validarComentario(comentarioDto);
             
             if (comentarioDto.getId() != null) {
                 throw new ComentarioValidacionException("No se puede especificar ID al crear un nuevo comentario");
             }
 
-            // Verificar que la publicación existe
             if (comentarioDto.getPublicacion() == null || comentarioDto.getPublicacion().getId() == null) {
                 throw new ComentarioValidacionException("Debe especificar una publicación válida para el comentario");
             }
@@ -68,8 +71,7 @@ public class ComentarioService {
         if (idComentario == null || idComentario <= 0) {
             throw new ComentarioValidacionException("El ID del comentario debe ser un número positivo");
         }
-        
-        // Verificar que el comentario existe antes de eliminarlo
+
         if (!comentarioRepository.existsById(idComentario)) {
             log.warn("Intento de eliminar comentario inexistente con ID: {}", idComentario);
             throw new ComentarioNoEncontradoException(idComentario);
@@ -100,8 +102,7 @@ public class ComentarioService {
         if (idPublicacion == null || idPublicacion <= 0) {
             throw new ComentarioValidacionException("El ID de la publicación debe ser un número positivo");
         }
-        
-        // Verificar que la publicación existe
+
         if (!publicacionRepository.existsById(idPublicacion)) {
             log.warn("Intento de obtener comentarios de publicación inexistente con ID: {}", idPublicacion);
             throw new PublicacionNoEncontradaException(idPublicacion);
@@ -116,13 +117,11 @@ public class ComentarioService {
         if (comentarioDto == null) {
             throw new ComentarioValidacionException("Los datos del comentario no pueden ser nulos");
         }
-        
-        // Validar usuario
-        if (comentarioDto.getUsuario() == null || comentarioDto.getUsuario().getId() == null) {
+
+        if (comentarioDto.getUsuario() == null || comentarioDto.getUsuario().getId() == null || !usuarioRepository.existsById(comentarioDto.getUsuario().getId())) {
             throw new ComentarioValidacionException("Debe especificar un usuario válido para el comentario");
         }
-        
-        // Validar publicación
+
         if (comentarioDto.getPublicacion() == null || comentarioDto.getPublicacion().getId() == null) {
             throw new ComentarioValidacionException("Debe especificar una publicación válida para el comentario");
         }
