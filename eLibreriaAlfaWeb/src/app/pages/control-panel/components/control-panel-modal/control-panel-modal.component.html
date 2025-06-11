@@ -6,9 +6,10 @@
     [breakpoints]="breakpoints"
 >
     <div modal-title>{{ title }}</div>
-    <div modal-action>
-        @if (dataType === 'Usuario') {
+    <div modal-action>        @if (dataType === 'Usuario') {
             <app-user-form class="w-full" [user]="item" />
+        } @else if (dataType === 'Publicación') {
+            <app-publication-form class="w-full" [publication]="item" />
         }
         <!-- @else if (dataType === 'Categoría') {
             <app-category-form class="w-full" />

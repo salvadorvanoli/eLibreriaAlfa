@@ -29,7 +29,6 @@ export class FormTextareaInputComponent {
   @Output() textValue = new EventEmitter<string>();
   @Output() isInputInvalid = new EventEmitter<boolean>();
 
-  // Configuración del editor sin imágenes
   @Input() editorModules = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -42,8 +41,8 @@ export class FormTextareaInputComponent {
   showErrorMessage = computed(() => {
     return this.validateText() && this.formSubmitted();
   });
+
   validateText() {
-    // Extraer texto plano del HTML para validación
     const plainText = this.extractPlainText(this.text());
     const isInvalid = plainText.length === 0 || !this.textPattern.test(plainText);
     this.isInputInvalid.emit(isInvalid);
@@ -51,7 +50,6 @@ export class FormTextareaInputComponent {
   }
 
   private extractPlainText(html: string): string {
-    // Crear un elemento temporal para extraer solo el texto
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = html;
     return tempDiv.textContent || tempDiv.innerText || '';
@@ -61,6 +59,11 @@ export class FormTextareaInputComponent {
     this.text.set('');
     this.isInputInvalid.emit(false);
     this.textValue.emit('');
+  }
+
+  setValue(value: string) {
+    this.text.set(value);
+    this.textValue.emit(value);
   }
 
   onTextChange(event: any) {

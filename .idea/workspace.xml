@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0c558653-c790-42b9-849a-383512f382e3" name="Changes" comment="Agregada validación para usuario al crear un comentario: no se puede crear si no existe">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/PublicacionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/PublicacionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/services/PublicacionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/services/PublicacionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/resources/application.properties" afterDir="false" />
-    </list>
+    <list default="true" id="0c558653-c790-42b9-849a-383512f382e3" name="Changes" comment="Agregado al back el método necesario para modificar una publicación" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -124,7 +119,7 @@
       <workItem from="1746722376057" duration="4336000" />
       <workItem from="1748270090794" duration="1481000" />
       <workItem from="1748272595692" duration="7084000" />
-      <workItem from="1749659912120" duration="2897000" />
+      <workItem from="1749659912120" duration="3782000" />
     </task>
     <task id="LOCAL-00001" summary="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha">
       <option name="closed" value="true" />
@@ -142,7 +137,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749659884267</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Agregado al back el método necesario para modificar una publicación">
+      <option name="closed" value="true" />
+      <created>1749663535173</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1749663535173</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -152,6 +155,7 @@
     <MESSAGE value="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha" />
     <MESSAGE value="Endopints de buscar por id de categoria y producto." />
     <MESSAGE value="Agregada validación para usuario al crear un comentario: no se puede crear si no existe" />
-    <option name="LAST_COMMIT_MESSAGE" value="Agregada validación para usuario al crear un comentario: no se puede crear si no existe" />
+    <MESSAGE value="Agregado al back el método necesario para modificar una publicación" />
+    <option name="LAST_COMMIT_MESSAGE" value="Agregado al back el método necesario para modificar una publicación" />
   </component>
 </project>

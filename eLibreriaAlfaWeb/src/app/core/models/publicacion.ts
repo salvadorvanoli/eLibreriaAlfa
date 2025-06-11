@@ -36,6 +36,6 @@ export interface AgregarComentario {
 export interface AgregarPublicacion {
     titulo: string;
     contenido: string;
-    fechaCreacion: Date;
+    fechaCreacion: string;
     comentarios: any[];
 }
