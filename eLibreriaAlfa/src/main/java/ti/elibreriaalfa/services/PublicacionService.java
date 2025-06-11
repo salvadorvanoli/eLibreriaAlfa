@@ -1,5 +1,6 @@
 package ti.elibreriaalfa.services;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,35 +16,66 @@ import ti.elibreriaalfa.business.repositories.UsuarioRepository;
 import ti.elibreriaalfa.dtos.comentario.ComentarioDto;
 import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
 import ti.elibreriaalfa.dtos.publicacion.PublicacionDto;
+import ti.elibreriaalfa.exceptions.publicacion.PublicacionException;
+import ti.elibreriaalfa.exceptions.publicacion.PublicacionNoEncontradaException;
+import ti.elibreriaalfa.exceptions.publicacion.PublicacionValidacionException;
+import ti.elibreriaalfa.utils.Constants;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class PublicacionService {
     @Autowired
     private final PublicacionRepository publicacionRepository;
 
     public PublicacionService(PublicacionRepository publicacionRepository, UsuarioRepository usuarioRepository) {
         this.publicacionRepository = publicacionRepository;
-    }
+    }    public String crearPublicacion(PublicacionDto publicacionDto) {
+        log.info("Iniciando creación de publicación con título: {}", publicacionDto.getTitulo());
+        
+        try {
+            // Validaciones
+            validarPublicacion(publicacionDto);
+            
+            if (publicacionDto.getId() != null) {
+                throw new PublicacionValidacionException("No se puede especificar ID al crear una nueva publicación");
+            }
 
-    public String crearPublicacion(PublicacionDto publicacionDto) {
-        String response = null;
-
-        if (publicacionDto.getId() == null) {
             Publicacion publicacion = publicacionDto.mapToEntity();
-
-            response = "Publicación creada nro: " + publicacionRepository.save(publicacion).getId();
-
+            Publicacion publicacionGuardada = publicacionRepository.save(publicacion);
+            
+            log.info("Publicación creada exitosamente con ID: {}", publicacionGuardada.getId());
+            return Constants.SUCCESS_PUBLICACION_CREADA + publicacionGuardada.getId();
+            
+        } catch (Exception e) {
+            log.error("Error al crear publicación: {}", e.getMessage(), e);
+            throw e;
         }
-
-        return response;
     }
 
     public void borrarPublicacion(Long idPublicacion) {
-        publicacionRepository.deleteById(idPublicacion);
+        log.info("Iniciando eliminación de publicación con ID: {}", idPublicacion);
+        
+        if (idPublicacion == null || idPublicacion <= 0) {
+            throw new PublicacionValidacionException("El ID de la publicación debe ser un número positivo");
+        }
+        
+        // Verificar que la publicación existe antes de eliminarla
+        if (!publicacionRepository.existsById(idPublicacion)) {
+            log.warn("Intento de eliminar publicación inexistente con ID: {}", idPublicacion);
+            throw new PublicacionNoEncontradaException(idPublicacion);
+        }
+        
+        try {
+            publicacionRepository.deleteById(idPublicacion);
+            log.info("Publicación eliminada exitosamente con ID: {}", idPublicacion);
+        } catch (Exception e) {
+            log.error("Error al eliminar publicación con ID {}: {}", idPublicacion, e.getMessage(), e);
+            throw new PublicacionException("Error al eliminar la publicación: " + e.getMessage());
+        }
     }
 
     public ResponseListadoPublicaciones getAllPublicaciones() {
@@ -86,15 +118,23 @@ public class PublicacionService {
     }
 
     public ResponsePublicacion getPublicacionById(Long id) {
+        log.info("Buscando publicación con ID: {}", id);
+        
+        if (id == null || id <= 0) {
+            throw new PublicacionValidacionException("El ID de la publicación debe ser un número positivo");
+        }
+        
         Optional<Publicacion> publicacion = publicacionRepository.findById(id);
 
-        if (publicacion.isEmpty())
-            throw new IllegalArgumentException("No existe una publicación con el id especificado");
+        if (publicacion.isEmpty()) {
+            log.warn("No se encontró publicación con ID: {}", id);
+            throw new PublicacionNoEncontradaException(id);
+        }
 
         ResponsePublicacion response = new ResponsePublicacion();
-
         response.setPublicacion(publicacion.get().mapToDto());
-
+        
+        log.info("Publicación encontrada exitosamente: {}", publicacion.get().getTitulo());
         return response;
     }
 
@@ -135,5 +175,32 @@ public class PublicacionService {
         Sort sort = Sort.by(Sort.Direction.DESC, "fechaCreacion");
 
         return publicacionRepository.findAll(pageRequest.withSort(sort)).map(Publicacion::mapToDto);
+    }
+
+    // Métodos de validación
+    private void validarPublicacion(PublicacionDto publicacionDto) {
+        if (publicacionDto == null) {
+            throw new PublicacionValidacionException("Los datos de la publicación no pueden ser nulos");
+        }
+        
+        // Validar título
+        if (publicacionDto.getTitulo() == null || publicacionDto.getTitulo().trim().isEmpty()) {
+            throw new PublicacionValidacionException(Constants.ERROR_TITULO_VACIO);
+        }
+        
+        if (publicacionDto.getTitulo().trim().length() < Constants.MIN_TITULO_LENGTH || 
+            publicacionDto.getTitulo().trim().length() > Constants.MAX_TITULO_LENGTH) {
+            throw new PublicacionValidacionException(Constants.ERROR_TITULO_LENGTH);
+        }
+        
+        // Validar contenido
+        if (publicacionDto.getContenido() == null || publicacionDto.getContenido().trim().isEmpty()) {
+            throw new PublicacionValidacionException(Constants.ERROR_CONTENIDO_VACIO);
+        }
+        
+        if (publicacionDto.getContenido().trim().length() < Constants.MIN_CONTENIDO_LENGTH || 
+            publicacionDto.getContenido().trim().length() > Constants.MAX_CONTENIDO_LENGTH) {
+            throw new PublicacionValidacionException(Constants.ERROR_CONTENIDO_LENGTH);
+        }
     }
 }

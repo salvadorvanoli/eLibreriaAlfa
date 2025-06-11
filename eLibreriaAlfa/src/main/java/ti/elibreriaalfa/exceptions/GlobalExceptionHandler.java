@@ -8,6 +8,12 @@ import ti.elibreriaalfa.exceptions.usuario.UsuarioException;
 import ti.elibreriaalfa.exceptions.usuario.UsuarioInicioSesionException;
 import ti.elibreriaalfa.exceptions.usuario.UsuarioNoEncontradoException;
 import ti.elibreriaalfa.exceptions.usuario.UsuarioYaExisteException;
+import ti.elibreriaalfa.exceptions.publicacion.PublicacionException;
+import ti.elibreriaalfa.exceptions.publicacion.PublicacionNoEncontradaException;
+import ti.elibreriaalfa.exceptions.publicacion.PublicacionValidacionException;
+import ti.elibreriaalfa.exceptions.publicacion.PublicacionAccesoDenegadoException;
+import ti.elibreriaalfa.exceptions.publicacion.ComentarioNoEncontradoException;
+import ti.elibreriaalfa.exceptions.publicacion.ComentarioValidacionException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +51,49 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // Manejadores de excepciones de publicación
+    @ExceptionHandler(PublicacionException.class)
+    public ResponseEntity<Map<String, String>> handlePublicacionException(PublicacionException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PublicacionNoEncontradaException.class)
+    public ResponseEntity<Map<String, String>> handlePublicacionNoEncontradaException(PublicacionNoEncontradaException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(PublicacionValidacionException.class)
+    public ResponseEntity<Map<String, String>> handlePublicacionValidacionException(PublicacionValidacionException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PublicacionAccesoDenegadoException.class)
+    public ResponseEntity<Map<String, String>> handlePublicacionAccesoDenegadoException(PublicacionAccesoDenegadoException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(ComentarioNoEncontradoException.class)
+    public ResponseEntity<Map<String, String>> handleComentarioNoEncontradoException(ComentarioNoEncontradoException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ComentarioValidacionException.class)
+    public ResponseEntity<Map<String, String>> handleComentarioValidacionException(ComentarioValidacionException ex) {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
