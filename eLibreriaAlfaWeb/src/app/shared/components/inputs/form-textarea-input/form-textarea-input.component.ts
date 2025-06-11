@@ -30,7 +30,7 @@ export class FormTextareaInputComponent {
   @Output() isInputInvalid = new EventEmitter<boolean>();
 
   // Configuración del editor sin imágenes
-  editorModules = {
+  @Input() editorModules = {
     toolbar: [
       ['bold', 'italic', 'underline'],
       [{ 'list': 'ordered'}, { 'list': 'bullet' }],

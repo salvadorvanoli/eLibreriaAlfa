@@ -34,26 +34,50 @@ export class NewCommentFormComponent {
     
   @Input() publicacionId!: number;
   @Input() publicacionTitulo!: string;
-
   titulo: string = '';
   texto: string = '';
 
   isHeaderInvalid: boolean = false;
   isTextInvalid: boolean = false;
 
-  formSubmitted = signal(false);
+  // Contadores de caracteres
+  get tituloCharCount(): number {
+    return this.titulo.length;
+  }
 
-  textAreaPattern = /^[a-zA-Z0-9\s.,;:!?'"(){}[\]<>%&$#@!^*+=áéíóúÁÉÍÓÚñÑüÜ-]+$/;
-  messagePattern = /^.{1,}$/;
+  get textoCharCount(): number {
+    return this.texto.length;
+  }
+
+  get tituloCharCountClass(): string {
+    return this.tituloCharCount > 200 ? 'text-red-500' : this.tituloCharCount > 180 ? 'text-orange-500' : 'text-gray-500';
+  }
+
+  get textoCharCountClass(): string {
+    return this.textoCharCount > 200 ? 'text-red-500' : this.textoCharCount > 180 ? 'text-orange-500' : 'text-gray-500';
+  }
+
+  formSubmitted = signal(false);
+  textAreaPattern = /^[a-zA-Z0-9\s.,;:!?'"(){}[\]<>%&$#@!^*+=áéíóúÁÉÍÓÚñÑüÜ-]{1,200}$/;
+  messagePattern = /^.{1,200}$/;
 
   constructor(
     private messageService: MessageService,
     private securityService: SecurityService,
     private publicationService: PublicationService
   ) {}
-
   enviarComentario(): void {
     this.formSubmitted.set(true);
+    
+    if (this.titulo.trim().length === 0 || this.titulo.trim().length > 200) {
+      this.showError('El título debe tener entre 1 y 200 caracteres');
+      return;
+    }
+    
+    if (this.texto.trim().length === 0 || this.texto.trim().length > 200) {
+      this.showError('El texto debe tener entre 1 y 200 caracteres');
+      return;
+    }
     
     if (this.validateForm()) {
       return;
@@ -65,16 +89,21 @@ export class NewCommentFormComponent {
     }
 
     const textoPlano = this.htmlToPlainText(this.texto.trim());
+    
+    if (textoPlano.length > 200) {
+      this.showError('El texto del comentario excede los 200 caracteres permitidos');
+      return;
+    }
 
     const commentData = {
-        fechaCreacion: new Date().toISOString(), // Convertir a string ISO
+        fechaCreacion: new Date().toISOString(),
         usuario: {
-        id: Number(this.securityService.actualUser.id) // Objeto con id
+        id: Number(this.securityService.actualUser.id) 
         },
         titulo: this.titulo.trim(),
         texto: textoPlano,
         publicacion: {
-        id: Number(this.publicacionId) // Objeto con id
+        id: Number(this.publicacionId)
         }
     };
 

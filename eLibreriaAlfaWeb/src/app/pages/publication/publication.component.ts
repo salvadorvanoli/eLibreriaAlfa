@@ -164,4 +164,20 @@ export class PublicationComponent implements OnInit {
         this.commentsPerPage = event.rows;
         this.updatePaginatedComments();
     }
+
+    onCommentDeleted(commentId: number): void {
+        if (this.publicacion?.comentarios) {
+            this.publicacion.comentarios = this.publicacion.comentarios.filter(
+                comentario => comentario.id !== commentId
+            );
+            
+            this.setupPagination(this.publicacion.comentarios);
+            
+            const maxPage = Math.ceil(this.totalComments / this.commentsPerPage) - 1;
+            if (this.currentPage > maxPage && maxPage >= 0) {
+                this.currentPage = maxPage;
+                this.updatePaginatedComments();
+            }
+        }
+    }
 }

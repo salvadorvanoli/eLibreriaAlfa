@@ -1,17 +1,18 @@
 <div class="card md:w-150 sm:w-100 w-70 p-10 my-10 mx-auto rounded-md border-solid border-gray-200 border-2">
     <p-toast />
-    <form novalidate action="" method="post" class="mx-auto flex flex-col items-center gap-4 w-full max-w-md">
-
-        <app-form-text-input
+    <form novalidate action="" method="post" class="mx-auto flex flex-col items-center gap-4 w-full max-w-md">        <app-form-text-input
             #asuntoInput
             class="w-full"
             placeholder="Asunto"
             [formSubmitted]="formSubmitted"
             [textPattern]="textAreaPattern"
-            errorMessage="Asunto inválido"
+            errorMessage="El asunto debe tener entre 1 y 200 caracteres"
             (textValue)="titulo = $event"
             (isInputInvalid)="isHeaderInvalid = $event"
         />
+        <div class="w-full text-right text-sm" [class]="tituloCharCountClass">
+            {{ tituloCharCount }}/200 caracteres
+        </div>
         
         <app-form-textarea-input
             #messageInput
@@ -19,10 +20,14 @@
             placeholder="Escribe tu mensaje aquí"
             [formSubmitted]="formSubmitted"
             [textPattern]="messagePattern"
-            errorMessage="Mensaje inválido"
+            errorMessage="El mensaje debe tener entre 1 y 200 caracteres"
             (textValue)="texto = $event"
             (isInputInvalid)="isTextInvalid = $event"
+            [editorModules]="{toolbar: []}"
         />
+        <div class="w-full text-right text-sm" [class]="textoCharCountClass">
+            {{ textoCharCount }}/200 caracteres
+        </div>
 
         <app-primary-button
             class="w-full"

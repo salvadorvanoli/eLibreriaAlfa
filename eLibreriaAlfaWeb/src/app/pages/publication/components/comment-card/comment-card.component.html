@@ -1,8 +1,24 @@
 <div class="comment-item">
   <div class="comment-header">
-    <span class="comment-author">{{ getUserDisplayName(comentario.usuario) }}</span>
-    <span class="comment-date">{{ formatDate(comentario.fechaCreacion) }}</span>
+    <div class="comment-info">
+      <span class="comment-author">{{ getUserDisplayName(comentario.usuario) }}</span>
+      <span class="comment-date">{{ formatDate(comentario.fechaCreacion) }}</span>
+    </div>
+    @if (canDeleteComment()) {
+      <button 
+        class="delete-comment-btn" 
+        (click)="deleteComment()"
+        title="Eliminar comentario"
+        type="button">
+        <i class="fas fa-trash"></i>
+      </button>
+    }
   </div>
+  @if (comentario.titulo && comentario.titulo.trim()) {
+    <div class="comment-title">
+      <h4>{{ comentario.titulo }}</h4>
+    </div>
+  }
   <div class="comment-content">
     <p>{{ comentario.texto }}</p>
   </div>

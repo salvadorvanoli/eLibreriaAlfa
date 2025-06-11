@@ -87,6 +87,27 @@
   }
 }
 
+// Estilos para contadores de caracteres
+.character-counter {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 0.25rem;
+  text-align: right;
+
+  &.text-gray-500 {
+    color: #6b7280;
+  }
+
+  &.text-orange-500 {
+    color: #f97316;
+  }
+
+  &.text-red-500 {
+    color: #ef4444;
+    font-weight: 600;
+  }
+}
+
 // Responsive design
 @media (max-width: 768px) {
   .add-comment-form {
@@ -104,6 +125,10 @@
     .submit-comment-btn {
       width: 100%;
       padding: 0.875rem;
+    }
+
+    .character-counter {
+      font-size: 0.8rem;
     }
   }
 }

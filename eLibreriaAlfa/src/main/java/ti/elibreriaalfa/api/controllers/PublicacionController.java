@@ -167,7 +167,6 @@ public class PublicacionController {
             @ApiResponse(responseCode = "404", description = "Comentario no encontrado"),
             @ApiResponse(responseCode = "403", description = "Acceso denegado")
     })
-
     @DeleteMapping("/comment/{id}")
     public ResponseEntity<Void> borrarComentario(@PathVariable(name = "id") Long idComentario) {
         log.info("Eliminando comentario con ID: {}", idComentario);

@@ -22,6 +22,12 @@ export class PublicationService extends BaseHttpService<AgregarPublicacion, Publ
     );
   }
 
+  deleteComment(commentId: number): Observable<void> {
+    return this.http.delete<void>(this.baseUrl + this.apiUrl + `/comment/${commentId}`, { withCredentials: true }).pipe(
+      tap(() => console.log('Comentario eliminado:', commentId))
+    );
+  }
+
   getPublicationsPageByDate(pagina: number, cantidad: number): Observable<any[]> {
     return this.http.get<any[]>(this.baseUrl + this.apiUrl + '/page/date' + `?pagina=${pagina}&cantidad=${cantidad}`);
   }

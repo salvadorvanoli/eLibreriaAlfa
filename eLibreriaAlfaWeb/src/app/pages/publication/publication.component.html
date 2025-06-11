@@ -73,11 +73,13 @@
               <a routerLink="/inicio-sesion">Inicia sesión</a> para participar en la discusión.
             </p>
           </div>
-        }
-        @if (paginatedComments && paginatedComments.length > 0) {
+        }        @if (paginatedComments && paginatedComments.length > 0) {
           <div class="comments-list">
             @for (comentario of paginatedComments; track comentario.id) {
-              <app-comment-card [comentario]="comentario"></app-comment-card>
+              <app-comment-card 
+                [comentario]="comentario"
+                (commentDeleted)="onCommentDeleted($event)">
+              </app-comment-card>
             }
           </div>
 

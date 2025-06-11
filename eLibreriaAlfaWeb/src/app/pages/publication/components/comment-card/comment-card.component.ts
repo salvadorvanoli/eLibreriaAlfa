@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Comentario } from '../../../../core/models/publicacion';
+import { SecurityService } from '../../../../core/services/security.service';
+import { PublicationService } from '../../../../core/services/publication.service';
 
 @Component({
   selector: 'app-comment-card',
@@ -12,6 +14,12 @@ import { Comentario } from '../../../../core/models/publicacion';
 export class CommentCardComponent {
   
   @Input() comentario!: Comentario;
+  @Output() commentDeleted = new EventEmitter<number>();
+
+  constructor(
+    private securityService: SecurityService,
+    private publicationService: PublicationService
+  ) {}
 
   formatDate(date: Date): string {
     return new Date(date).toLocaleDateString('es-ES', {
@@ -45,5 +53,32 @@ export class CommentCardComponent {
     }
     
     return 'Usuario';
+  }
+
+  canDeleteComment(): boolean {
+    const currentUser = this.securityService.actualUser;
+    if (!currentUser || !this.comentario?.usuario) {
+      return false;
+    }
+    
+    return currentUser.id === this.comentario.usuario.id;
+  }
+
+  deleteComment(): void {
+    if (!this.canDeleteComment()) {
+      return;
+    }
+
+    if (confirm('¿Estás seguro de que deseas eliminar este comentario?')) {
+      this.publicationService.deleteComment(this.comentario.id).subscribe({
+        next: () => {
+          this.commentDeleted.emit(this.comentario.id);
+        },
+        error: (error) => {
+          console.error('Error al eliminar comentario:', error);
+          alert('Error al eliminar el comentario. Por favor, intenta de nuevo.');
+        }
+      });
+    }
   }
 }
