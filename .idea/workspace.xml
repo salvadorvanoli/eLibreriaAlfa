@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0c558653-c790-42b9-849a-383512f382e3" name="Changes" comment="Agregada validación para usuario al crear un comentario: no se puede crear si no existe">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/eLibreriaAlfa.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/eLibreriaAlfa.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/PublicacionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/api/controllers/PublicacionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/services/PublicacionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/java/ti/elibreriaalfa/services/PublicacionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eLibreriaAlfa/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/eLibreriaAlfa/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +124,7 @@
       <workItem from="1746722376057" duration="4336000" />
       <workItem from="1748270090794" duration="1481000" />
       <workItem from="1748272595692" duration="7084000" />
-      <workItem from="1749659912120" duration="1060000" />
+      <workItem from="1749659912120" duration="2897000" />
     </task>
     <task id="LOCAL-00001" summary="Agregado un endpoint para traer publicaciones paginadas ordenadas por fecha">
       <option name="closed" value="true" />

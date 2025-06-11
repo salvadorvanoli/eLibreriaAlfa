@@ -1,6 +1,7 @@
 package ti.elibreriaalfa.services;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -141,9 +142,8 @@ public class PublicacionService {
     public String modificarPublicacion(Long id, PublicacionDto publicacionDto) {
         String response = null;
 
-        Publicacion aux = publicacionRepository.findById(id).orElseThrow(() -> new RuntimeException("Impresión no existe"));
+        Publicacion aux = publicacionRepository.findById(id).orElseThrow(() -> new RuntimeException(Constants.ERROR_PUBLICACION_NO_ENCONTRADA));
 
-        aux.setId(publicacionDto.getId());
         aux.setTitulo(publicacionDto.getTitulo());
         aux.setContenido(publicacionDto.getContenido());
         aux.setFechaCreacion(publicacionDto.getFechaCreacion());

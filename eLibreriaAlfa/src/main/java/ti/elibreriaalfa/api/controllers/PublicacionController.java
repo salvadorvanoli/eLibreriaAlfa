@@ -147,6 +147,29 @@ public class PublicacionController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "Modificar publicación existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Publicación modificada exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos de publicación inválidos"),
+            @ApiResponse(responseCode = "403", description = "Acceso denegado - Se requiere rol ADMINISTRADOR"),
+            @ApiResponse(responseCode = "404", description = "Publicación no encontrada")
+    })
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<String> modificarPublicacion(
+            @PathVariable(name = "id") Long idPublicacion,
+            @RequestBody PublicacionDto publicacionDto) {
+        log.info("Modificando publicación con ID: {}", idPublicacion);
+        String response = "";
+        try {
+            response = publicacionService.modificarPublicacion(idPublicacion, publicacionDto);
+        } catch (Exception e) {
+            log.error("Error al modificar publicación: {}", e.getMessage());
+            return new ResponseEntity<>("Error al modificar publicación: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @Operation(summary = "Crear comentario en publicación")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Comentario creado exitosamente"),
