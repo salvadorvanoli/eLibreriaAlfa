@@ -16,9 +16,13 @@ public class Impresion {
     @Column(nullable = false)
     private Boolean color;
 
-    private Boolean simple;
+    private String formato;
 
-    private Boolean vertical;
+    private String tipoPapel;
+
+    private Boolean dobleCara;
+
+    private String orientacion;
 
     private String estado = "Pendiente";
 
@@ -38,10 +42,11 @@ public class Impresion {
         impresionDto.setEstado(this.getEstado());
         impresionDto.setUsuario(this.getUsuario().mapToDtoSimple());
         impresionDto.setColor(this.getColor());
-        impresionDto.setVertical(this.getVertical());
-        impresionDto.setSimple(this.getSimple());
         impresionDto.setComentarioAdicional(this.getComentarioAdicional());
-
+        impresionDto.setFormato(this.getFormato());
+        impresionDto.setTipoPapel(this.getTipoPapel());
+        impresionDto.setDobleCara(this.getDobleCara());
+        impresionDto.setOrientacion(this.getOrientacion());
         return impresionDto;
     }
 }
