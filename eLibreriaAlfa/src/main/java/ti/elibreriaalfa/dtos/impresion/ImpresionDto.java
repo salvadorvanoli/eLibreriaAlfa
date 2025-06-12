@@ -11,14 +11,17 @@ public class ImpresionDto {
 
     private Boolean color;
 
-    private Boolean simple;
+    private String formato;
 
-    private Boolean vertical;
+    private String tipoPapel;
+
+    private Boolean dobleCara;
+
+    private String orientacion;
 
     private String comentarioAdicional;
 
     private UsuarioSimpleDto usuario;
-
 
     private String nombreArchivo;
 
@@ -33,8 +36,10 @@ public class ImpresionDto {
         impresion.setId(this.getId());
         impresion.setColor(this.getColor());
         impresion.setUsuario(this.getUsuario().mapToEntity());
-        impresion.setSimple(this.getSimple());
-        impresion.setVertical(this.getVertical());
+        impresion.setFormato(this.getFormato());
+        impresion.setTipoPapel(this.getTipoPapel());
+        impresion.setDobleCara(this.getDobleCara());
+        impresion.setOrientacion(this.getOrientacion());
         impresion.setComentarioAdicional(this.getComentarioAdicional());
 
         return impresion;

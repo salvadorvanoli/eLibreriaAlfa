@@ -13,6 +13,7 @@ import ti.elibreriaalfa.business.repositories.ImpresionRepository;
 import ti.elibreriaalfa.business.repositories.UsuarioRepository;
 import ti.elibreriaalfa.dtos.impresion.ImpresionDto;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,8 +83,6 @@ public class ImpresionService {
         }
 
         aux.setId(impresionDto.getId());
-        aux.setSimple(impresionDto.getSimple());
-        aux.setVertical(impresionDto.getVertical());
         aux.setColor(impresionDto.getColor());
         aux.setComentarioAdicional(impresionDto.getComentarioAdicional());
 
@@ -108,4 +107,23 @@ public class ImpresionService {
                 .map(Impresion::mapToDto)
                 .toList();
     }
+
+    public String cambiarEstadoImpresion(Long idImpresion, String nuevoEstado) {
+        Impresion impresion = impresionRepository.findById(idImpresion)
+                .orElseThrow(() -> new IllegalArgumentException("No existe una impresión con el id especificado"));
+
+        List<String> estadosValidos = Arrays.asList(
+                "Pendiente", "En proceso", "Completado", "Cancelado", "Error");
+
+        if (!estadosValidos.contains(nuevoEstado)) {
+            throw new IllegalArgumentException("Estado no válido: " + nuevoEstado +
+                    ". Estados válidos: " + String.join(", ", estadosValidos));
+        }
+
+        impresion.setEstado(nuevoEstado);
+        impresionRepository.save(impresion);
+
+        return "Estado de impresión actualizado correctamente a: " + nuevoEstado;
+    }
+
 }

@@ -10,6 +10,8 @@ import ti.elibreriaalfa.api.responses.impresion.ResponseListadoImpresiones;
 import ti.elibreriaalfa.dtos.impresion.ImpresionDto;
 import ti.elibreriaalfa.services.ImpresionService;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping(value = "print")
 public class ImpresionController {
@@ -20,7 +22,6 @@ public class ImpresionController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<ResponseListadoImpresiones> getAllImpresiones() {
         return new ResponseEntity<>(impresionService.getAllImpresiones(), HttpStatus.OK);
     }
@@ -66,4 +67,21 @@ public class ImpresionController {
         return ResponseEntity.ok(impresionService.listarImpresionesPorUsuario(usuarioId));
     }
 
+    @PatchMapping("/{idImpresion}/estado")
+    public ResponseEntity<String> cambiarEstadoImpresion(
+            @PathVariable(name = "idImpresion") Long idImpresion,
+            @RequestBody Map<String, String> request) {
+
+        String nuevoEstado = request.get("estado");
+        if (nuevoEstado == null || nuevoEstado.trim().isEmpty()) {
+            return new ResponseEntity<>("El estado es requerido", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            String resultado = impresionService.cambiarEstadoImpresion(idImpresion, nuevoEstado);
+            return new ResponseEntity<>(resultado, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
