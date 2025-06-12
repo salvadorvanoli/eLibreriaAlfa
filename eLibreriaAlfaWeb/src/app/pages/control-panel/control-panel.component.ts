@@ -1,8 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { TitleAndDescriptionComponent } from '../../shared/components/title-and-description/title-and-description.component';
-import { OptionsPanelComponent } from "./components/options-panel/options-panel.component";
-import { DataPanelComponent } from "./components/data-panel/data-panel.component";
+import { OptionsPanelComponent } from './components/options-panel/options-panel.component';
+import { DataPanelComponent } from './components/data-panel/data-panel.component';
 import { ControlPanelModalComponent } from './components/control-panel-modal/control-panel-modal.component';
+import { PrintsTableComponent } from '../../shared/components/prints-table/prints-table.component'; 
 
 @Component({
   selector: 'app-control-panel',
@@ -11,7 +12,8 @@ import { ControlPanelModalComponent } from './components/control-panel-modal/con
     TitleAndDescriptionComponent,
     OptionsPanelComponent,
     DataPanelComponent,
-    ControlPanelModalComponent
+    ControlPanelModalComponent,
+    PrintsTableComponent 
   ],
   templateUrl: './control-panel.component.html',
   styleUrl: './control-panel.component.scss'

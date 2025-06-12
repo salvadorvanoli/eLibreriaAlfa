@@ -21,7 +21,6 @@ export class ImpresionService extends BaseHttpService<ImpresionRequest, Impresio
       responseType: 'text'
     }).pipe(
       tap(() => {
-        // Notificar que se creó una nueva impresión
         this.impresionCreatedSubject.next();
       })
     );
@@ -30,4 +29,20 @@ export class ImpresionService extends BaseHttpService<ImpresionRequest, Impresio
   getImpresionesByUsuario(usuarioId: number): Observable<Impresion[]> {
     return this.http.get<Impresion[]>(`${this.baseUrl}${this.end}/user/${usuarioId}`);
   }
+
+  cambiarEstadoImpresion(idImpresion: number, nuevoEstado: string): Observable<string> {
+    const body = { estado: nuevoEstado };
+    return this.http.patch(`${this.baseUrl}${this.end}/${idImpresion}/estado`, body, {
+      responseType: 'text'
+    }).pipe(
+      tap(() => {
+        this.impresionCreatedSubject.next();
+      })
+    );
+  }
+
+  getAllImpresiones(): Observable<any> {
+    return this.http.get(`${this.baseUrl}${this.end}`);
+  }
+  
 }

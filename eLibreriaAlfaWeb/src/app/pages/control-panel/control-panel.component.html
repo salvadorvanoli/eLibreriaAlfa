@@ -4,10 +4,13 @@
         <app-options-panel (dataType)="onDataTypeSelected($event)" (modalIsVisible)="modalIsVisible = $event" />
     </div>
     <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
-        <app-data-panel [itemType]="selectedDataType" (itemSelected)="onItemSelected($event)" />
+        @if (selectedDataType() === 'Impresión') {
+            <app-prints-table [userRegistrado]="false" />
+        } @else {
+            <app-data-panel [itemType]="selectedDataType" (itemSelected)="onItemSelected($event)" />
+        }
     </div>
 </div>
-
 
 <app-control-panel-modal
     [visible]="modalIsVisible"

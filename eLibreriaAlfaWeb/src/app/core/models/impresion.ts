@@ -4,14 +4,28 @@ export interface Impresion {
     id: number;
     color: boolean;
     comentarioAdicional: string;
-    usuarioSimple: UsuarioSimple;
+    usuarioSimple?: UsuarioSimple;
+    usuario?: {                   
+        id: number;
+        email: string;
+        nombre: string;
+        apellido: string;
+    };
     estado: string; 
     nombreArchivo: string;
+    formato: string;
+    tipoPapel: string;
+    dobleCara: boolean;
+    orientacion: string;
 }
 
 export interface ImpresionRequest {
     color: boolean;
     comentarioAdicional: string;
-    usuario: UsuarioSimple; 
+    usuario: UsuarioSimple;
     nombreArchivo: string;
+    formato: string; 
+    tipoPapel: string; 
+    dobleCara: boolean;
+    orientacion: string; 
 }

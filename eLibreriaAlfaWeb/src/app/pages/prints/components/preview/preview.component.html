@@ -7,14 +7,37 @@
     </div>
     
     <div class="preview-container">
-      @if (file && previewUrl && fileType === 'pdf') {
-        <!-- Vista previa de PDF con filtro aplicado según selectedColor -->
-        <div class="preview-content">
-          <iframe 
-            [src]="getPdfUrlWithoutToolbar() | safeResourceUrl" 
-            [class]="'preview-pdf ' + getColorFilterClass()"
-          ></iframe>
-        </div>
+      @if (file && previewUrl) {
+        @if (fileType === 'pdf') {
+          <!-- Vista previa de PDF -->
+          <div class="preview-content">
+            <iframe 
+              [src]="getPdfUrlWithoutToolbar() | safeResourceUrl" 
+              [class]="'preview-pdf ' + getColorFilterClass()"
+            ></iframe>
+          </div>
+        } @else if (fileType === 'image') {
+          <!-- Vista previa de imagen -->
+          <div class="preview-content">
+            <img 
+              [src]="previewUrl" 
+              [alt]="file.name"
+              [class]="'preview-image ' + getColorFilterClass()"
+              style="max-width: 100%; height: auto; border-radius: 8px;">
+          </div>
+        } @else {
+          <!-- Otros tipos de archivo -->
+          <div class="preview-placeholder">
+            <div class="placeholder-content">
+              <i [class]="getFileIcon() + ' text-6xl text-gray-400 mb-4'"></i>
+              <h3 class="text-xl font-semibold text-gray-700 mb-2">{{ getFileTypeName() }}</h3>
+              <p class="text-gray-500 text-center mb-2">{{ file.name }}</p>
+              <p class="text-sm text-gray-400">
+                Este tipo de archivo se procesará para impresión, pero no se puede previsualizar en el navegador.
+              </p>
+            </div>
+          </div>
+        }
       } @else {
         <!-- Placeholder cuando no hay archivo -->
         <div class="preview-placeholder">
@@ -22,7 +45,10 @@
             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <p class="text-gray-500 text-center">Selecciona un archivo PDF para ver la vista previa</p>
+            <p class="text-gray-500 text-center">Selecciona un archivo para ver la vista previa</p>
+            <p class="text-sm text-gray-400 text-center mt-2">
+              Formatos soportados: PDF, Word, Excel, CorelDRAW, PNG, JPG, JPEG
+            </p>
           </div>
         </div>
       }

@@ -3,17 +3,25 @@ import { CommonModule } from '@angular/common';
 import { EspecificacionesComponent } from './components/especificaciones/especificaciones.component';
 import { TitleAndDescriptionComponent } from '../../shared/components/title-and-description/title-and-description.component';
 import { UserPrintsComponent } from './components/user-prints/user-prints.component';
+import { SelectPrintsComponent } from './components/select-prints/select-prints.component';
 import { SecurityService } from '../../core/services/security.service';
 
 @Component({
   selector: 'app-prints',
   standalone: true,
-  imports: [CommonModule, EspecificacionesComponent, TitleAndDescriptionComponent, UserPrintsComponent],
+  imports: [
+    CommonModule, 
+    EspecificacionesComponent, 
+    TitleAndDescriptionComponent, 
+    UserPrintsComponent,
+    SelectPrintsComponent
+  ],
   templateUrl: './prints.component.html',
   styleUrl: './prints.component.scss'
 })
 export class PrintsComponent implements OnInit {
   isUserAuthenticated: boolean = false;
+  selectedPrintOption: string = 'ver'; 
 
   constructor(private securityService: SecurityService) {}
 
@@ -31,5 +39,9 @@ export class PrintsComponent implements OnInit {
         this.isUserAuthenticated = false;
       }
     });
+  }
+
+  onPrintOptionSelected(option: string): void {
+    this.selectedPrintOption = option;
   }
 }

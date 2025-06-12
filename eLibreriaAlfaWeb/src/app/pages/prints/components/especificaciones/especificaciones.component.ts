@@ -13,10 +13,30 @@ import { SecurityService } from '../../../../core/services/security.service';
 import { ImpresionService } from '../../../../core/services/impresion.service';
 import { ImpresionRequest } from '../../../../core/models/impresion';
 
-
 declare var pdfjsLib: any;
 
+interface FormatOption {
+  label: string;
+  value: string;
+}
+
+interface PaperTypeOption {
+  label: string;
+  value: string;
+  availableForA3?: boolean;
+}
+
 interface ColorOption {
+  label: string;
+  value: string;
+}
+
+interface SideOption {
+  label: string;
+  value: string;
+}
+
+interface OrientationOption {
   label: string;
   value: string;
 }
@@ -40,11 +60,15 @@ interface ColorOption {
 })
 export class EspecificacionesComponent {
   selectedFile: File | null = null;
+  selectedFormat: FormatOption = { label: 'A4', value: 'A4' };
+  selectedPaperType: PaperTypeOption = { label: 'Papel común', value: 'common' };
   selectedColor: ColorOption = { label: 'Color', value: 'color' };
+  selectedSide: SideOption = { label: 'Simple', value: 'simple' };
+  selectedOrientation: OrientationOption = { label: 'Vertical', value: 'vertical' };
+  
   pdfPageCount: number = 0;
   isCountingPages: boolean = false;
   
-
   showConfirmDialog: boolean = false;
   comentarioAdicional: string = '';
   isSubmitting: boolean = false;
@@ -55,27 +79,119 @@ export class EspecificacionesComponent {
     private impresionService: ImpresionService,
     private messageService: MessageService
   ) {
-
     this.loadPdfJs();
   }
   
+  
+  formats: FormatOption[] = [
+    { label: 'A4', value: 'A4' },
+    { label: 'A3', value: 'A3' }
+  ];
+
+  
+  paperTypes: PaperTypeOption[] = [
+    { label: 'Papel común', value: 'common', availableForA3: true },
+    { label: 'Papel foto', value: 'photo', availableForA3: false },
+    { label: 'Papel foto adhesivo', value: 'photo_adhesive', availableForA3: false },
+    { label: 'Papel mate adhesivo', value: 'matte_adhesive', availableForA3: false },
+    { label: 'Papel tarjeta liso', value: 'card_smooth', availableForA3: false },
+    { label: 'Papel tarjeta texturado', value: 'card_textured', availableForA3: false }
+  ];
+  
+
   colors: ColorOption[] = [
     { label: 'Color', value: 'color' },
     { label: 'Blanco y Negro', value: 'grayscale' }
   ];
+
+
+  sides: SideOption[] = [
+    { label: 'Simple', value: 'simple' },
+    { label: 'Doble cara', value: 'double' }
+  ];
+
+
+  orientations: OrientationOption[] = [
+    { label: 'Vertical', value: 'vertical' },
+    { label: 'Horizontal', value: 'horizontal' }
+  ];
+
+
+  get availablePaperTypes(): PaperTypeOption[] {
+    if (this.selectedFormat.value === 'A3') {
+      return this.paperTypes.filter(type => type.availableForA3);
+    }
+    return this.paperTypes;
+  }
+
+  get availableColors(): ColorOption[] {
+    if (this.selectedFormat.value === 'A3') {
+      return this.colors.filter(color => color.value === 'grayscale');
+    }
+    return this.colors;
+  }
+
+  get availableSides(): SideOption[] {
+    if (this.selectedPaperType.value !== 'common') {
+      return this.sides.filter(side => side.value === 'simple');
+    }
+    return this.sides;
+  }
+
   
- 
+  onFormatChange(): void {
+   
+    if (this.selectedFormat.value === 'A3') {
+      this.selectedPaperType = this.paperTypes.find(type => type.value === 'common')!;
+      this.selectedColor = this.colors.find(color => color.value === 'grayscale')!;
+      this.selectedSide = this.sides.find(side => side.value === 'simple')!;
+    }
+    this.cdr.detectChanges();
+  }
+
+  onPaperTypeChange(): void {
+    
+    if (this.selectedPaperType.value !== 'common') {
+      this.selectedSide = this.sides.find(side => side.value === 'simple')!;
+    }
+    this.cdr.detectChanges();
+  }
+
   get estimatedPrice(): number {
-    console.log('Calculando precio. pdfPageCount:', this.pdfPageCount, 'selectedColor:', this.selectedColor.value);
     if (!this.selectedFile) return 0;
     
+    let pricePerPage = 0;
+    
+    
+    if (this.selectedFormat.value === 'A4') {
+      pricePerPage = this.selectedColor.value === 'color' ? 2 : 1;
+    } else { 
+      pricePerPage = 3;
+    }
 
-    const pricePerPage = this.selectedColor.value === 'color' ? 2 : 1;
-    return this.pdfPageCount * pricePerPage;
+   
+    const paperMultipliers: { [key: string]: number } = {
+      'common': 1,
+      'photo': 3,
+      'photo_adhesive': 4,
+      'matte_adhesive': 3.5,
+      'card_smooth': 2,
+      'card_textured': 2.5
+    };
+
+    pricePerPage *= paperMultipliers[this.selectedPaperType.value] || 1;
+
+   
+    if (this.selectedSide.value === 'double') {
+      pricePerPage *= 1.5;
+    }
+
+    return Math.ceil(this.pdfPageCount * pricePerPage);
   }
   
   get pricePerPage(): number {
-    return this.selectedColor.value === 'color' ? 2 : 1;
+    if (!this.selectedFile) return 0;
+    return Math.ceil(this.estimatedPrice / this.pdfPageCount);
   }
   
   get totalPages(): number {
@@ -83,7 +199,6 @@ export class EspecificacionesComponent {
   }
   
   private loadPdfJs(): void {
-
     if (typeof pdfjsLib !== 'undefined') return;
     
     const script = document.createElement('script');
@@ -98,25 +213,123 @@ export class EspecificacionesComponent {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       
-
-      if (file.type !== 'application/pdf') {
+     
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword', 
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+        'application/vnd.ms-excel', 
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+        'image/png',
+        'image/jpeg',
+        'image/jpg',
+        'application/x-coreldraw', 
+        'image/x-coreldraw' 
+      ];
+      
+      
+      const fileName = file.name.toLowerCase();
+      const fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+      const allowedExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'png', 'jpg', 'jpeg', 'cdr'];
+      
+      if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
         this.messageService.add({
           severity: 'error',
-          summary: 'Error',
-          detail: 'Por favor, selecciona solo archivos PDF.'
+          summary: 'Formato no válido',
+          detail: 'Por favor, selecciona archivos PDF, Word, Excel, CorelDRAW, PNG, JPG o JPEG.'
         });
         return;
       }
       
       this.selectedFile = file;
-      this.pdfPageCount = 0; 
-      console.log('PDF seleccionado:', this.selectedFile);
+      this.pdfPageCount = 0;
+      console.log('Archivo seleccionado:', this.selectedFile);
       
-
       if (this.selectedFile) {
-        await this.countPdfPages(this.selectedFile);
+        await this.estimateFilePages(this.selectedFile);
       }
     }
+  }
+  
+  
+  async estimateFilePages(file: File): Promise<void> {
+    try {
+      console.log('Estimando páginas para:', file.name, 'Tipo:', file.type);
+      this.isCountingPages = true;
+      this.cdr.detectChanges();
+      
+      const fileName = file.name.toLowerCase();
+      const fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
+      
+      
+      if (file.type === 'application/pdf' || fileExtension === 'pdf') {
+        await this.countPdfPages(file);
+        return;
+      }
+      
+    
+      this.estimatePagesByFileSize(file, fileExtension);
+      
+    } catch (error) {
+      console.error('Error al estimar páginas:', error);
+      this.estimatePagesByFileSize(file, file.name.toLowerCase().split('.').pop() || '');
+    } finally {
+      this.isCountingPages = false;
+      this.cdr.detectChanges();
+    }
+  }
+  
+ 
+  private estimatePagesByFileSize(file: File, extension: string): void {
+    const fileSizeInKB = file.size / 1024;
+    const fileSizeInMB = fileSizeInKB / 1024;
+    
+    console.log(`Estimando páginas por tamaño. Archivo: ${file.name}, Tamaño: ${fileSizeInMB.toFixed(2)} MB`);
+    
+    let estimatedPages = 1;
+    
+    switch (extension) {
+      case 'doc':
+      case 'docx':
+       
+        estimatedPages = Math.max(1, Math.ceil(fileSizeInKB / 100));
+        break;
+        
+      case 'xls':
+      case 'xlsx':
+      
+        estimatedPages = Math.max(1, Math.ceil(fileSizeInKB / 50));
+        break;
+        
+      case 'png':
+      case 'jpg':
+      case 'jpeg':
+       
+        estimatedPages = 1;
+        break;
+        
+      case 'cdr':
+       
+        if (fileSizeInMB < 5) {
+          estimatedPages = 1;
+        } else if (fileSizeInMB < 20) {
+          estimatedPages = Math.ceil(fileSizeInMB / 5);
+        } else {
+          estimatedPages = Math.ceil(fileSizeInMB / 10);
+        }
+        break;
+        
+      default:
+        
+        estimatedPages = Math.max(1, Math.ceil(fileSizeInKB / 200));
+        break;
+    }
+    
+    
+    this.pdfPageCount = Math.max(1, Math.min(500, estimatedPages));
+    
+    console.log(`Páginas estimadas para ${extension.toUpperCase()}: ${this.pdfPageCount}`);
+    this.cdr.detectChanges();
   }
   
   async countPdfPages(file: File): Promise<void> {
@@ -125,14 +338,11 @@ export class EspecificacionesComponent {
       this.isCountingPages = true;
       this.cdr.detectChanges();
       
-   
       await this.waitForPdfJs();
       
- 
       const arrayBuffer = await file.arrayBuffer();
       console.log('ArrayBuffer creado, tamaño:', arrayBuffer.byteLength);
       
-
       const loadingTask = pdfjsLib.getDocument({
         data: arrayBuffer
       });
@@ -148,7 +358,6 @@ export class EspecificacionesComponent {
     } catch (error) {
       console.error('Error al procesar PDF con PDF.js:', error);
       
-
       const fileSizeInKB = file.size / 1024;
       console.log(`Usando fallback. Tamaño del archivo: ${fileSizeInKB.toFixed(2)} KB`);
       
@@ -162,7 +371,6 @@ export class EspecificacionesComponent {
         this.pdfPageCount = Math.ceil(fileSizeInKB / 300);
       }
       
-
       this.pdfPageCount = Math.max(1, Math.min(500, this.pdfPageCount));
       
       console.log(`Páginas estimadas por tamaño: ${this.pdfPageCount}`);
@@ -243,17 +451,15 @@ export class EspecificacionesComponent {
           color: this.selectedColor.value === 'color',
           comentarioAdicional: this.comentarioAdicional || '',
           usuario: currentUser,
-          nombreArchivo: this.selectedFile!.name 
+          nombreArchivo: this.selectedFile!.name,
+          formato: this.selectedFormat.value,
+          tipoPapel: this.selectedPaperType.label, 
+          dobleCara: this.selectedSide.value === 'double', 
+          orientacion: this.selectedOrientation.value
         };
 
         console.log('=== DATOS QUE SE ENVÍAN AL BACKEND ===');
         console.log('request:', request);
-        console.log('currentUser:', currentUser);
-        console.log('selectedColor.value:', this.selectedColor.value);
-        console.log('color (boolean):', this.selectedColor.value === 'color');
-        console.log('comentarioAdicional:', this.comentarioAdicional);
-        console.log('nombreArchivo:', this.selectedFile!.name);
-        console.log('usuario completo:', currentUser);
         console.log('========================================');
 
         this.impresionService.createPrintRequest(request).subscribe({
@@ -265,7 +471,7 @@ export class EspecificacionesComponent {
               detail: 'Solicitud de impresión enviada correctamente.'
             });
             
-            // Limpiar formulario
+            
             this.selectedFile = null;
             this.pdfPageCount = 0;
             this.comentarioAdicional = '';
@@ -274,7 +480,6 @@ export class EspecificacionesComponent {
           },
           error: (error) => {
             console.error('Error al crear solicitud de impresión:', error);
-            console.error('Detalles completos del error:', error.error);
             this.messageService.add({
               severity: 'error',
               summary: 'Error',

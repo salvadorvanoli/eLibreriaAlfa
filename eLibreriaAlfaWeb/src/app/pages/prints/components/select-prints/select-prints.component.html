@@ -1,0 +1,28 @@
+<div class="flex justify-center w-full pt-4">
+  <div class="w-full max-w-md">
+    <p-dropdown 
+      [(ngModel)]="selectedOption"
+      [options]="options"
+      optionLabel="label"
+      placeholder="Selecciona una opción"
+      [style]="{'width': '100%'}"
+      (onChange)="onSelectionChange($event.value)">
+      
+      <!-- Template para mostrar la opción seleccionada -->
+      <ng-template pTemplate="selectedItem">
+        <div class="flex align-items-center gap-2" *ngIf="selectedOption">
+          <i [class]="selectedOption.icon + ' text-blue-500'"></i>
+          <span>{{ selectedOption.label }}</span>
+        </div>
+      </ng-template>
+      
+      <!-- Template para las opciones del dropdown -->
+      <ng-template pTemplate="item" let-option>
+        <div class="flex align-items-center gap-2">
+          <i [class]="option.icon + ' text-blue-500'"></i>
+          <span>{{ option.label }}</span>
+        </div>
+      </ng-template>
+    </p-dropdown>
+  </div>
+</div>

@@ -41,6 +41,11 @@ export class OptionsPanelComponent {
       label: 'Pedidos',
       icon: 'pi pi-shopping-cart',
       command: () => this.sendDataType('Pedido')
+    },
+    {
+      label: 'Impresiones',
+      icon: 'pi pi-print',
+      command: () => this.sendDataType('Impresión')
     }
   ];
 
