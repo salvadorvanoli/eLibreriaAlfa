@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,7 +26,9 @@ public class ImageService {
 
     @PostConstruct
     public void init() throws IOException {
-        Path basePathObj = Paths.get(basePath).toAbsolutePath().normalize();
+       // Path basePathObj = Paths.get(basePath).toAbsolutePath().normalize();
+
+        this.basePathObj = Paths.get(basePath).toAbsolutePath().normalize();
         Files.createDirectories(basePathObj);
     }
 
@@ -76,5 +80,83 @@ public class ImageService {
             throw new SecurityException("Acceso a ruta no permitida");
         }
     }
+
+    private void validatePrint(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("El archivo está vacío");
+        }
+
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new IllegalArgumentException("El archivo excede el tamaño máximo permitido");
+        }
+
+        // Tipos permitidos para impresiones
+        String contentType = file.getContentType();
+        if (contentType == null) {
+            throw new IllegalArgumentException("Tipo de archivo no válido");
+        }
+
+        String extension = getString(file, contentType);
+        List<String> allowedExtensions = Arrays.asList("jpg", "jpeg", "png", "gif", "webp", "pdf", "doc", "docx", "xls", "xlsx");
+        if (!allowedExtensions.contains(extension)) {
+            throw new IllegalArgumentException("Extensión de archivo no permitida: " + extension);
+        }
+    }
+
+    private static String getString(MultipartFile file, String contentType) {
+        List<String> allowedTypes = Arrays.asList(
+                "image/jpeg", "image/png", "image/gif", "image/webp", // Imágenes
+                "application/pdf", // PDF
+                "application/msword", // Word (.doc)
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // Word (.docx)
+                "application/vnd.ms-excel", // Excel (.xls)
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // Excel (.xlsx)
+        );
+
+        if (!allowedTypes.contains(contentType)) {
+            throw new IllegalArgumentException("Tipo de archivo no permitido para impresión: " + contentType);
+        }
+
+        // Validaciones específicas para impresiones
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null || originalFilename.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del archivo no puede estar vacío");
+        }
+
+        // Verificar extensión del archivo
+        String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
+        return extension;
+    }
+
+    public String savePrint(MultipartFile file) throws IOException {
+        System.out.println("=== INICIANDO GUARDADO DE ARCHIVO ===");
+        System.out.println("Nombre original: " + file.getOriginalFilename());
+        System.out.println("Tamaño: " + file.getSize() + " bytes");
+        System.out.println("Tipo de contenido: " + file.getContentType());
+
+        validatePrint(file);
+        System.out.println("✅ Validación completada");
+
+        Path subfolderPath = getSubfolderPath("impresiones");
+        System.out.println("Ruta de subcarpeta: " + subfolderPath.toAbsolutePath());
+
+        Files.createDirectories(subfolderPath);
+        System.out.println("✅ Directorio creado/verificado");
+
+        String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        System.out.println("Nombre del archivo generado: " + filename);
+
+        Path destination = subfolderPath.resolve(filename);
+        System.out.println("Ruta completa de destino: " + destination.toAbsolutePath());
+
+        file.transferTo(destination.toFile());
+        System.out.println("✅ Archivo guardado exitosamente");
+        System.out.println("¿Archivo existe?: " + Files.exists(destination));
+        System.out.println("Tamaño del archivo guardado: " + Files.size(destination) + " bytes");
+        System.out.println("=== FIN GUARDADO DE ARCHIVO ===");
+
+        return filename;
+    }
+
 
 }
