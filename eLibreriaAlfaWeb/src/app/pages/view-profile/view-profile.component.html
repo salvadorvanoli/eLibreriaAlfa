@@ -1,4 +1,8 @@
-<app-select-profile (optionSelected)="onProfileOptionSelected($event)" class="mt-6"></app-select-profile>
+<app-select-profile 
+  [initialSection]="selectedSection"
+  (optionSelected)="onProfileOptionSelected($event)" 
+  class="mt-6">
+</app-select-profile>
 
 <!-- Sección de Información Personal -->
 @if (selectedSection === 'info') {
@@ -32,5 +36,8 @@
 
 <!-- Sección de Historial de Pedidos -->
 @if (selectedSection === 'historial') {
+  <div class="flex justify-center mt-1 mb-3">
+    <div class="justify-start text-black text-2xl font-semibold font-['Inter'] leading-7">Historial de órdenes</div>
+  </div>
   <app-order-table [userRegistrado]="true"></app-order-table>
 }

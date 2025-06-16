@@ -8,6 +8,8 @@ import { ModalComponent } from '../../shared/components/modal/modal.component';
 import { OrderService } from '../../core/services/order.services';
 import { SecurityService } from '../../core/services/security.service';
 import { FormsModule } from '@angular/forms';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-view-product',
@@ -16,8 +18,10 @@ import { FormsModule } from '@angular/forms';
     CommonModule, 
     CarouselComponent,
     ModalComponent,
-    FormsModule
+    FormsModule,
+    ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './view-product.component.html',
   styleUrls: ['./view-product.component.scss']
 })
@@ -36,10 +40,10 @@ export class ViewProductComponent implements OnInit {
     private router: Router,
     private productService: ProductService,
     private orderService: OrderService,
-    private securityService: SecurityService) {}
+    private securityService: SecurityService,
+    private messageService: MessageService) {}
 
   ngOnInit() {
-    // Obtener el ID del usuario actual
     this.securityService.getActualUser().subscribe({
       next: (usuario) => {
         if (usuario) {
@@ -67,7 +71,7 @@ export class ViewProductComponent implements OnInit {
           console.error('Error obteniendo el producto:', error);
           if (error.status === 404) {
             console.log('Producto no encontrado, redirigiendo al home...');
-            this.router.navigate(['/']); // Redirige a la ruta raíz (home)
+            this.router.navigate(['/']); 
           } else {
             this.error = `Error al cargar el producto: ${error.message}`;
             this.loading = false;
@@ -78,7 +82,6 @@ export class ViewProductComponent implements OnInit {
   }
 
   agregarAlPedido() {
-    // Verificar si el usuario está autenticado
     if (!this.usuarioId) {
       this.router.navigate(['/login']);
       return;
@@ -88,28 +91,73 @@ export class ViewProductComponent implements OnInit {
     
     this.addingToOrder = true;
 
-    // Crear el objeto producto_encargue según la estructura requerida
-    const productoEncargue = {
-      producto: { id: this.producto.id },
-      cantidad: this.cantidad
-    };
+    this.orderService.usuarioTieneEncargueEnCreacion(this.usuarioId).subscribe({
+      next: (tieneEncargue) => {
+        if (!tieneEncargue) {
+          this.addingToOrder = false;
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Encargue no disponible',
+            detail: 'No tienes un encargue en creación. Espere a que su pedido sea completado o cancele el actual.',
+            life: 5000
+          });
+          return;
+        }
 
-    // Llamar al servicio para agregar el producto al encargue
-    this.orderService.agregarProductoAEncargue(this.usuarioId, productoEncargue).subscribe({
-      next: () => {
-        this.modalVisible = true;
-        this.addingToOrder = false;
+        const productoEncargue = {
+          producto: { id: this.producto!.id },
+          cantidad: this.cantidad
+        };
+
+        this.orderService.agregarProductoAEncargue(this.usuarioId!, productoEncargue).subscribe({
+          next: () => {
+            this.modalVisible = true;
+            this.addingToOrder = false;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Producto agregado',
+              detail: 'El producto se agregó correctamente a tu pedido.',
+              life: 3000
+            });
+          },
+          error: (error) => {
+            console.error('Error al agregar el producto al pedido:', error);
+            this.addingToOrder = false;
+            
+            if (error.status === 500) {
+              this.messageService.add({
+                severity: 'info',
+                summary: 'Producto duplicado',
+                detail: 'Ya tiene este producto en su pedido.',
+                life: 4000
+              });
+            } else {
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: 'Error al agregar el producto al pedido. Inténtalo nuevamente.',
+                life: 5000
+              });
+            }
+          }
+        });
       },
       error: (error) => {
-        console.error('Error al agregar el producto al pedido:', error);
+        console.error('Error al verificar encargue en creación:', error);
         this.addingToOrder = false;
-        // Aquí podrías mostrar un mensaje de error al usuario
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Error al verificar el estado del encargue. Inténtalo nuevamente.',
+          life: 5000
+        });
       }
     });
   }
 
-  irAVerPedido() {
-    this.modalVisible = false;
-    this.router.navigate(['/perfil']);  // Cambiado de '/pedido' a '/perfil'
-  }
+irAVerPedido() {
+  this.modalVisible = false;
+  this.router.navigate(['/perfil'], { queryParams: { section: 'actual' } });
+}
+
 }

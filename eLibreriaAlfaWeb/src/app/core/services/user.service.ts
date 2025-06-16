@@ -25,11 +25,14 @@ export class UserService extends BaseHttpService<any, any> {
     return this.http.get<UsuarioSimple | Usuario>(`${this.baseUrl}${this.end}/${email}`, { withCredentials: true });
   }
 
+  getUserById(usuarioId: number): Observable<UsuarioSimple | Usuario> {
+    return this.http.get<UsuarioSimple | Usuario>(`${this.baseUrl}${this.end}/id/${usuarioId}`, { withCredentials: true });
+  }
+
   create(user: Usuario): Observable<Usuario> {
     return this.http.post<Usuario>(`${this.baseUrl}${this.end}`, user, { withCredentials: true });
   }
 
-  // Método para actualizar el perfil del usuario
   updateProfile(email: string, profileData: ModificarPerfilUsuario): Observable<UsuarioSimple> {
     return this.http.patch<UsuarioSimple>(
       `${this.baseUrl}${this.end}/${email}/profile`, 

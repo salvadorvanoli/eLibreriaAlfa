@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProfileFormComponent } from './components/profile-form/profile-form.component';
 import { TitleComponent } from './components/title/title.component';
@@ -42,11 +43,20 @@ export class ViewProfileComponent implements OnInit {
   selectedSection: string = 'info'; 
   
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
     private orderService: OrderService,
     private securityService: SecurityService
   ) {}
   
   ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const section = params['section'];
+      if (section && ['info', 'actual', 'historial'].includes(section)) {
+        this.selectedSection = section;
+      }
+    });
+
     this.checkOrderState();
   }
   
@@ -76,6 +86,11 @@ export class ViewProfileComponent implements OnInit {
 
   onProfileOptionSelected(option: string) {
     this.selectedSection = option;
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { section: option },
+      queryParamsHandling: 'merge'
+    });
   }
 
   checkOrderState() {

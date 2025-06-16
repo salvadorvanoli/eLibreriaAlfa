@@ -2,6 +2,16 @@
    
     <p-toast></p-toast>
     
+    <!-- Agregar el componente de filtro -->
+    <div class="flex items-center justify-start mb-4 gap-2">
+        <app-dropdown-filter
+            [registeredUser]="userRegistrado"
+            type="prints"
+            [(selectedState)]="estadoSeleccionado"
+            (selectedStateChange)="onEstadoChange()"
+            placeholder="Todos">
+        </app-dropdown-filter>
+    </div>
 
     <p-dialog 
         header="Comentario adicional" 
@@ -44,12 +54,6 @@
         appendTo="body">
         
         <div class="flex flex-col gap-6" *ngIf="selectedImpresionForEdit">
-          
-            <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400" *ngIf="selectedImpresionForEdit">
-                <h4 class="font-semibold text-blue-800 mb-2">{{ formatFileName(selectedImpresionForEdit.nombreArchivo) }}</h4>
-                <p class="text-sm text-blue-600">Cliente: {{ getClienteNombreCompleto(selectedImpresionForEdit) }}</p>
-            </div>
-            
           
             <div class="flex flex-col gap-3">
                 <div>
@@ -145,7 +149,7 @@
     </p-dialog>
 
     <p-table
-        [value]="impresiones"
+        [value]="filteredImpresiones"
         [paginator]="true"
         [rows]="5"
         [tableStyle]="{ 'min-width': '50rem' }"

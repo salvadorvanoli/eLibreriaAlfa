@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { OrderService } from '../../../core/services/order.services';
 import { SecurityService } from '../../../core/services/security.service';
+import { UserService } from '../../../core/services/user.service'; // <-- Agregar import
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -13,6 +14,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { Encargue } from '../../../core/models/encargue';
+import { DropdownFilterComponent } from '../dropdown-filter/dropdown-filter.component';
 
 @Component({
   selector: 'app-order-table',
@@ -27,7 +29,8 @@ import { Encargue } from '../../../core/models/encargue';
     FormsModule,
     ToastModule,
     TooltipModule,
-    DialogModule
+    DialogModule,
+    DropdownFilterComponent
   ],
   providers: [MessageService],
   templateUrl: './order-table.component.html',
@@ -40,6 +43,9 @@ export class OrderTableComponent implements OnInit {
     @Output() orderEdit = new EventEmitter<Encargue>();
     
     orders: Encargue[] = [];
+    filteredOrders: Encargue[] = []; // <-- Cambiar a filteredOrders
+    estadoSeleccionado: string = '';
+    
     isLoading: boolean = false;
     
     showCancelDialog: boolean = false;
@@ -70,21 +76,31 @@ export class OrderTableComponent implements OnInit {
         { label: 'Completado', value: 'COMPLETADO' },
         { label: 'Cancelado', value: 'CANCELADO' }
     ];
-    estadoSeleccionado: string = 'TODOS';
-
+    
     constructor(
         private orderService: OrderService,
         private securityService: SecurityService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private userService: UserService 
     ) {}
 
     ngOnInit() {
         this.loadOrders();
     }
 
-    get ordersFiltrados(): Encargue[] {
-        if (this.estadoSeleccionado === 'TODOS') return this.orders;
-        return this.orders.filter(o => o.estado === this.estadoSeleccionado);
+
+    filtrarOrdenes(): void {
+        if (!this.estadoSeleccionado || this.estadoSeleccionado === '') {
+            this.filteredOrders = [...this.orders];
+        } else {
+            this.filteredOrders = this.orders.filter(order => 
+                order.estado?.toUpperCase() === this.estadoSeleccionado.toUpperCase()
+            );
+        }
+    }
+
+    onEstadoChange(): void {
+        this.filtrarOrdenes();
     }
 
     loadOrders(): void {
@@ -101,10 +117,12 @@ export class OrderTableComponent implements OnInit {
                                         fecha: new Date(order.fecha)
                                     }))
                                     .sort((a: Encargue, b: Encargue) => a.fecha.getTime() - b.fecha.getTime());
+                                this.filteredOrders = [...this.orders]; 
                                 this.isLoading = false;
                             },
                             error: () => {
                                 this.orders = [];
+                                this.filteredOrders = []; 
                                 this.isLoading = false;
                             }
                         });
@@ -118,25 +136,17 @@ export class OrderTableComponent implements OnInit {
                                         fecha: new Date(order.fecha)
                                     }))
                                     .sort((a: Encargue, b: Encargue) => a.fecha.getTime() - b.fecha.getTime());
+                                this.filteredOrders = [...this.orders]; 
                                 this.isLoading = false;
                             },
                             error: () => {
                                 this.orders = [];
+                                this.filteredOrders = [];
                                 this.isLoading = false;
                             }
                         });
-                    } else {
-                        this.orders = [];
-                        this.isLoading = false;
                     }
-                } else {
-                    this.orders = [];
-                    this.isLoading = false;
                 }
-            },
-            error: () => {
-                this.orders = [];
-                this.isLoading = false;
             }
         });
     }
@@ -276,7 +286,40 @@ export class OrderTableComponent implements OnInit {
     }
 
     getClienteNombreCompleto(order: Encargue): string {
-        return (order as any).clienteNombreCompleto || '';
+        console.log('getClienteNombreCompleto llamado para orden:', order);
+        
+        if ((order as any).clienteNombreCompleto) {
+            console.log('Nombre ya existe en orden:', (order as any).clienteNombreCompleto);
+            return (order as any).clienteNombreCompleto;
+        }
+
+        const userId = (order as any).idUsuarioComprador;
+        console.log('idUsuarioComprador encontrado:', userId);
+        
+        if (userId) {
+            console.log('Haciendo llamada al UserService para idUsuarioComprador:', userId);
+            
+            this.userService.getUserById(userId).subscribe({
+                next: (usuario) => {
+                    console.log('Usuario obtenido del backend:', usuario);
+                    const nombreCompleto = `${usuario.nombre || ''} ${usuario.apellido || ''}`.trim();
+                    console.log('Nombre completo construido:', nombreCompleto);
+                    
+                    (order as any).clienteNombreCompleto = nombreCompleto || 'Sin nombre';
+                    console.log('Nombre asignado a orden:', (order as any).clienteNombreCompleto);
+                },
+                error: (error) => {
+                    console.error('Error al cargar usuario:', error);
+                    (order as any).clienteNombreCompleto = 'Error al cargar';
+                }
+            });
+            
+            console.log('Retornando "Cargando..." temporalmente');
+            return 'Cargando...';
+        }
+
+        console.log('No se encontró idUsuarioComprador, retornando "Usuario desconocido"');
+        return 'Usuario desconocido';
     }
 
 

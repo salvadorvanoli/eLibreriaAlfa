@@ -13,6 +13,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { Impresion } from '../../../core/models/impresion';
+import { DropdownFilterComponent } from '../dropdown-filter/dropdown-filter.component'; 
 
 @Component({
   selector: 'app-prints-table',
@@ -27,7 +28,8 @@ import { Impresion } from '../../../core/models/impresion';
     FormsModule,
     ToastModule,
     TooltipModule,
-    DialogModule
+    DialogModule,
+    DropdownFilterComponent 
   ],
   providers: [MessageService],
   templateUrl: './prints-table.component.html',
@@ -40,7 +42,10 @@ export class PrintsTableComponent implements OnInit {
     @Output() impresionEdit = new EventEmitter<Impresion>();
     
     impresiones: Impresion[] = [];
+    filteredImpresiones: Impresion[] = []; 
     isLoading: boolean = false;
+    
+    estadoSeleccionado: string = ''; 
     
     showCancelDialog: boolean = false;
     selectedImpresionToCancel: Impresion | null = null;
@@ -70,6 +75,20 @@ export class PrintsTableComponent implements OnInit {
 
     ngOnInit() {
         this.loadImpresiones();
+    }
+
+    filtrarImpresiones(): void {
+        if (!this.estadoSeleccionado || this.estadoSeleccionado === '') {
+            this.filteredImpresiones = [...this.impresiones];
+        } else {
+            this.filteredImpresiones = this.impresiones.filter(impresion => 
+                impresion.estado?.toUpperCase() === this.estadoSeleccionado.toUpperCase()
+            );
+        }
+    }
+
+    onEstadoChange(): void {
+        this.filtrarImpresiones();
     }
 
     loadImpresiones(): void {
@@ -274,6 +293,7 @@ export class PrintsTableComponent implements OnInit {
                     this.impresionService.getImpresionesByUsuario(currentUser.id).subscribe({
                         next: (impresiones) => {
                             this.impresiones = impresiones;
+                            this.filteredImpresiones = [...impresiones]; 
                             this.isLoading = false;
                         },
                         error: () => {
@@ -296,6 +316,7 @@ export class PrintsTableComponent implements OnInit {
         this.impresionService.getAllImpresiones().subscribe({
             next: (response) => {
                 this.impresiones = response.impresiones || response || [];
+                this.filteredImpresiones = [...this.impresiones]; 
                 this.isLoading = false;
             },
             error: (error) => {
