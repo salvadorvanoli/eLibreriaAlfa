@@ -1,4 +1,4 @@
-<!-- Overlay backdrop -->
+
 <div 
   *ngIf="visible" 
   class="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-start justify-center pt-20 overflow-y-auto"
@@ -45,12 +45,12 @@
             [readOnly]="true"
             [productos]="productos" 
             [totalRecords]="totalRecords"
-            [estadoEncargue]="EncargueEstado.ENVIADO">
+            [estadoEncargue]="EncargueEstado.PENDIENTE">
           </app-product-container>
         </div>
       </div>
       
-      <!-- Cancel order confirmation view -->
+
       <div *ngIf="modalType === 'cancel'" class="text-center py-4">
         <div class="text-red-500 mb-4">
           <i class="pi pi-exclamation-triangle text-5xl"></i>

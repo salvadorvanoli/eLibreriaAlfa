@@ -12,7 +12,7 @@
         [style]="{width: '400px'}">
         
         <div *ngIf="selectedImpresionForDetails">
-            <p class="font-medium text-gray-800 mb-3">{{ selectedImpresionForDetails.nombreArchivo }}</p>
+            <p class="font-medium text-gray-800 mb-3">{{ formatFileName(selectedImpresionForDetails.nombreArchivo) }}</p>
             <div class="bg-gray-50 p-3 rounded border border-gray-200 min-h-[80px]">
                 <p class="text-gray-800">{{ 
                     selectedImpresionForDetails.comentarioAdicional || 'No hay comentarios adicionales para esta impresión.' 
@@ -45,8 +45,8 @@
         
         <div class="flex flex-col gap-6" *ngIf="selectedImpresionForEdit">
           
-            <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
-                <h4 class="font-semibold text-blue-800 mb-2">{{ selectedImpresionForEdit.nombreArchivo }}</h4>
+            <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400" *ngIf="selectedImpresionForEdit">
+                <h4 class="font-semibold text-blue-800 mb-2">{{ formatFileName(selectedImpresionForEdit.nombreArchivo) }}</h4>
                 <p class="text-sm text-blue-600">Cliente: {{ getClienteNombreCompleto(selectedImpresionForEdit) }}</p>
             </div>
             
@@ -118,7 +118,7 @@
             </div>
             
             <div class="bg-gray-50 p-3 rounded-lg" *ngIf="selectedImpresionToCancel">
-                <p class="font-medium text-gray-800">{{ selectedImpresionToCancel.nombreArchivo }}</p>
+                <p class="font-medium text-gray-800">{{ formatFileName(selectedImpresionToCancel.nombreArchivo) }}</p>
                 <p class="text-sm text-gray-600">Esta acción no se puede deshacer.</p>
             </div>
         </div>
@@ -154,33 +154,32 @@
     >
         <ng-template #header>
             <tr>
-                
-                @if (userRegistrado) {
-                    <th style="width:25%">Archivo</th>
-                    <th style="width:12%">Estado</th>
-                    <th style="width:11%">Color</th>
-                    <th style="width:11%">Formato</th>
-                    <th style="width:11%">Papel</th>
-                    <th style="width:11%">Caras</th>
-                    <th style="width:11%">Orientación</th>
-                    <th style="width:8%">Acciones</th>
-                } @else {
-                    <th style="width:20%">Archivo</th>
-                    <th style="width:15%">Cliente</th>
-                    <th style="width:10%">Estado</th>
-                    <th style="width:9%">Color</th>
-                    <th style="width:9%">Formato</th>
-                    <th style="width:9%">Papel</th>
-                    <th style="width:9%">Caras</th>
-                    <th style="width:10%">Orientación</th>
-                    <th style="width:9%">Acciones</th>
-                }
-            </tr>
+        @if (userRegistrado) {
+            <th style="width:18%">Archivo</th>  
+            <th style="width:12%">Estado</th>
+            <th style="width:12%">Color</th>    
+            <th style="width:8%">Formato</th>
+            <th style="width:16%">Papel</th>
+            <th style="width:8%">Caras</th>
+            <th style="width:14%">Orientación</th>
+            <th style="width:12%">Acciones</th>
+        } @else {
+            <th style="width:15%">Archivo</th>   
+            <th style="width:13%">Cliente</th>
+            <th style="width:12%">Estado</th>    
+            <th style="width:8%">Color</th>
+            <th style="width:6%">Formato</th>
+            <th style="width:12%">Papel</th>
+            <th style="width:10%">Caras</th>
+            <th style="width:10%">Orientación</th>
+            <th style="width:13%">Acciones</th>
+        }
+    </tr>
         </ng-template>
         <ng-template #body let-impresion>
             <tr>
                 <td class="truncate-cell" [title]="impresion.nombreArchivo">
-                    {{ impresion.nombreArchivo }}
+                    {{ formatFileName(impresion.nombreArchivo) }}
                 </td>
                 
                
@@ -204,7 +203,17 @@
                 <td>{{ impresion.orientacion | titlecase }}</td>
                 <td>
                     <div class="flex justify-center gap-1">
-                       
+                        <p-button 
+                            icon="pi pi-download" 
+                            [rounded]="true" 
+                            [text]="true" 
+                            severity="success" 
+                            size="small"
+                            [disabled]="!impresion.nombreArchivo"
+                            (onClick)="descargarArchivo(impresion)"
+                            pTooltip="Descargar archivo">
+                        </p-button>
+                        
                         @if (userRegistrado) {
                             <p-button 
                                 icon="pi pi-eye" 
@@ -226,9 +235,7 @@
                                 (onClick)="descartarImpresion(impresion)"
                                 pTooltip="Cancelar impresión">
                             </p-button>
-                        } 
-                       
-                        @else {
+                        } @else {
                             <p-button 
                                 icon="pi pi-eye" 
                                 [rounded]="true" 
@@ -243,7 +250,6 @@
                                 icon="pi pi-pencil" 
                                 [rounded]="true" 
                                 [text]="true"
-                              
                                 size="small"
                                 (onClick)="editarEstado(impresion)"
                                 pTooltip="Modificar estado">

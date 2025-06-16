@@ -23,7 +23,7 @@ interface PrintOption {
 export class SelectPrintsComponent {
   @Output() optionSelected = new EventEmitter<string>();
 
-  selectedOption: PrintOption = { label: 'Ver mis impresiones', value: 'ver', icon: 'pi pi-list' };
+  selectedOption: PrintOption = { label: 'Solicitar impresión', value: 'solicitar', icon: 'pi pi-plus' };
 
   options: PrintOption[] = [
     { label: 'Solicitar impresión', value: 'solicitar', icon: 'pi pi-plus' },

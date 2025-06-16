@@ -5,6 +5,8 @@ import { TitleAndDescriptionComponent } from '../../shared/components/title-and-
 import { UserPrintsComponent } from './components/user-prints/user-prints.component';
 import { SelectPrintsComponent } from './components/select-prints/select-prints.component';
 import { SecurityService } from '../../core/services/security.service';
+import { RestrictedOverlayComponent } from '../../shared/components/restricted-overlay/restricted-overlay.component';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-prints',
@@ -14,14 +16,16 @@ import { SecurityService } from '../../core/services/security.service';
     EspecificacionesComponent, 
     TitleAndDescriptionComponent, 
     UserPrintsComponent,
-    SelectPrintsComponent
+    SelectPrintsComponent,
+    RestrictedOverlayComponent,
+    ProgressSpinnerModule
   ],
   templateUrl: './prints.component.html',
   styleUrl: './prints.component.scss'
 })
 export class PrintsComponent implements OnInit {
-  isUserAuthenticated: boolean = false;
-  selectedPrintOption: string = 'ver'; 
+  isUserAuthenticated: boolean | null = null; 
+  selectedPrintOption: string = 'solicitar'; 
 
   constructor(private securityService: SecurityService) {}
 

@@ -5,10 +5,12 @@ import { TitleComponent } from './components/title/title.component';
 import { NoOrderYetComponent } from './components/no-order-yet/no-order-yet.component';
 import { OrderInProgressComponent } from './components/order-in-progress/order-in-progress.component';
 import { OrderSubmittedComponent } from './components/order-submitted/order-submitted.component';
+import { SelectProfileComponent } from './components/select-profile/select-profile.component';
 import { OrderService, EncargueEstado } from '../../core/services/order.services';
 import { SecurityService } from '../../core/services/security.service';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import { of, timer, forkJoin } from 'rxjs';
+import { OrderTableComponent } from '../../shared/components/order-table/order-table.component';
 
 @Component({
   selector: 'app-view-profile',
@@ -19,7 +21,9 @@ import { of, timer, forkJoin } from 'rxjs';
     TitleComponent,
     NoOrderYetComponent,
     OrderInProgressComponent,
-    OrderSubmittedComponent
+    OrderSubmittedComponent,
+    SelectProfileComponent,
+    OrderTableComponent
   ],
   templateUrl: './view-profile.component.html',
   styles: [`
@@ -35,6 +39,7 @@ import { of, timer, forkJoin } from 'rxjs';
 })
 export class ViewProfileComponent implements OnInit {
   orderState: 'none' | 'in-progress' | 'submitted' | 'loading' = 'loading';
+  selectedSection: string = 'info'; 
   
   constructor(
     private orderService: OrderService,
@@ -69,6 +74,10 @@ export class ViewProfileComponent implements OnInit {
     }, 800);
   }
 
+  onProfileOptionSelected(option: string) {
+    this.selectedSection = option;
+  }
+
   checkOrderState() {
     this.orderState = 'loading'; 
 
@@ -80,7 +89,6 @@ export class ViewProfileComponent implements OnInit {
         return of(null);
       }),
       switchMap(usuarioRaw => {
-        // Asegúrate de que usuarioRaw es del tipo correcto
         const usuario = usuarioRaw as { id?: number };
         if (!usuario || !usuario.id) {
           console.log('No hay usuario autenticado o falta ID');
@@ -94,7 +102,7 @@ export class ViewProfileComponent implements OnInit {
             return of(null);
           }),
           switchMap(tieneEncargueEnCreacion => {
-            if (tieneEncargueEnCreacion === null) { // Si hubo error en el paso anterior
+            if (tieneEncargueEnCreacion === null) {
               return of(null);
             }
             console.log('¿Tiene encargue en creación?', tieneEncargueEnCreacion);
@@ -138,7 +146,7 @@ export class ViewProfileComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error en la subscripción principal de forkJoin:', error);
-        this.orderState = 'none'; // Fallback a 'none' en caso de error en forkJoin
+        this.orderState = 'none'; 
       }
     });
   }

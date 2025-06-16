@@ -1,23 +1,36 @@
-<app-title [text]="'Información personal'" [align]="'center'" class="mt-18"></app-title>
-<app-profile-form></app-profile-form>
+<app-select-profile (optionSelected)="onProfileOptionSelected($event)" class="mt-6"></app-select-profile>
 
-@switch (orderState) {
-  @case ('none') {
-    <app-no-order-yet class="mt-0"></app-no-order-yet>
+<!-- Sección de Información Personal -->
+@if (selectedSection === 'info') {
+  <app-title [text]="'Información personal'" [align]="'center'" class="mt-2"></app-title>
+  <app-profile-form></app-profile-form>
+}
+
+<!-- Sección de Pedido Actual -->
+@if (selectedSection === 'actual') {
+  @switch (orderState) {
+    @case ('none') {
+      <app-no-order-yet class="mt-0"></app-no-order-yet>
+    }
+    @case ('in-progress') {
+      <app-order-in-progress 
+        (noProductsLeft)="updateToLoading()" 
+        (orderSubmitted)="updateToSubmitted()">
+      </app-order-in-progress>
+    }
+    @case ('submitted') {
+      <app-order-submitted></app-order-submitted>
+    }
+    @default {
+      <!-- Mientras se carga -->
+      <div class="w-[1124px] flex justify-center p-8">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    }
   }
-  @case ('in-progress') {
-    <app-order-in-progress 
-      (noProductsLeft)="updateToLoading()" 
-      (orderSubmitted)="updateToSubmitted()">
-    </app-order-in-progress>
-  }
-  @case ('submitted') {
-    <app-order-submitted></app-order-submitted>
-  }
-  @default {
-    <!-- Mientras se carga -->
-    <div class="w-[1124px] flex justify-center p-8">
-      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-    </div>
-  }
+}
+
+<!-- Sección de Historial de Pedidos -->
+@if (selectedSection === 'historial') {
+  <app-order-table [userRegistrado]="true"></app-order-table>
 }

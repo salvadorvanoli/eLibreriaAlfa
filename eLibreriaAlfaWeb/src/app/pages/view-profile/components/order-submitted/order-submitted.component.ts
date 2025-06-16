@@ -28,7 +28,7 @@ export class OrderSubmittedComponent implements OnInit {
   loading = false;
   encargueId: number | null = null;
   
-  // Productos que se pasarán al modal
+
   productos: any[] = [];
   totalRecords: number = 0;
   usuarioId: number | null = null;
@@ -40,7 +40,6 @@ export class OrderSubmittedComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Obtener el ID del usuario para usarlo más tarde
     this.securityService.getActualUser().subscribe(usuario => {
       if (usuario && usuario.id) {
         this.usuarioId = usuario.id;
@@ -60,12 +59,11 @@ export class OrderSubmittedComponent implements OnInit {
       })
     ).subscribe(usuario => {
       if (usuario && usuario.id) {
-        // Cargar los productos del encargue ENVIADO
         this.orderService.listarProductosEncarguePorUsuarioYEstado(
           usuario.id,
-          EncargueEstado.ENVIADO,
-          0, // Primera página
-          10 // Cantidad de registros
+          EncargueEstado.PENDIENTE,
+          0, 
+          10 
         ).pipe(
           catchError(error => {
             console.error('Error cargando productos del encargue:', error);
@@ -79,12 +77,10 @@ export class OrderSubmittedComponent implements OnInit {
           this.productos = response.content;
           this.totalRecords = response.totalElements;
           
-          // Si hay productos, obtener el ID del encargue
           if (this.productos.length > 0) {
             this.encargueId = this.productos[0].encargueId;
           }
           
-          // Mostrar el modal con los datos cargados
           this.orderDetails = {
             productos: this.productos,
             totalRecords: this.totalRecords,
@@ -110,7 +106,6 @@ export class OrderSubmittedComponent implements OnInit {
 
   onModalConfirm() {
     if (this.modalType === 'cancel') {
-      // Ejecutar cancelación de pedido
       if (!this.usuarioId) {
         this.messageService.add({
           severity: 'error',
@@ -142,7 +137,6 @@ export class OrderSubmittedComponent implements OnInit {
             detail: 'Pedido cancelado correctamente'
           });
           
-          // Recargar la página después de un breve retraso
           setTimeout(() => {
             window.location.reload();
           }, 1500);
