@@ -177,4 +177,9 @@ public class UsuarioService {
         else
             throw new UsuarioNoEncontradoException(Constants.ERROR_USUARIO_NO_ENCONTRADO_EMAIL);
     }
+
+    public UsuarioSimpleDto getUsuarioById(Long usuarioId) {
+        Usuario usuario = getUsuarioEntityById(usuarioId);
+        return usuario.mapToDtoSimple();
+    }
 }

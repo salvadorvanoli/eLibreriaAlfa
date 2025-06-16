@@ -78,4 +78,10 @@ public class UsuarioController {
                                                      @RequestBody ModificarPerfilUsuarioDto perfilUsuario) {
         return new ResponseEntity<>(usuarioService.patchPerfilUsuario(usuarioEmail, perfilUsuario), HttpStatus.OK);
     }
+
+    @GetMapping("/id/{usuarioId}")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<Object> getUsuarioById(@PathVariable(name = "usuarioId") Long usuarioId) {
+        return new ResponseEntity<>(usuarioService.getUsuarioById(usuarioId), HttpStatus.OK);
+    }
 }
