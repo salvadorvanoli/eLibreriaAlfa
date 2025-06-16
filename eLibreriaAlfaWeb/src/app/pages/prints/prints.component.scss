@@ -1,0 +1,10 @@
+.authenticated-content-container {
+  position: relative;
+  min-height: 300px; /* Ajusta esto según el tamaño del contenido */
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}

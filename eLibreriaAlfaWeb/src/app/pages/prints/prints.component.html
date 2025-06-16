@@ -3,21 +3,23 @@
     [center]="true">
 </app-title-and-description>
 
-<!-- Select para elegir entre solicitar o ver impresiones -->
-<app-select-prints 
-    *ngIf="isUserAuthenticated" 
-    (optionSelected)="onPrintOptionSelected($event)">
-</app-select-prints>
 
-<!-- Mostrar componente según la selección -->
-<div *ngIf="isUserAuthenticated">
+<div class="loading-container" *ngIf="isUserAuthenticated === null">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+
+
+<div class="authenticated-content-container" *ngIf="isUserAuthenticated !== null">
+    <app-select-prints 
+        (optionSelected)="onPrintOptionSelected($event)">
+    </app-select-prints>
+
     @if (selectedPrintOption === 'solicitar') {
         <app-especificaciones></app-especificaciones>
     } @else if (selectedPrintOption === 'ver') {
         <app-user-prints></app-user-prints>
     }
+    
+    <app-restricted-overlay *ngIf="isUserAuthenticated === false"></app-restricted-overlay>
 </div>
-
-<!-- Si no está autenticado, mostrar solo especificaciones -->
-<app-especificaciones *ngIf="!isUserAuthenticated"></app-especificaciones>
 

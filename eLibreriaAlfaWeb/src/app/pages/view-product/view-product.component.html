@@ -31,7 +31,7 @@
                         id="cantidad"
                         name="cantidad"
                         min="1"
-                        value="1" 
+                        [(ngModel)]="cantidad"
                         class="w-20 h-10 p-2 border border-gray-300 rounded-md text-center text-Text-Default-Default font-['Inter'] focus:ring-Primary-Default-Default focus:border-Primary-Default-Default appearance-none [-moz-appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                     />
                 </div>
@@ -39,10 +39,12 @@
 
             <div 
                 class="p-3 bg-gray-900 hover:bg-gray-600 transition-colors rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-700 flex justify-center items-center cursor-pointer mt-6 md:mt-auto"
-                (click)="modalVisible = true"
+                (click)="agregarAlPedido()"
+                [class.opacity-50]="addingToOrder"
+                [class.cursor-not-allowed]="addingToOrder"
             >
                 <div class="text-white text-base font-normal font-['Inter'] leading-none">
-                    Agregar a pedido
+                    {{ addingToOrder ? 'Agregando...' : 'Agregar a pedido' }}
                 </div>
             </div>
         </div>
@@ -55,6 +57,7 @@
     <div modal-action>
         <button 
             class="p-3 bg-gray-900 rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-700 flex justify-center items-center gap-2"
+            (click)="irAVerPedido()"
         >
             <span class="text-white text-base font-normal font-['Inter'] leading-none">Ver pedido</span>
         </button>

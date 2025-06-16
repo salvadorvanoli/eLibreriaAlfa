@@ -6,6 +6,8 @@
     <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
         @if (selectedDataType() === 'Impresión') {
             <app-prints-table [userRegistrado]="false" />
+        } @else if (selectedDataType() === 'Pedido') {
+            <app-order-table [userRegistrado]="false"></app-order-table>
         } @else {
             <app-data-panel [itemType]="selectedDataType" (itemSelected)="onItemSelected($event)" />
         }

@@ -157,6 +157,25 @@ export class EspecificacionesComponent {
     this.cdr.detectChanges();
   }
 
+  getPaperMultiplierText(paperType: string): string {
+    const paperMultipliers: { [key: string]: number } = {
+      'common': 1,
+      'photo': 3,
+      'photo_adhesive': 4,
+      'matte_adhesive': 3.5,
+      'card_smooth': 2,
+      'card_textured': 2.5
+    };
+    
+    const multiplier = paperMultipliers[paperType] || 1;
+    
+    if (multiplier === 1) {
+      return 'Precio base';
+    } else {
+      return `${multiplier}x precio`;
+    }
+  }
+
   get estimatedPrice(): number {
     if (!this.selectedFile) return 0;
     
@@ -460,18 +479,20 @@ export class EspecificacionesComponent {
 
         console.log('=== DATOS QUE SE ENVÍAN AL BACKEND ===');
         console.log('request:', request);
+        console.log('archivo:', this.selectedFile);
         console.log('========================================');
 
-        this.impresionService.createPrintRequest(request).subscribe({
+        // CAMBIO: Pasar tanto request como archivo
+        this.impresionService.createPrintRequest(request, this.selectedFile!).subscribe({
           next: (response) => {
-            console.log('Solicitud de impresión creada:', response);
+            console.log('✅ Solicitud de impresión creada:', response);
             this.messageService.add({
               severity: 'success',
               summary: 'Éxito',
               detail: 'Solicitud de impresión enviada correctamente.'
             });
             
-            
+            // Limpiar formulario
             this.selectedFile = null;
             this.pdfPageCount = 0;
             this.comentarioAdicional = '';
@@ -479,7 +500,7 @@ export class EspecificacionesComponent {
             this.cdr.detectChanges();
           },
           error: (error) => {
-            console.error('Error al crear solicitud de impresión:', error);
+            console.error('❌ Error al crear solicitud de impresión:', error);
             this.messageService.add({
               severity: 'error',
               summary: 'Error',

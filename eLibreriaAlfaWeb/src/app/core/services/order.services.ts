@@ -8,9 +8,10 @@ import { ProductoEncargue } from '../models/producto-encargue';
 
 export enum EncargueEstado {
   EN_CREACION = 'EN_CREACION',
-  ENVIADO = 'ENVIADO',
+  PENDIENTE = 'PENDIENTE',
   COMPLETADO = 'COMPLETADO',
-  CANCELADO = 'CANCELADO'
+  CANCELADO = 'CANCELADO',
+  ENTREGADO = 'ENTREGADO' 
 }
 
 
@@ -73,6 +74,15 @@ export class OrderService extends BaseHttpService<Encargue, Encargue> {
   }
 
 
+  agregarProductoAEncargue(usuarioId: number, producto: any): Observable<void> {
+    return this.http.post<void>(
+      `${this.baseUrl}${this.end}/usuario/${usuarioId}/producto`,
+      producto,
+      { withCredentials: true }
+    );
+  }
+
+
   obtenerEncargueEnCreacion(): Observable<Encargue> {
     return this.http.get<Encargue>(
       `${this.baseUrl}${this.end}/en-creacion`,
@@ -95,6 +105,32 @@ export class OrderService extends BaseHttpService<Encargue, Encargue> {
       `${this.baseUrl}${this.end}/usuario/${usuarioId}/cancelar-enviado`,
       {},
       { withCredentials: true }
+    );
+  }
+
+
+  listarEncarguesFinalizadosPorUsuario(usuarioId: number): Observable<Encargue[]> {
+    const url = `${this.baseUrl}${this.end}/user/${usuarioId}/history`;
+    console.log('Llamando a endpoint de historial:', url);
+    return this.http.get<Encargue[]>(
+      url,
+      { withCredentials: true }
+    );
+  }
+
+
+  getEncargues(): Observable<any> {
+    return this.http.get<any>(
+      `${this.baseUrl}${this.end}`,
+      { withCredentials: true }
+    );
+  }
+
+  cambiarEstadoEncargue(idEncargue: number, nuevoEstado: string): Observable<string> {
+    return this.http.patch<string>(
+      `${this.baseUrl}${this.end}/${idEncargue}/estado`,
+      { estado: nuevoEstado },
+      { withCredentials: true, responseType: 'text' as 'json' }
     );
   }
 }

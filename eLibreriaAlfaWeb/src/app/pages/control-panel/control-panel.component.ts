@@ -4,6 +4,7 @@ import { OptionsPanelComponent } from './components/options-panel/options-panel.
 import { DataPanelComponent } from './components/data-panel/data-panel.component';
 import { ControlPanelModalComponent } from './components/control-panel-modal/control-panel-modal.component';
 import { PrintsTableComponent } from '../../shared/components/prints-table/prints-table.component'; 
+import { OrderTableComponent } from '../../shared/components/order-table/order-table.component';
 
 @Component({
   selector: 'app-control-panel',
@@ -13,7 +14,8 @@ import { PrintsTableComponent } from '../../shared/components/prints-table/print
     OptionsPanelComponent,
     DataPanelComponent,
     ControlPanelModalComponent,
-    PrintsTableComponent 
+    PrintsTableComponent,
+    OrderTableComponent
   ],
   templateUrl: './control-panel.component.html',
   styleUrl: './control-panel.component.scss'

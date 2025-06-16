@@ -216,6 +216,55 @@ export class PrintsTableComponent implements OnInit {
         }
     }
 
+    descargarArchivo(impresion: Impresion): void {
+        if (!impresion.nombreArchivo) {
+            this.messageService.add({
+                severity: 'warning',
+                summary: 'Advertencia',
+                detail: 'No hay archivo asociado a esta impresión'
+            });
+            return;
+        }
+
+        console.log('=== DESCARGANDO ARCHIVO ===');
+        console.log('Impresión:', impresion);
+        console.log('Archivo a descargar:', impresion.nombreArchivo);
+
+        this.impresionService.downloadFile(impresion.nombreArchivo).subscribe({
+            next: (blob) => {
+                console.log('✅ Blob recibido:', blob);
+                
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                
+                link.download = impresion.nombreArchivo;
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                window.URL.revokeObjectURL(url);
+                
+                console.log('✅ Descarga iniciada exitosamente');
+            },
+            error: (error) => {
+                console.error('❌ Error al descargar archivo:', error);
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: 'No se pudo descargar el archivo. Intente nuevamente.'
+                });
+            }
+        });
+    }
+
+    formatFileName(filename: string | undefined): string {
+        if (!filename) return 'Sin nombre';
+        
+        return filename.length > 37 ? filename.substring(37) : filename;
+    }
+
     private loadImpresionesByUser(): void {
         this.isLoading = true;
         
