@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
@@ -20,7 +20,8 @@ interface ProfileOption {
   templateUrl: './select-profile.component.html',
   styleUrl: './select-profile.component.scss'
 })
-export class SelectProfileComponent {
+export class SelectProfileComponent implements OnInit {
+  @Input() initialSection: string = 'info'; 
   @Output() optionSelected = new EventEmitter<string>();
 
   selectedOption: ProfileOption = { 
@@ -36,6 +37,11 @@ export class SelectProfileComponent {
   ];
 
   ngOnInit() {
+    const initialOption = this.options.find(opt => opt.value === this.initialSection);
+    if (initialOption) {
+      this.selectedOption = initialOption;
+    }
+    
     this.optionSelected.emit(this.selectedOption.value);
   }
 
