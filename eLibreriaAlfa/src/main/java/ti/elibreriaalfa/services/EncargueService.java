@@ -36,8 +36,12 @@ public class EncargueService {
     public ResponseListadoEncargues listadoEncargues() {
         ResponseListadoEncargues responseListadoEncargues = new ResponseListadoEncargues();
 
-        responseListadoEncargues.setEncargues(encargueRepository.findAll().stream()
-                .map(this::mapToDto).toList());
+        responseListadoEncargues.setEncargues(
+                encargueRepository.findAll().stream()
+                        .filter(e -> e.getEstado() != Encargue_Estado.EN_CREACION)
+                        .map(this::mapToDto)
+                        .toList()
+        );
 
         return responseListadoEncargues;
     }
@@ -161,15 +165,13 @@ public class EncargueService {
         return encarguesPage.map(this::mapToDto);
     }
 
-    @Transactional
-    public void agregarProductoAEncargue(Long encargueId, Producto_EncargueDto productoDto) {
-        Encargue encargue = encargueRepository.findById(encargueId)
-                .orElseThrow(() -> new EntityNotFoundException("Encargue no encontrado"));
+    public void agregarProductoAEncarguePorUsuario(Long usuarioId, Producto_EncargueDto productoDto) {
+        Encargue encargue = encargueRepository.findByUsuario_IdAndEstado(usuarioId, Encargue_Estado.EN_CREACION)
+                .orElseThrow(() -> new IllegalArgumentException("No hay encargue en proceso actualmente para este usuario"));
 
         Producto producto = productoRepository.findById(productoDto.getProducto().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
-        // Verifica si ya existe el producto en el encargue
         boolean existe = encargue.getProductos().stream()
                 .anyMatch(pe -> pe.getProducto().getId().equals(producto.getId()));
         if (existe) {
@@ -184,7 +186,6 @@ public class EncargueService {
         productoEncargueRepository.save(pe);
         encargue.getProductos().add(pe);
 
-        // Actualiza el total
         encargue.setTotal(encargue.getTotal() + producto.getPrecio() * productoDto.getCantidad());
         encargueRepository.save(encargue);
     }
@@ -245,7 +246,7 @@ public class EncargueService {
                 .orElseThrow(() -> new EntityNotFoundException("Encargue no encontrado con ID: " + encargueId));
 
         encargue.setFecha(fechaEnvio);
-        encargue.setEstado(Encargue_Estado.ENVIADO);
+        encargue.setEstado(Encargue_Estado.PENDIENTE);
 
         encargueRepository.save(encargue);
     }
@@ -254,9 +255,9 @@ public class EncargueService {
 
     @Transactional
     public void cancelarEncargueEnviadoYCrearNuevo(Long usuarioId) {
-        // Buscar encargue ENVIADO del usuario
-        Encargue encargue = encargueRepository.findByUsuario_IdAndEstado(usuarioId, Encargue_Estado.ENVIADO)
-                .orElseThrow(() -> new EntityNotFoundException("No se encontró un encargue ENVIADO para el usuario"));
+        // Buscar encargue PENDIENTE del usuario
+        Encargue encargue = encargueRepository.findByUsuario_IdAndEstado(usuarioId, Encargue_Estado.PENDIENTE)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró un encargue PENDIENTE para el usuario"));
 
         // Cambiar estado a CANCELADO
         encargue.setEstado(Encargue_Estado.CANCELADO);
@@ -274,6 +275,49 @@ public class EncargueService {
         nuevoEncargue.setFecha(null);
 
         encargueRepository.save(nuevoEncargue);
+    }
+
+    public List<EncargueDto> listarEncarguesPorUsuarioEstados(Long usuarioId, List<Encargue_Estado> estados) {
+        return encargueRepository.findAll().stream()
+                .filter(e -> e.getUsuario().getId().equals(usuarioId) && estados.contains(e.getEstado()))
+                .map(this::mapToDto)
+                .toList();
+    }
+
+    @Transactional
+    public void cambiarEstadoEncargue(Long encargueId, String nuevoEstadoStr) {
+        Encargue encargue = encargueRepository.findById(encargueId)
+                .orElseThrow(() -> new EntityNotFoundException("Encargue no encontrado"));
+
+        Encargue_Estado nuevoEstado;
+        try {
+            nuevoEstado = Encargue_Estado.valueOf(nuevoEstadoStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Estado no válido: " + nuevoEstadoStr);
+        }
+
+        encargue.setEstado(nuevoEstado);
+        encargueRepository.save(encargue);
+
+        if (nuevoEstado == Encargue_Estado.CANCELADO ||
+                nuevoEstado == Encargue_Estado.ENTREGADO ||
+                nuevoEstado == Encargue_Estado.COMPLETADO) {
+
+            Usuario usuario = encargue.getUsuario();
+            boolean yaExisteEnCreacion = encargueRepository
+                    .findByUsuario_IdAndEstado(usuario.getId(), Encargue_Estado.EN_CREACION)
+                    .isPresent();
+
+            if (!yaExisteEnCreacion) {
+                Encargue nuevoEncargue = new Encargue();
+                nuevoEncargue.setUsuario(usuario);
+                nuevoEncargue.setEstado(Encargue_Estado.EN_CREACION);
+                nuevoEncargue.setProductos(new ArrayList<>());
+                nuevoEncargue.setTotal(0f);
+                nuevoEncargue.setFecha(null);
+                encargueRepository.save(nuevoEncargue);
+            }
+        }
     }
 
 }

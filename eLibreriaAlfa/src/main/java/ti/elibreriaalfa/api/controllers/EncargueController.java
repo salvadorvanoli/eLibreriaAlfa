@@ -2,6 +2,7 @@ package ti.elibreriaalfa.api.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import ti.elibreriaalfa.dtos.producto_encargue.Producto_EncargueDto;
 import ti.elibreriaalfa.services.EncargueService;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -83,11 +85,11 @@ public class EncargueController {
     }
 
     // Agregar producto a un encargue
-    @PostMapping("/{id}/producto")
-    public ResponseEntity<Void> agregarProductoAEncargue(
-            @PathVariable("id") Long encargueId,
+    @PostMapping("/usuario/{usuarioId}/producto")
+    public ResponseEntity<Void> agregarProductoAEncarguePorUsuario(
+            @PathVariable("usuarioId") Long usuarioId,
             @RequestBody Producto_EncargueDto productoDto) {
-        encargueService.agregarProductoAEncargue(encargueId, productoDto);
+        encargueService.agregarProductoAEncarguePorUsuario(usuarioId, productoDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -145,6 +147,29 @@ public class EncargueController {
     public ResponseEntity<Void> cancelarEnviadoYCrearNuevo(@PathVariable("usuarioId") Long usuarioId) {
         encargueService.cancelarEncargueEnviadoYCrearNuevo(usuarioId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/user/{userId}/history")
+    public ResponseEntity<?> listarEncarguesFinalizadosPorUsuario(@PathVariable("userId") Long usuarioId) {
+        var encargues = encargueService.listarEncarguesPorUsuarioEstados(usuarioId,
+                List.of(Encargue_Estado.CANCELADO, Encargue_Estado.ENTREGADO, Encargue_Estado.COMPLETADO));
+        return ResponseEntity.ok(encargues);
+    }
+
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<String> cambiarEstadoEncargue(
+            @PathVariable("id") Long idEncargue,
+            @RequestBody Map<String, String> body) {
+        String nuevoEstado = body.get("estado");
+        if (nuevoEstado == null || nuevoEstado.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("El estado es requerido");
+        }
+        try {
+            encargueService.cambiarEstadoEncargue(idEncargue, nuevoEstado);
+            return ResponseEntity.ok("Estado actualizado correctamente");
+        } catch (IllegalArgumentException | EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 /* Ejemplos de Json para probar:
