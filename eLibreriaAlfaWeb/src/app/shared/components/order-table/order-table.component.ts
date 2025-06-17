@@ -260,7 +260,7 @@ export class OrderTableComponent implements OnInit {
             case 'EN_CREACION':
                 return 'warning';
             case 'PENDIENTE':
-                return 'secondary';
+                return 'warning'; 
             case 'CANCELADO':
                 return 'danger';
             default:
