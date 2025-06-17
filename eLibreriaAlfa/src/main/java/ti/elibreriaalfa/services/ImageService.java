@@ -86,9 +86,7 @@ public class ImageService {
             throw new IllegalArgumentException("El archivo está vacío");
         }
 
-        if (file.getSize() > 10 * 1024 * 1024) {
-            throw new IllegalArgumentException("El archivo excede el tamaño máximo permitido");
-        }
+
 
         // Tipos permitidos para impresiones
         String contentType = file.getContentType();

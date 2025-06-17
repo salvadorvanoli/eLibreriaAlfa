@@ -113,7 +113,7 @@ public class ImpresionService {
                 .orElseThrow(() -> new IllegalArgumentException("No existe una impresión con el id especificado"));
 
         List<String> estadosValidos = Arrays.asList(
-                "Pendiente", "En proceso", "Completado", "Cancelado", "Error");
+                "Pendiente", "En proceso", "Completado", "Cancelado", "Entregado", "Error");
 
         if (!estadosValidos.contains(nuevoEstado)) {
             throw new IllegalArgumentException("Estado no válido: " + nuevoEstado +
