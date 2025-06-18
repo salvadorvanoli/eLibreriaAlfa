@@ -1,8 +1,8 @@
-import { ProductoSimple } from './producto';
+import { ProductoSimpleDto } from './producto';
 
 export interface ProductoEncargue {
   id: number;  
   cantidad: number;  
-  producto: ProductoSimple;  
+  producto: ProductoSimpleDto;  
   encargueId: number;
 }

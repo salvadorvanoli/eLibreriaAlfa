@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
-import { Producto } from '../../../../core/models/producto';
+import { ProductoSimpleDto } from '../../../../core/models/producto';
 
 @Component({
   selector: 'app-product-card',
@@ -15,6 +15,6 @@ import { Producto } from '../../../../core/models/producto';
 })
 export class ProductCardComponent {
 
-  @Input() product!: Producto;
+  @Input() product!: ProductoSimpleDto;
 
 }

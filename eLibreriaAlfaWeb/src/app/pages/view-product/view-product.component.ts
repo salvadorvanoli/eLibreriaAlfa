@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../core/services/product.service';
-import { Producto } from '../../core/models/producto';
+import { ProductoDto } from '../../core/models/producto';
 import { CarouselComponent } from './components/carousel/carousel.component';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
 
@@ -19,7 +19,7 @@ import { ModalComponent } from '../../shared/components/modal/modal.component';
 })
 
 export class ViewProductComponent implements OnInit {
-  producto?: Producto;
+  producto?: ProductoDto;
   loading = true;
   error?: string;
   modalVisible = false;
@@ -38,7 +38,7 @@ export class ViewProductComponent implements OnInit {
         return;
       }
       this.productService.getById(id).subscribe({
-        next: (producto: Producto) => {
+        next: (producto: ProductoDto) => {
           this.producto = producto;
           this.loading = false;
         },

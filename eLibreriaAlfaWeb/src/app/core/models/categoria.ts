@@ -1,25 +1,24 @@
-import { Producto } from "./producto";
+import { ProductoSimpleDto } from "./producto";
 
-export interface Categoria {
+export interface CategoriaDto {
     id: number;
     nombre: string;
-    padre: CategoriaSimple;
-    productos: Producto[];
+    padre: CategoriaSimpleDto;
+    productos: ProductoSimpleDto[];
 }
 
-export interface CategoriaSimple {
+export interface CategoriaSimpleDto {
     id: number;
     nombre: string;
 }
 
-export interface CategoriaNodo {
+export interface CategoriaNodoDto {
     id: number;
     nombre: string;
-    hijos: CategoriaNodo[];
-    productos: number[];
+    hijos: CategoriaNodoDto[];
 }
 
-export interface CategoriaCreate {
+export interface CategoriaRequestDto {
     nombre: string;
     padreId?: number;
 }

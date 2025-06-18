@@ -2,18 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseHttpService } from './base-http.service';
-import { Categoria, CategoriaCreate, CategoriaNodo } from '../models/categoria';
+import { CategoriaRequestDto, CategoriaNodoDto } from '../models/categoria';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService extends BaseHttpService<CategoriaCreate, Categoria> {
+export class CategoryService extends BaseHttpService<CategoriaRequestDto, any> {
 
   constructor(http: HttpClient) {
     super(http, '/category');
   }
 
-  getAllCategoriesTree(): Observable<CategoriaNodo[]> {
-    return this.http.get<CategoriaNodo[]>(`${this.baseUrl}${this.end}`);
+  getAllCategoriesTree(): Observable<CategoriaNodoDto[]> {
+    return this.http.get<CategoriaNodoDto[]>(`${this.baseUrl}${this.end}`);
   }
 }

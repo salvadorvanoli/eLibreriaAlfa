@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ti.elibreriaalfa.dtos.producto.ProductoDto;
+import ti.elibreriaalfa.dtos.producto.ProductoRequestDto;
 import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
 import ti.elibreriaalfa.services.ProductoService;
 
@@ -68,14 +69,9 @@ public class ProductoController {
 
     @PostMapping
     @Operation(description = "Esta función crea una nueva categoria")
-    //@PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<String> createProducto(@RequestBody ProductoDto producto) {
-        String response = productoService.crearProducto(producto);
-        if (response == null) {
-            return new ResponseEntity<>("Error al crear socio", HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        }
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<ProductoDto> createProducto(@RequestBody ProductoRequestDto producto) {
+        return new ResponseEntity<>(productoService.createProducto(producto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -87,23 +83,16 @@ public class ProductoController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<String> modificarProducto(
+    public ResponseEntity<ProductoDto> modificarProducto(
             @PathVariable(name = "id") Long idProducto,
-            @RequestBody ProductoDto productoDto) {
-
-        try {
-            String response = productoService.modificarProducto(idProducto, productoDto);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error interno al modificar producto", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            @RequestBody ProductoRequestDto productoDto
+    ) {
+        return new ResponseEntity<>(productoService.modifyProducto(idProducto, productoDto), HttpStatus.OK);
     }
 
     //http://localhost:8080/product/paginado?pagina=0&cantidad=10
     @GetMapping("/paginado")
-    public ResponseEntity<Page<ProductoDto>> productosPaginados(
+    public ResponseEntity<Page<ProductoSimpleDto>> productosPaginados(
             @RequestParam("pagina") Integer pagina,
             @RequestParam("cantidad")  Integer cantidad) {
 

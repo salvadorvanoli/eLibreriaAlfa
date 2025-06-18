@@ -5,7 +5,7 @@ import { CategoryTreeComponent } from '../../shared/components/category-tree/cat
 import { ProductsCatalogComponent } from './components/products-catalog/products-catalog.component';
 import { MessageComponent } from '../../shared/components/message/message.component';
 import { ProductService } from '../../core/services/product.service';
-import { Producto } from '../../core/models/producto';
+import { ProductoSimpleDto } from '../../core/models/producto';
 
 @Component({
   selector: 'app-catalog',
@@ -24,7 +24,7 @@ import { Producto } from '../../core/models/producto';
 })
 export class CatalogComponent {
 
-  products!: Producto[];
+  products!: ProductoSimpleDto[];
   selectedCategory: number = 0;
   searchText: string = '';
   order: string = "";
@@ -64,8 +64,8 @@ export class CatalogComponent {
     });
   }
 
-  onCategorySelection(category: number) {
-    this.selectedCategory = category;
+  onCategorySelection(category: number | number[]) {
+    this.selectedCategory = category as number;
     this.filterProducts();
   }
 

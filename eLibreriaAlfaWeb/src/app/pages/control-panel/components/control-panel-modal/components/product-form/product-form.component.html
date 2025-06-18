@@ -1,0 +1,46 @@
+<p-toast />
+<form novalidate action="" method="post" class="mx-auto flex flex-col items-center gap-4 w-full max-w-md">
+    <app-form-text-input
+        #nameInput
+        class="w-full" 
+        placeholder="Nombre"
+        [formSubmitted]="formSubmitted"
+        [textPattern]="namePattern"
+        errorMessage="El nombre debe tener entre 1 y 50 caracteres"
+        (textValue)="name = $event"
+        (isInputInvalid)="isNameInvalid = $event"
+        [minLength]="1"
+        [maxLength]="50"
+    />
+
+    <app-form-number-input
+        #priceInput
+        class="w-full" 
+        placeholder="Precio"
+        [formSubmitted]="formSubmitted"
+        [min]="1"
+        errorMessage="El precio debe ser mayor a 0"
+        (inputValue)="price = $event"
+        (isInputInvalid)="isPriceInvalid = $event"
+    />
+    
+    <app-form-textarea-input
+        #descriptionInput
+        class="w-full" 
+        placeholder="Contenido de la publicación"
+        [formSubmitted]="formSubmitted"
+        [textPattern]="descriptionPattern"
+        errorMessage="La descripción debe tener entre 1 y 200 caracteres"
+        (textValue)="description = $event"
+        (isInputInvalid)="isDescriptionInvalid = $event"
+        [editorModules]="{toolbar: []}"
+    />
+    
+    <app-primary-button
+        class="w-full"
+        styleClass="w-full"
+        [classes]="'w-full'"
+        [label]="'Confirmar'"
+        (onClick)="confirm()"
+    />
+</form>

@@ -53,5 +53,18 @@ public class Constants {
     public static final String SUCCESS_COMENTARIO_CREADO = "Comentario creado exitosamente con ID: ";
     public static final String SUCCESS_COMENTARIO_ELIMINADO = "Comentario eliminado exitosamente";
 
+    // Constantes de producto
+    public static final int MIN_NOMBRE_PRODUCTO_LENGTH = 1;
+    public static final int MAX_NOMBRE_PRODUCTO_LENGTH = 50;
+    public static final int MIN_PRECIO_PRODUCTO = 50;
+    public static final int MIN_DESCRIPCION_PRODUCTO_LENGTH = 1;
+    public static final int MAX_DESCRIPCION_PRODUCTO_LENGTH = 500;
+    public static final int MIN_CATEGORIAS_PRODUCTO = 1;
+
+    // Mensajes de error para validaciones de categoría
+    public static final String ERROR_NOMBRE_CATEGORIA_VACIO = "El nombre de la categoría no puede estar vacío";
+    public static final String ERROR_CATEGORIA_NO_ENCONTRADA = "No existe una categoría con ese ID";
+
+
     private Constants() {}
 }

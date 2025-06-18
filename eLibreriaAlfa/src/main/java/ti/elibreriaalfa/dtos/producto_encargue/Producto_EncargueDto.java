@@ -21,7 +21,7 @@ public class Producto_EncargueDto {
     public Producto_EncargueDto(Producto_Encargue pe) {
         this.id = pe.getId();
         this.cantidad = pe.getCantidad();
-        this.producto = new ProductoSimpleDto(pe.getProducto());
+        this.producto = pe.getProducto().mapToDtoSimple();
         this.EncargueId = pe.getEncargue().getId();
     }
 }

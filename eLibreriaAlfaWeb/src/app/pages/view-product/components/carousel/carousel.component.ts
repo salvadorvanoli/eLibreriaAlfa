@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Producto } from '../../../../core/models/producto';  
 import { ProductService } from '../../../../core/services/product.service'; 
 import { CarouselModule } from 'primeng/carousel';
 import { ButtonModule } from 'primeng/button';

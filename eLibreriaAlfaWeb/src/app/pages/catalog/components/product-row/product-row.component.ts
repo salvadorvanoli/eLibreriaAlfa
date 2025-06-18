@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { Producto } from '../../../../core/models/producto';
+import { ProductoSimpleDto } from '../../../../core/models/producto';
 
 @Component({
   selector: 'app-product-row',
@@ -15,7 +15,7 @@ import { Producto } from '../../../../core/models/producto';
 })
 export class ProductRowComponent {
 
-  @Input() product!: Producto;
+  @Input() product!: ProductoSimpleDto;
   @Input() first!: boolean;
 
 }
