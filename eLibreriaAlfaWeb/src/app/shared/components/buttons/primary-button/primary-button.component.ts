@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 })
 export class PrimaryButtonComponent {
   @Input() label: string = '';
+  @Input() icon: string = '';
   @Input() classes: string = '';
 
   @Output() onClick = new EventEmitter<Event>();

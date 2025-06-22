@@ -6,8 +6,8 @@ public class Constants {
     public static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
     public static final String TELEFONO_REGEX = "^(09[0-9]{7}|9[0-9]{7})$";
     public static final int MIN_CONTRASENIA_LENGTH = 6;
-    public static final int MIN_NOMBRE_LENGTH = 1;
-    public static final int MAX_NOMBRE_LENGTH = 40;
+    public static final int MIN_NOMBRE_USUARIO_LENGTH = 1;
+    public static final int MAX_NOMBRE_USUARIO_LENGTH = 40;
     public static final float ENCARGUE_INICIAL_TOTAL = 0f;
 
     // Mensajes de error para validaciones de usuario
@@ -56,10 +56,18 @@ public class Constants {
     // Constantes de producto
     public static final int MIN_NOMBRE_PRODUCTO_LENGTH = 1;
     public static final int MAX_NOMBRE_PRODUCTO_LENGTH = 50;
-    public static final int MIN_PRECIO_PRODUCTO = 50;
+    public static final int MIN_PRECIO_PRODUCTO = 1;
     public static final int MIN_DESCRIPCION_PRODUCTO_LENGTH = 1;
     public static final int MAX_DESCRIPCION_PRODUCTO_LENGTH = 500;
     public static final int MIN_CATEGORIAS_PRODUCTO = 1;
+
+    // Mensajes de error para validaciones de producto
+    public static final String ERROR_NOMBRE_PRODUCTO_INVALIDO = "El nombre debe tener entre " + MIN_NOMBRE_PRODUCTO_LENGTH + " y " + MAX_NOMBRE_PRODUCTO_LENGTH + " caracteres";
+    public static final String ERROR_NOMBRE_PRODUCTO_YA_EXISTE = "El formato del correo electrónico no es válido";
+    public static final String ERROR_PRECIO_PRODUCTO_INVALIDO = "El precio debe ser de al menos " + MIN_PRECIO_PRODUCTO;
+    public static final String ERROR_DESCRIPCION_PRODUCTO_INVALIDA = "La descripción debe tener entre " + MIN_DESCRIPCION_PRODUCTO_LENGTH + " y " + MAX_DESCRIPCION_PRODUCTO_LENGTH + " caracteres";
+    public static final String ERROR_CATEGORIAS_PRODUCTO_INVALIDAS = "El producto debe tener al menos una categoría asociada";
+    public static final String ERROR_PRODUCTO_NO_ENCONTRADO_ID = "No existe un producto con ese ID";
 
     // Mensajes de error para validaciones de categoría
     public static final String ERROR_NOMBRE_CATEGORIA_VACIO = "El nombre de la categoría no puede estar vacío";

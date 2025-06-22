@@ -27,7 +27,7 @@
     <app-form-textarea-input
         #descriptionInput
         class="w-full" 
-        placeholder="Contenido de la publicación"
+        placeholder="Descripción"
         [formSubmitted]="formSubmitted"
         [textPattern]="descriptionPattern"
         errorMessage="La descripción debe tener entre 1 y 200 caracteres"
@@ -35,6 +35,25 @@
         (isInputInvalid)="isDescriptionInvalid = $event"
         [editorModules]="{toolbar: []}"
     />
+
+    <app-category-tree-popover
+        #categoriesInput
+        class="w-full"
+        [formSubmitted]="formSubmitted"
+        (categorySelection)="categories = $event"
+        (isInputInvalid)="areCategoriesInvalid = $event"
+    />
+
+    <app-image-upload-input
+        #imagesInput
+        [maxFiles]="5"
+        [maxFileSize]="5242880"
+        [acceptedTypes]="'image/*'"
+        [formSubmitted]="formSubmitted"
+        (imagesValue)="newImages = $event"
+        (removedImages)="onRemoveImage($event)"
+        (isInputInvalid)="areImagesInvalid = $event">
+    </app-image-upload-input>
     
     <app-primary-button
         class="w-full"

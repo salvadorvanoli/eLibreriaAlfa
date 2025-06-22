@@ -3,9 +3,11 @@ package ti.elibreriaalfa.api.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ti.elibreriaalfa.dtos.producto.ProductoConImagenesDto;
 import ti.elibreriaalfa.dtos.producto.ProductoDto;
 import ti.elibreriaalfa.dtos.producto.ProductoRequestDto;
 import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
@@ -59,33 +61,33 @@ public class ProductoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductoDto> getProductoPorId(@PathVariable(name = "id") Long idProducto) {
-        try {
-            ProductoDto producto = productoService.obtenerProductoPorId(idProducto);
-            return new ResponseEntity<>(producto, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(productoService.obtenerProductoPorId(idProducto), HttpStatus.OK);
     }
 
-    @PostMapping
+    @GetMapping("/{id}/with-images")
+    public ResponseEntity<ProductoConImagenesDto> getProductoConImagenesPorId(@PathVariable(name = "id") Long idProducto) {
+        return new ResponseEntity<>(productoService.obtenerProductoConImagenesPorId(idProducto), HttpStatus.OK);
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(description = "Esta función crea una nueva categoria")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<ProductoDto> createProducto(@RequestBody ProductoRequestDto producto) {
+    public ResponseEntity<ProductoDto> createProducto(@ModelAttribute ProductoRequestDto producto) {
         return new ResponseEntity<>(productoService.createProducto(producto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     //@PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<Void> borrarCategoria(@PathVariable(name = "id") Long idProducto) {
-        productoService.borrarProducto(idProducto);
+    public ResponseEntity<Void> deleteProducto(@PathVariable(name = "id") Long idProducto) {
+        productoService.deleteProducto(idProducto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<ProductoDto> modificarProducto(
+    public ResponseEntity<ProductoDto> modifyProducto(
             @PathVariable(name = "id") Long idProducto,
-            @RequestBody ProductoRequestDto productoDto
+            @ModelAttribute ProductoRequestDto productoDto
     ) {
         return new ResponseEntity<>(productoService.modifyProducto(idProducto, productoDto), HttpStatus.OK);
     }

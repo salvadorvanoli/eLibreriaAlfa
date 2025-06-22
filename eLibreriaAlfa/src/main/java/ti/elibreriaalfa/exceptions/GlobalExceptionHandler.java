@@ -4,6 +4,11 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ti.elibreriaalfa.exceptions.image.ImageException;
+import ti.elibreriaalfa.exceptions.image.ImageNotFoundException;
+import ti.elibreriaalfa.exceptions.producto.ProductoException;
+import ti.elibreriaalfa.exceptions.producto.ProductoNoEncontradoException;
+import ti.elibreriaalfa.exceptions.producto.ProductoYaExisteException;
 import ti.elibreriaalfa.exceptions.usuario.UsuarioException;
 import ti.elibreriaalfa.exceptions.usuario.UsuarioInicioSesionException;
 import ti.elibreriaalfa.exceptions.usuario.UsuarioNoEncontradoException;
@@ -21,6 +26,14 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // Manejadores de excepciones de usuario
     @ExceptionHandler(UsuarioException.class)
     public ResponseEntity<Map<String, String>> handleUsuarioException(UsuarioException ex) {
         Map<String, String> error = new HashMap<>();
@@ -47,13 +60,6 @@ public class GlobalExceptionHandler {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", ex.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     // Manejadores de excepciones de publicación
@@ -97,5 +103,41 @@ public class GlobalExceptionHandler {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    // Manejadores de exceptiones de producto
+    @ExceptionHandler(ProductoException.class)
+    public ResponseEntity<Map<String, String>> handleProductoException(ProductoException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ProductoNoEncontradoException.class)
+    public ResponseEntity<Map<String, String>> handleProductoNoEncontradoException(ProductoNoEncontradoException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProductoYaExisteException.class)
+    public ResponseEntity<Map<String, String>> handleProductoYaExisteException(ProductoYaExisteException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ImageException.class)
+    public ResponseEntity<Map<String, String>> handleImageException(ImageException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ImageNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleImageNotFoundException(ImageNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 }

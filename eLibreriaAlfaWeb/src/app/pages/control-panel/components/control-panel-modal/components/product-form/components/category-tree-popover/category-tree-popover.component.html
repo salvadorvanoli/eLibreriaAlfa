@@ -1,6 +1,10 @@
-<app-primary-button (click)="op.toggle($event)" icon="pi pi-share-alt" label="Share" />
+<app-primary-button (click)="op.toggle($event)" icon="pi pi-sitemap" label="Seleccionar categorías" />
 <p-popover #op>
-    <app-category-tree selectionMode="multiple" [selectedCategories]="productCategories" (selection)="onCategorySelection($event)" />
+    <app-category-tree
+        #categoryTree
+        selectionMode="multiple"
+        (selection)="onCategorySelection($event)"
+    />
 </p-popover>
 
 @if (showErrorMessage()) {

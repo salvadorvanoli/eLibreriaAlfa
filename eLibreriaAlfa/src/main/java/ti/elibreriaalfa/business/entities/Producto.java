@@ -7,15 +7,14 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import ti.elibreriaalfa.dtos.categoria.CategoriaSimpleDto;
 import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
+import ti.elibreriaalfa.dtos.producto.ProductoConImagenesDto;
 import ti.elibreriaalfa.dtos.producto.ProductoDto;
 import ti.elibreriaalfa.dtos.producto.ProductoRequestDto;
 import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
-import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
 import ti.elibreriaalfa.utils.Constants;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -27,7 +26,7 @@ public class Producto {
     private Long id;
 
     @Column(nullable = false)
-    @Size(min = Constants.MIN_NOMBRE_PRODUCTO_LENGTH, max = Constants.MAX_NOMBRE_PRODUCTO_LENGTH, message = "El nombre debe tener entre " + Constants.MIN_NOMBRE_PRODUCTO_LENGTH + " y " + Constants.MAX_NOMBRE_PRODUCTO_LENGTH + " caracteres")
+    @Size(min = Constants.MIN_NOMBRE_PRODUCTO_LENGTH, max = Constants.MAX_NOMBRE_PRODUCTO_LENGTH, message = Constants.ERROR_NOMBRE_PRODUCTO_INVALIDO)
     private String nombre;
 
     @Column(nullable = false)
@@ -76,6 +75,24 @@ public class Producto {
         producto.setPrecio(this.precio);
         producto.setImagenes(this.imagenes);
         producto.setDescripcion(this.descripcion);
+
+        return producto;
+    }
+
+    public ProductoConImagenesDto mapToDtoConImagenes() {
+        ProductoConImagenesDto producto = new ProductoConImagenesDto();
+
+        producto.setId(this.id);
+        producto.setNombre(this.nombre);
+        producto.setPrecio(this.precio);
+        producto.setDescripcion(this.descripcion);
+
+        List<CategoriaSimpleDto> categorias = (this.categorias != null)
+                ? this.categorias.stream()
+                .map(Categoria::mapToSimpleDto)
+                .toList()
+                : Collections.emptyList();
+        producto.setCategorias(categorias);
 
         return producto;
     }
