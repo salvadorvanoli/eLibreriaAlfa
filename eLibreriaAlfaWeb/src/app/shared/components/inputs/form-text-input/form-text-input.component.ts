@@ -25,6 +25,8 @@ export class FormTextInputComponent {
   @Input() textPattern: RegExp = new RegExp('');
   @Input() errorMessage: string = "";
   @Input() formSubmitted = signal(false);
+  @Input() minLength: number = 1;
+  @Input() maxLength: number = 200;
 
   @Output() textValue = new EventEmitter<string>();
   @Output() isInputInvalid = new EventEmitter<boolean>();

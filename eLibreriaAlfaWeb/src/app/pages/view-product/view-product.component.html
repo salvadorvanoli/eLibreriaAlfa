@@ -2,9 +2,11 @@
     <p-toast></p-toast>
     
     <div class="flex flex-col md:flex-row gap-6 md:gap-8 h-full items-stretch">
-        <div class="w-full md:w-1/2 lg:flex-1">
-            <app-carousel class="w-full"></app-carousel>
-        </div>
+        @if (producto?.imagenes && producto?.imagenes?.length && producto?.imagenes?.length!! > 0) {
+            <div class="w-full md:w-1/2 lg:flex-1">
+                <app-carousel class="w-full" [product]="producto"></app-carousel>
+            </div>
+        }
 
         <div class="w-full md:w-1/2 lg:flex-1 flex flex-col justify-between mt-6 md:mt-0">
             <div class="flex flex-col gap-4">
@@ -20,8 +22,7 @@
                 </div>
                 
                 <div class="w-full md:w-[484px] mt-2">
-                    <div class="text-Text-Default-Default text-sm md:text-base font-normal font-['Inter'] leading-snug">
-                       {{producto?.descripcion}}
+                    <div [innerHTML]="producto?.descripcion" class="text-Text-Default-Default text-sm md:text-base font-normal font-['Inter'] leading-snug">
                     </div>
                 </div>
 

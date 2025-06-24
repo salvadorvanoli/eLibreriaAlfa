@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { FormTextInputComponent } from "../../../../shared/components/inputs/form-text-input/form-text-input.component";
 import { UserFormComponent } from "./components/user-form/user-form.component";
+import { ProductFormComponent } from './components/product-form/product-form.component';
 import { PublicationFormComponent } from './components/publication-form/publication-form.component';
 
 @Component({
@@ -10,6 +11,7 @@ import { PublicationFormComponent } from './components/publication-form/publicat
   imports: [
     ModalComponent,
     UserFormComponent,
+    ProductFormComponent,
     PublicationFormComponent,
 ],
   templateUrl: './control-panel-modal.component.html',

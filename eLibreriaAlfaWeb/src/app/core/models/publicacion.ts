@@ -1,3 +1,4 @@
+import { ImageDto } from "./image";
 import { UsuarioSimple } from "./usuario";
 
 export interface PublicacionSimple {
@@ -5,11 +6,15 @@ export interface PublicacionSimple {
     titulo: string;
     contenido: string;
     fechaCreacion: Date;
+    imagenUrl?: string;
 }
 
 export interface Publicacion extends PublicacionSimple {
     comentarios?: Comentario[];
-    imagenUrl?: string;
+}
+
+export interface PublicacionConImagenDto extends PublicacionSimple {
+    imagen: ImageDto;
 }
 
 export interface Comentario {
@@ -33,9 +38,8 @@ export interface AgregarComentario {
     };
 }
 
-export interface AgregarPublicacion {
+export interface PublicacionRequestDto {
     titulo: string;
     contenido: string;
-    fechaCreacion: string;
-    comentarios: any[];
+    imagen: File | null;
 }

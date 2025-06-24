@@ -6,13 +6,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ti.elibreriaalfa.api.responses.publicacion.ResponseListadoPublicaciones;
 import ti.elibreriaalfa.api.responses.publicacion.ResponsePublicacion;
 import ti.elibreriaalfa.dtos.comentario.ComentarioDto;
+import ti.elibreriaalfa.dtos.publicacion.PublicacionConImagenDto;
 import ti.elibreriaalfa.dtos.publicacion.PublicacionDto;
+import ti.elibreriaalfa.dtos.publicacion.PublicacionRequestDto;
+import ti.elibreriaalfa.dtos.publicacion.PublicacionSimpleDto;
 import ti.elibreriaalfa.services.ComentarioService;
 import ti.elibreriaalfa.services.PublicacionService;
 
@@ -78,6 +82,11 @@ public class PublicacionController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/{idPublicacion}/with-images")
+    public ResponseEntity<PublicacionConImagenDto> getPublicacionConImagenById(@PathVariable(name = "idPublicacion") Long idPublicacion) {
+        return new ResponseEntity<>(publicacionService.getPublicacionConImagenById(idPublicacion), HttpStatus.OK);
+    }
+
     @Operation(summary = "Obtener publicaciones paginadas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Página de publicaciones obtenida exitosamente"),
@@ -125,12 +134,10 @@ public class PublicacionController {
             @ApiResponse(responseCode = "400", description = "Datos de publicación inválidos"),
             @ApiResponse(responseCode = "403", description = "Acceso denegado")
     })
-    @PostMapping
-    //@PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<String> createPublicacion(@RequestBody PublicacionDto publicacionDto) {
-        log.info("Creando nueva publicación con título: {}", publicacionDto.getTitulo());
-        String response = publicacionService.crearPublicacion(publicacionDto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<PublicacionSimpleDto> createPublicacion(@ModelAttribute PublicacionRequestDto publicacionDto) {
+        return new ResponseEntity<>(publicacionService.createPublicacion(publicacionDto), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Eliminar publicación")
@@ -141,9 +148,9 @@ public class PublicacionController {
     })
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<Void> borrarPublicacion(@PathVariable(name = "id") Long idPublicacion) {
+    public ResponseEntity<Void> deletePublicacion(@PathVariable(name = "id") Long idPublicacion) {
         log.info("Eliminando publicación con ID: {}", idPublicacion);
-        publicacionService.borrarPublicacion(idPublicacion);
+        publicacionService.deletePublicacion(idPublicacion);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -154,20 +161,12 @@ public class PublicacionController {
             @ApiResponse(responseCode = "403", description = "Acceso denegado - Se requiere rol ADMINISTRADOR"),
             @ApiResponse(responseCode = "404", description = "Publicación no encontrada")
     })
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<String> modificarPublicacion(
+    public ResponseEntity<PublicacionSimpleDto> modifyPublicacion(
             @PathVariable(name = "id") Long idPublicacion,
-            @RequestBody PublicacionDto publicacionDto) {
-        log.info("Modificando publicación con ID: {}", idPublicacion);
-        String response = "";
-        try {
-            response = publicacionService.modificarPublicacion(idPublicacion, publicacionDto);
-        } catch (Exception e) {
-            log.error("Error al modificar publicación: {}", e.getMessage());
-            return new ResponseEntity<>("Error al modificar publicación: " + e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(response, HttpStatus.OK);
+            @ModelAttribute PublicacionRequestDto publicacionDto) {
+        return new ResponseEntity<>(publicacionService.modifyPublicacion(idPublicacion, publicacionDto), HttpStatus.OK);
     }
 
     @Operation(summary = "Crear comentario en publicación")

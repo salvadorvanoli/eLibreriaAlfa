@@ -1,5 +1,4 @@
 import { ProductoEncargue } from "./producto-encargue";
-import { Producto } from "./producto";
 
 export enum EncargueEstado {
     EN_CREACION = 'EN_CREACION',

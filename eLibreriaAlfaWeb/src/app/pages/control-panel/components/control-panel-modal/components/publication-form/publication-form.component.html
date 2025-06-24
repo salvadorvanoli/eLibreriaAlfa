@@ -6,6 +6,8 @@
         placeholder="Título de la publicación"
         [formSubmitted]="formSubmitted"
         [textPattern]="titlePattern"
+        [minLength]="1"
+        [maxLength]="200"
         errorMessage="El título debe tener entre 1 y 200 caracteres"
         (textValue)="title = $event"
         (isInputInvalid)="isTitleInvalid = $event"
@@ -20,6 +22,8 @@
         placeholder="Contenido de la publicación"
         [formSubmitted]="formSubmitted"
         [textPattern]="contentPattern"
+        [minLength]="1"
+        [maxLength]="200"
         errorMessage="El título debe tener entre 1 y 200 caracteres"
         (textValue)="content = $event"
         (isInputInvalid)="isContentInvalid = $event"
@@ -28,6 +32,18 @@
     <div class="w-full text-right text-sm character-counter" [class]="contentCharCountClass">
         {{ contentCharCount }}/200 caracteres
     </div>
+
+    <app-image-upload-input
+        #imageInput
+        [required]="true"
+        [maxFiles]="1"
+        [maxFileSize]="5242880"
+        [acceptedTypes]="'image/*'"
+        [formSubmitted]="formSubmitted"
+        (imagesValue)="newImage = $event"
+        (removedImages)="onRemoveImage($event)"
+        (isInputInvalid)="isImageInvalid = $event">
+    </app-image-upload-input>
     
     <app-primary-button
         class="w-full"

@@ -3,10 +3,13 @@ package ti.elibreriaalfa.api.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ti.elibreriaalfa.dtos.producto.ProductoConImagenesDto;
 import ti.elibreriaalfa.dtos.producto.ProductoDto;
+import ti.elibreriaalfa.dtos.producto.ProductoRequestDto;
 import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
 import ti.elibreriaalfa.services.ProductoService;
 
@@ -58,52 +61,40 @@ public class ProductoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductoDto> getProductoPorId(@PathVariable(name = "id") Long idProducto) {
-        try {
-            ProductoDto producto = productoService.obtenerProductoPorId(idProducto);
-            return new ResponseEntity<>(producto, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(productoService.obtenerProductoPorId(idProducto), HttpStatus.OK);
     }
 
-    @PostMapping
+    @GetMapping("/{id}/with-images")
+    public ResponseEntity<ProductoConImagenesDto> getProductoConImagenesPorId(@PathVariable(name = "id") Long idProducto) {
+        return new ResponseEntity<>(productoService.obtenerProductoConImagenesPorId(idProducto), HttpStatus.OK);
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(description = "Esta función crea una nueva categoria")
-    //@PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<String> createProducto(@RequestBody ProductoDto producto) {
-        String response = productoService.crearProducto(producto);
-        if (response == null) {
-            return new ResponseEntity<>("Error al crear socio", HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        }
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<ProductoDto> createProducto(@ModelAttribute ProductoRequestDto producto) {
+        return new ResponseEntity<>(productoService.createProducto(producto), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    //@PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<Void> borrarCategoria(@PathVariable(name = "id") Long idProducto) {
-        productoService.borrarProducto(idProducto);
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<Void> deleteProducto(@PathVariable(name = "id") Long idProducto) {
+        productoService.deleteProducto(idProducto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<String> modificarProducto(
+    public ResponseEntity<ProductoDto> modifyProducto(
             @PathVariable(name = "id") Long idProducto,
-            @RequestBody ProductoDto productoDto) {
-
-        try {
-            String response = productoService.modificarProducto(idProducto, productoDto);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Error interno al modificar producto", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+            @ModelAttribute ProductoRequestDto productoDto
+    ) {
+        return new ResponseEntity<>(productoService.modifyProducto(idProducto, productoDto), HttpStatus.OK);
     }
 
     //http://localhost:8080/product/paginado?pagina=0&cantidad=10
     @GetMapping("/paginado")
-    public ResponseEntity<Page<ProductoDto>> productosPaginados(
+    public ResponseEntity<Page<ProductoSimpleDto>> productosPaginados(
             @RequestParam("pagina") Integer pagina,
             @RequestParam("cantidad")  Integer cantidad) {
 

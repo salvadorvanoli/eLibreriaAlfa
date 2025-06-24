@@ -9,7 +9,7 @@ import { SelectItem } from 'primeng/api';
 import { SearchBarComponent } from '../../../../shared/components/inputs/search-bar/search-bar.component';
 import { ProductRowComponent } from "../product-row/product-row.component";
 import { ProductCardComponent } from "../product-card/product-card.component";
-import { Producto } from '../../../../core/models/producto';
+import { ProductoSimpleDto } from '../../../../core/models/producto';
 
 @Component({
   selector: 'app-products-catalog',
@@ -44,7 +44,7 @@ export class ProductsCatalogComponent {
     { label: 'Precio descendente', value: 'desc' },
   ];
 
-  @Input() products!: Producto[];
+  @Input() products!: ProductoSimpleDto[];
 
   @Output() searchTextChange = new EventEmitter<string>();
   @Output() sortChange = new EventEmitter<string>();

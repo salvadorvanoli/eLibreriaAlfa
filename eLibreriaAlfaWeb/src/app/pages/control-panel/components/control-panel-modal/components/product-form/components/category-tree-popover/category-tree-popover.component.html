@@ -1,0 +1,19 @@
+<app-primary-button (click)="op.toggle($event)" icon="pi pi-sitemap" label="Seleccionar categorías" />
+<p-popover #op>
+    <app-category-tree
+        #categoryTree
+        selectionMode="multiple"
+        (selection)="onCategorySelection($event)"
+    />
+</p-popover>
+
+@if (showErrorMessage()) {
+    <p-message
+        class="w-full"
+        severity="error"
+        variant="simple"
+        size="small"
+    >
+        Debes seleccionar al menos una categoría
+    </p-message>
+}

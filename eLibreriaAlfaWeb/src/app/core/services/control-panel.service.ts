@@ -59,9 +59,9 @@ export class ControlPanelService {
       case 'Categoría':
         return this.categoryService.getById(id);
       case 'Producto':
-        return this.productService.getById(id);
+        return this.productService.getByIdWithImages(id);
       case 'Publicación':
-        return this.publicationService.getById(id);
+        return this.publicationService.getByIdWithImages(id);
       //case 'Pedido':
         //return this.orderService.getById(id);
       default:

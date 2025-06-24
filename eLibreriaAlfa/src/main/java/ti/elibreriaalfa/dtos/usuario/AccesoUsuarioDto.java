@@ -21,14 +21,12 @@ public class AccesoUsuarioDto {
     }
 
     public void validateAccesoUsuarioDto() {
-        if (this.email == null || this.email.isBlank()) {
-            throw new UsuarioException(Constants.ERROR_EMAIL_VACIO);
-        } else if (!this.email.matches(Constants.EMAIL_REGEX)) {
-            throw new UsuarioException(Constants.ERROR_EMAIL_FORMATO);
+        if (this.email == null || this.email.isBlank() || !this.email.matches(Constants.EMAIL_REGEX)) {
+            throw new UsuarioException(Constants.ERROR_EMAIL_USUARIO_INVALIDO);
         }
 
         if (this.contrasenia == null || this.contrasenia.length() < Constants.MIN_CONTRASENIA_LENGTH) {
-            throw new UsuarioException(Constants.ERROR_CONTRASENIA_LENGTH);
+            throw new UsuarioException(Constants.ERROR_CONTRASENIA_USUARIO_INVALIDA);
         }
     }
 }

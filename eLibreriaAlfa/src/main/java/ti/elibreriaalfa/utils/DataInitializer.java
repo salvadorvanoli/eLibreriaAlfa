@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ti.elibreriaalfa.business.entities.*;
 import ti.elibreriaalfa.business.repositories.*;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -103,72 +102,212 @@ public class DataInitializer {
     private List<Categoria> crearCategorias() {
         log.info("Creando categorías...");
 
-        List<String> nombresCategorias = Arrays.asList(
-                "Libros de Literatura",
-                "Útiles Escolares",
-                "Material de Oficina",
-                "Juegos Educativos",
-                "Electrónicos"
+        // Crear árbol de categorías
+        Categoria libros = new Categoria();
+        libros.setNombre("Libros");
+        libros.setPadre(null);
+        categoriaRepository.save(libros);
+
+        Categoria literatura = new Categoria();
+        literatura.setNombre("Literatura");
+        literatura.setPadre(libros);
+        categoriaRepository.save(literatura);
+
+        Categoria novela = new Categoria();
+        novela.setNombre("Novela");
+        novela.setPadre(literatura);
+        categoriaRepository.save(novela);
+
+        Categoria cuento = new Categoria();
+        cuento.setNombre("Cuento");
+        cuento.setPadre(literatura);
+        categoriaRepository.save(cuento);
+
+        Categoria infantil = new Categoria();
+        infantil.setNombre("Infantil");
+        infantil.setPadre(libros);
+        categoriaRepository.save(infantil);
+
+        Categoria utiles = new Categoria();
+        utiles.setNombre("Útiles Escolares");
+        utiles.setPadre(null);
+        categoriaRepository.save(utiles);
+
+        Categoria escritura = new Categoria();
+        escritura.setNombre("Escritura");
+        escritura.setPadre(utiles);
+        categoriaRepository.save(escritura);
+
+        Categoria papel = new Categoria();
+        papel.setNombre("Papel");
+        papel.setPadre(utiles);
+        categoriaRepository.save(papel);
+
+        Categoria oficina = new Categoria();
+        oficina.setNombre("Material de Oficina");
+        oficina.setPadre(null);
+        categoriaRepository.save(oficina);
+
+        Categoria electronicos = new Categoria();
+        electronicos.setNombre("Electrónicos");
+        electronicos.setPadre(null);
+        categoriaRepository.save(electronicos);
+
+        Categoria computo = new Categoria();
+        computo.setNombre("Computación");
+        computo.setPadre(electronicos);
+        categoriaRepository.save(computo);
+
+        Categoria audio = new Categoria();
+        audio.setNombre("Audio");
+        audio.setPadre(electronicos);
+        categoriaRepository.save(audio);
+
+        Categoria juegos = new Categoria();
+        juegos.setNombre("Juegos Educativos");
+        juegos.setPadre(null);
+        categoriaRepository.save(juegos);
+
+        Categoria mesa = new Categoria();
+        mesa.setNombre("Juegos de Mesa");
+        mesa.setPadre(juegos);
+        categoriaRepository.save(mesa);
+
+        Categoria didacticos = new Categoria();
+        didacticos.setNombre("Didácticos");
+        didacticos.setPadre(juegos);
+        categoriaRepository.save(didacticos);
+
+        // Devolver todas las categorías creadas
+        return Arrays.asList(
+                libros, literatura, novela, cuento, infantil,
+                utiles, escritura, papel,
+                oficina,
+                electronicos, computo, audio,
+                juegos, mesa, didacticos
         );
-
-        List<Categoria> categorias = new ArrayList<>();
-
-        for (String nombre : nombresCategorias) {
-            Categoria categoria = new Categoria();
-            categoria.setNombre(nombre);
-            categoria.setPadre(null);
-            categorias.add(categoriaRepository.save(categoria));
-        }
-
-        return categorias;
     }
 
     private void crearProductos(List<Categoria> categorias) {
         log.info("Creando productos...");
 
-        String[][] productosInfo = {
-                {"Cien años de soledad", "Novela clásica de Gabriel García Márquez", "25.99"},
-                {"El principito", "Obra de Antoine de Saint-Exupéry", "15.50"},
-                {"Cuaderno universitario", "Cuaderno de tapa dura con 100 hojas", "3.99"},
-                {"Bloc de notas", "Block tamaño A5 con hojas rayadas", "2.50"},
-                {"Lapiceras de colores", "Set de 12 lapiceras de gel de colores", "8.75"},
-                {"Carpeta archivadora", "Carpeta A4 con anillos", "6.25"},
-                {"Calculadora científica", "Calculadora con funciones avanzadas", "18.50"},
-                {"Post-it", "Pack de 5 blocks de notas adhesivas", "4.99"},
-                {"Juego de mesa educativo", "Para aprender matemáticas jugando", "22.50"},
-                {"Rompecabezas mapa mundial", "Puzzle de 1000 piezas", "19.99"},
-                {"Juego de memoria", "Clásico juego para ejercitar la memoria", "12.75"},
-                {"Tablet educativa", "Tablet con apps educativas para niños", "89.99"},
-                {"Audífonos", "Audífonos con cable y micrófono", "34.50"},
-                {"Cargador portátil", "Batería externa 10000mAh", "45.99"},
-                {"Lápices", "Paquete de 12 lápices HB", "3.25"},
-                {"Borrador", "Borrador de goma blanco", "0.99"},
-                {"Diccionario", "Diccionario español completo", "28.75"},
-                {"Mochila escolar", "Mochila resistente con varios compartimentos", "39.99"},
-                {"Estuche", "Estuche con cierre para guardar útiles", "7.50"},
-                {"Kit de geometría", "Set completo con regla, transportador y compás", "5.99"}
-        };
+        // Buscar categorías por nombre para asignar productos
+        Categoria novela = categorias.stream().filter(c -> c.getNombre().equals("Novela")).findFirst().orElse(null);
+        Categoria cuento = categorias.stream().filter(c -> c.getNombre().equals("Cuento")).findFirst().orElse(null);
+        Categoria infantil = categorias.stream().filter(c -> c.getNombre().equals("Infantil")).findFirst().orElse(null);
+        Categoria escritura = categorias.stream().filter(c -> c.getNombre().equals("Escritura")).findFirst().orElse(null);
+        Categoria papel = categorias.stream().filter(c -> c.getNombre().equals("Papel")).findFirst().orElse(null);
+        Categoria computo = categorias.stream().filter(c -> c.getNombre().equals("Computación")).findFirst().orElse(null);
+        Categoria audio = categorias.stream().filter(c -> c.getNombre().equals("Audio")).findFirst().orElse(null);
+        Categoria mesa = categorias.stream().filter(c -> c.getNombre().equals("Juegos de Mesa")).findFirst().orElse(null);
+        Categoria didacticos = categorias.stream().filter(c -> c.getNombre().equals("Didácticos")).findFirst().orElse(null);
+        Categoria oficina = categorias.stream().filter(c -> c.getNombre().equals("Material de Oficina")).findFirst().orElse(null);
 
-        for (int i = 0; i < productosInfo.length; i++) {
-            Producto producto = new Producto();
-            producto.setNombre(productosInfo[i][0]);
-            producto.setDescripcion(productosInfo[i][1]);
-            producto.setPrecio(Float.parseFloat(productosInfo[i][2]));
+        // Productos variados
+        Producto p1 = new Producto();
+        p1.setNombre("Cien años de soledad");
+        p1.setDescripcion("Novela clásica de Gabriel García Márquez");
+        p1.setPrecio(25.99f);
+        p1.setCategorias(Arrays.asList(novela));
+        productoRepository.save(p1);
 
-            // Asignar categoría(s) - cada producto puede estar en 1 o 2 categorías
-            int numCategorias = random.nextInt(2) + 1; // 1 o 2 categorías
-            List<Categoria> categoriasProducto = new ArrayList<>();
+        Producto p2 = new Producto();
+        p2.setNombre("El principito");
+        p2.setDescripcion("Obra de Antoine de Saint-Exupéry");
+        p2.setPrecio(15.50f);
+        p2.setCategorias(Arrays.asList(cuento, infantil));
+        productoRepository.save(p2);
 
-            for (int j = 0; j < numCategorias; j++) {
-                int categoriaIndex = random.nextInt(categorias.size());
-                Categoria categoria = categorias.get(categoriaIndex);
-                if (!categoriasProducto.contains(categoria)) {
-                    categoriasProducto.add(categoria);
-                }
-            }
+        Producto p3 = new Producto();
+        p3.setNombre("Harry Potter y la piedra filosofal");
+        p3.setDescripcion("Primer libro de la saga Harry Potter");
+        p3.setPrecio(29.99f);
+        p3.setCategorias(Arrays.asList(novela, infantil));
+        productoRepository.save(p3);
 
-            producto.setCategorias(categoriasProducto);
-            productoRepository.save(producto);
-        }
+        Producto p4 = new Producto();
+        p4.setNombre("Set de lápices de colores");
+        p4.setDescripcion("Caja de 24 lápices de colores");
+        p4.setPrecio(7.99f);
+        p4.setCategorias(Arrays.asList(escritura));
+        productoRepository.save(p4);
+
+        Producto p5 = new Producto();
+        p5.setNombre("Cuaderno universitario");
+        p5.setDescripcion("Cuaderno de tapa dura con 100 hojas");
+        p5.setPrecio(3.99f);
+        p5.setCategorias(Arrays.asList(papel));
+        productoRepository.save(p5);
+
+        Producto p6 = new Producto();
+        p6.setNombre("Notebook Lenovo 14''");
+        p6.setDescripcion("Notebook para estudiantes y oficina");
+        p6.setPrecio(499.99f);
+        p6.setCategorias(Arrays.asList(computo, oficina));
+        productoRepository.save(p6);
+
+        Producto p7 = new Producto();
+        p7.setNombre("Auriculares inalámbricos JBL");
+        p7.setDescripcion("Auriculares bluetooth con micrófono");
+        p7.setPrecio(59.99f);
+        p7.setCategorias(Arrays.asList(audio));
+        productoRepository.save(p7);
+
+        Producto p8 = new Producto();
+        p8.setNombre("Juego de mesa: Catan");
+        p8.setDescripcion("Juego de estrategia para toda la familia");
+        p8.setPrecio(44.99f);
+        p8.setCategorias(Arrays.asList(mesa));
+        productoRepository.save(p8);
+
+        Producto p9 = new Producto();
+        p9.setNombre("Puzzle educativo de animales");
+        p9.setDescripcion("Puzzle didáctico para niños pequeños");
+        p9.setPrecio(12.50f);
+        p9.setCategorias(Arrays.asList(didacticos, infantil));
+        productoRepository.save(p9);
+
+        Producto p10 = new Producto();
+        p10.setNombre("Silla ergonómica de oficina");
+        p10.setDescripcion("Silla con soporte lumbar y altura regulable");
+        p10.setPrecio(129.99f);
+        p10.setCategorias(Arrays.asList(oficina));
+        productoRepository.save(p10);
+
+        // Más productos variados
+        Producto p11 = new Producto();
+        p11.setNombre("Resaltadores pastel");
+        p11.setDescripcion("Set de 6 resaltadores colores pastel");
+        p11.setPrecio(5.99f);
+        p11.setCategorias(Arrays.asList(escritura));
+        productoRepository.save(p11);
+
+        Producto p12 = new Producto();
+        p12.setNombre("Agenda 2025");
+        p12.setDescripcion("Agenda anual con calendario y stickers");
+        p12.setPrecio(8.99f);
+        p12.setCategorias(Arrays.asList(papel, oficina));
+        productoRepository.save(p12);
+
+        Producto p13 = new Producto();
+        p13.setNombre("Tablet Samsung Galaxy Tab A7");
+        p13.setDescripcion("Tablet para estudio y entretenimiento");
+        p13.setPrecio(199.99f);
+        p13.setCategorias(Arrays.asList(computo, infantil));
+        productoRepository.save(p13);
+
+        Producto p14 = new Producto();
+        p14.setNombre("Juego didáctico de matemáticas");
+        p14.setDescripcion("Juego para aprender sumas y restas");
+        p14.setPrecio(14.99f);
+        p14.setCategorias(Arrays.asList(didacticos));
+        productoRepository.save(p14);
+
+        Producto p15 = new Producto();
+        p15.setNombre("Bolígrafos gel azul");
+        p15.setDescripcion("Pack de 10 bolígrafos de gel azul");
+        p15.setPrecio(4.50f);
+        p15.setCategorias(Arrays.asList(escritura));
+        productoRepository.save(p15);
     }
 }

@@ -9,15 +9,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import ti.elibreriaalfa.api.responses.categoria.ResponseListadoCategorias;
+import ti.elibreriaalfa.business.entities.Usuario;
 import ti.elibreriaalfa.business.repositories.CategoriaRepository;
 import ti.elibreriaalfa.business.repositories.ProductoRepository;
 import ti.elibreriaalfa.business.entities.Categoria;
 import ti.elibreriaalfa.business.entities.Producto;
 import ti.elibreriaalfa.dtos.categoria.CategoriaDto;
-import ti.elibreriaalfa.dtos.categoria.CategoriaCreateDto;
+import ti.elibreriaalfa.dtos.categoria.CategoriaRequestDto;
 import ti.elibreriaalfa.dtos.categoria.CategoriaNodoDto;
 import ti.elibreriaalfa.dtos.categoria.CategoriaSimpleDto;
 import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
+import ti.elibreriaalfa.exceptions.usuario.UsuarioNoEncontradoException;
+import ti.elibreriaalfa.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -42,7 +45,7 @@ public class CategoriaService {
         ResponseListadoCategorias responseListadoCategorias = new ResponseListadoCategorias();
 
         responseListadoCategorias.setCategorias(categoriaRepository.findAll().stream()
-                .map(this::mapToDto).toList());
+                .map(Categoria::mapToDto).toList());
 
         return responseListadoCategorias;
     }
@@ -57,86 +60,61 @@ public class CategoriaService {
     }
 
     public CategoriaDto obtenerCategoriaPorId(Long id) {
-        Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + id));
-        return new CategoriaDto(categoria);
+        Categoria categoria = getCategoriaEntityById(id);
+        return categoria.mapToDto();
     }
 
     @Transactional
-    public String crearCategoria(CategoriaCreateDto categoriaDto) {
-        // Validación básica
-        if (categoriaDto.getNombre() == null || categoriaDto.getNombre().trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre de la categoría es obligatorio");
-        }
+    public CategoriaSimpleDto crearCategoria(CategoriaRequestDto categoriaDto) {
+        categoriaDto.validateCategoriaRequestDto();
 
-        Categoria nuevaCategoria = new Categoria();
-        nuevaCategoria.setNombre(categoriaDto.getNombre());
+        Categoria nuevaCategoria = categoriaDto.mapToEntity();
 
         if (categoriaDto.getPadreId() != null) {
-            Categoria padre = categoriaRepository.findById(categoriaDto.getPadreId())
-                    .orElseThrow(() -> new RuntimeException("Categoría padre no encontrada"));
+            Categoria padre = getCategoriaEntityById(categoriaDto.getPadreId());
             nuevaCategoria.setPadre(padre);
-            padre.getHijos().add(nuevaCategoria); // Bidireccionalidad
+            padre.getHijos().add(nuevaCategoria);
+            categoriaRepository.save(padre);
         }
 
         categoriaRepository.save(nuevaCategoria);
-        return "Categoría creada con ID: " + nuevaCategoria.getId();
+        return nuevaCategoria.mapToSimpleDto();
     }
 
     @Transactional
-    public String modificarCategoria(Long id, CategoriaDto categoriaDto) {
-        Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + id));
+    public CategoriaSimpleDto modificarCategoria(Long id, CategoriaRequestDto categoriaDto) {
+        categoriaDto.validateCategoriaRequestDto();
+
+        Categoria categoria = getCategoriaEntityById(id);
 
         categoria.setNombre(categoriaDto.getNombre());
 
-        if (categoriaDto.getPadre() != null) {
-            Categoria padre = categoriaRepository.findById(categoriaDto.getPadre().getId())
-                    .orElseThrow(() -> new RuntimeException("Categoría padre no encontrada"));
+        if (categoriaDto.getPadreId() != null) {
+            Categoria padre = getCategoriaEntityById(categoriaDto.getPadreId());
+            padre.getHijos().removeIf(hijo -> hijo.getId().equals(categoria.getId()));
+            padre.agregarHijo(categoria);
+            categoriaRepository.save(padre);
             categoria.setPadre(padre);
         } else {
             categoria.setPadre(null);
         }
 
-        if (categoriaDto.getProductos() != null) {
-            Set<Long> nuevosIds = categoriaDto.getProductos().stream()
-                    .map(ProductoSimpleDto::getId)
-                    .collect(Collectors.toSet());
-
-            Set<Producto> actuales = new HashSet<>(categoria.getProductos());
-
-            for (Producto producto : actuales) {
-                if (!nuevosIds.contains(producto.getId())) {
-                    producto.getCategorias().remove(categoria);
-                    categoria.getProductos().remove(producto);
-                    productoRepository.save(producto);
-                }
-            }
-
-            List<Producto> nuevosProductos = productoRepository.findAllById(nuevosIds);
-            for (Producto producto : nuevosProductos) {
-                if (!categoria.getProductos().contains(producto)) {
-                    producto.getCategorias().add(categoria);
-                    categoria.getProductos().add(producto);
-                    productoRepository.save(producto);
-                }
-            }
-        }
-
         categoriaRepository.save(categoria);
-        return "Categoría modificada exitosamente";
+        return categoria.mapToSimpleDto();
     }
 
 
     @Transactional
     public void borrarCategoria(Long idCategoria) {
-        Categoria categoria = categoriaRepository.findById(idCategoria)
-                .orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada"));
+        Categoria categoria = getCategoriaEntityById(idCategoria);
 
-        List<Producto> productos = new ArrayList<>(categoria.getProductos());
+        List<Producto> productos = categoria.getProductos();
         for (Producto producto : productos) {
             producto.getCategorias().remove(categoria);
-            productoRepository.save(producto);
+            if (producto.getCategorias().isEmpty())
+                    productoRepository.delete(producto);
+                else
+                    productoRepository.save(producto);
         }
 
         categoria.getProductos().clear();
@@ -147,11 +125,12 @@ public class CategoriaService {
     public Page<CategoriaDto> listadoCategoriaPage(int pagina, int cantidad) {
         Pageable pageable = PageRequest.of(pagina, cantidad, Sort.by("Id").descending());
         Page<Categoria> categoriasPage = categoriaRepository.findAll(pageable);
-        return categoriasPage.map(this::mapToDto);
+        return categoriasPage.map(Categoria::mapToDto);
     }
 
-    private CategoriaDto mapToDto(Categoria categoria) {
-        return new CategoriaDto(categoria);
+    private Categoria getCategoriaEntityById(Long idCategoria) throws UsuarioNoEncontradoException {
+        return categoriaRepository.findById(idCategoria)
+                .orElseThrow(() -> new UsuarioNoEncontradoException(Constants.ERROR_CATEGORIA_NO_ENCONTRADA));
     }
 }
 

@@ -18,7 +18,7 @@ export class DynamicCarouselComponent implements OnInit {
   @Input() showLink: boolean = false;
   @Input() getLink!: (item: any) => string;
   @Input() getTitle!: (item: any) => string;
-  @Input() getImageUrl?: (item: any) => string;
+  @Input() getImageUrl!: (item: any) => string;
   @Input() getPrice?: (item: any) => string | number;
 
   responsiveOptions: any;

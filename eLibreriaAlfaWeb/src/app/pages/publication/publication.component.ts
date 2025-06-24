@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +8,7 @@ import { CommentCardComponent } from './components/comment-card/comment-card.com
 import { NewCommentFormComponent } from './components/new-comment-form/new-comment-form.component';
 import { Comentario, Publicacion } from '../../core/models/publicacion';
 import { PaginatorModule } from 'primeng/paginator';
+import { ImageService } from '../../core/services/image.service';
 
 @Component({
   selector: 'app-publication',
@@ -39,12 +40,14 @@ export class PublicationComponent implements OnInit {
     paginatedComments: Comentario[] = [];
 
     defaultImageUrl: string = 'https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg';
+    publicacionImageUrl: string | undefined = undefined;
 
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private publicationService: PublicationService,
-        private securityService: SecurityService
+        private securityService: SecurityService,
+        private imageService: ImageService
     ) {}
 
     ngOnInit(): void {
@@ -65,7 +68,9 @@ export class PublicationComponent implements OnInit {
         }
 
         this.loading = true;
-        this.error = null;        this.publicationService.getById(+id).subscribe({
+        this.error = null;
+        
+        this.publicationService.getById(+id).subscribe({
         next: (publication) => {
             let publicacionData = Array.isArray(publication) ? publication : Object.values(publication);
             
@@ -81,6 +86,8 @@ export class PublicationComponent implements OnInit {
             // Configurar paginación después de asignar la publicación
             if (this.publicacion) {
                 this.setupPagination(this.publicacion.comentarios || []);
+                if (this.publicacion.imagenUrl)
+                    this.publicacionImageUrl = this.imageService.getImageUrl(this.publicacion.imagenUrl)
             }
             
             this.loading = false;
@@ -105,7 +112,9 @@ export class PublicationComponent implements OnInit {
         this.setupPagination(publicacion.comentarios || []);
 
         return publicacion;
-    }    private setupPagination(comentarios: Comentario[]): void {
+    }
+    
+    private setupPagination(comentarios: Comentario[]): void {
         this.totalComments = comentarios.length;
         this.currentPage = 0;
         this.updatePaginatedComments(comentarios);

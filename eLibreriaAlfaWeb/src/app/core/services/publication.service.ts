@@ -2,13 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { BaseHttpService } from './base-http.service';
-import { PublicacionSimple, Publicacion, AgregarPublicacion, AgregarComentario } from '../models/publicacion';
+import { PublicacionSimple, Publicacion, PublicacionRequestDto, AgregarComentario } from '../models/publicacion';
 import { Comentario } from '../models/publicacion';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PublicationService extends BaseHttpService<AgregarPublicacion, PublicacionSimple> {
+export class PublicationService extends BaseHttpService<any, any> {
 
   private apiUrl = '/publication';
 
@@ -33,7 +33,7 @@ export class PublicationService extends BaseHttpService<AgregarPublicacion, Publ
   }
 
   // Métodos para gestión de publicaciones
-  
+  /*
   createPublication(publicacion: AgregarPublicacion): Observable<string> {
     return this.http.post(this.baseUrl + this.apiUrl, publicacion, { 
       withCredentials: true, 
@@ -60,4 +60,5 @@ export class PublicationService extends BaseHttpService<AgregarPublicacion, Publ
       tap(response => console.log('Publicación actualizada:', response))
     );
   }
+  */
 }

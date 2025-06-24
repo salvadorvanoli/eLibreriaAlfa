@@ -7,22 +7,24 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ti.elibreriaalfa.business.entities.Categoria;
 import ti.elibreriaalfa.business.entities.Producto;
 import ti.elibreriaalfa.business.repositories.CategoriaRepository;
 import ti.elibreriaalfa.business.repositories.ProductoRepository;
-import ti.elibreriaalfa.dtos.categoria.CategoriaSimpleDto;
+import ti.elibreriaalfa.dtos.image.ImageDto;
 import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
+import ti.elibreriaalfa.dtos.producto.ProductoConImagenesDto;
 import ti.elibreriaalfa.dtos.producto.ProductoDto;
+import ti.elibreriaalfa.dtos.producto.ProductoRequestDto;
 import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
 
 import org.springframework.data.jpa.domain.Specification;
 import jakarta.persistence.criteria.Join;
+import ti.elibreriaalfa.exceptions.producto.ProductoYaExisteException;
+import ti.elibreriaalfa.utils.Constants;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,10 +33,12 @@ public class ProductoService {
 
     private final CategoriaRepository categoriaRepository;
     private final ProductoRepository productoRepository;
+    private final ImageService imageService;
 
-    public ProductoService(CategoriaRepository categoriaRepository, ProductoRepository productoRepository) {
+    public ProductoService(CategoriaRepository categoriaRepository, ProductoRepository productoRepository, ImageService imageService) {
         this.categoriaRepository = categoriaRepository;
         this.productoRepository = productoRepository;
+        this.imageService = imageService;
     }
 
     public List<ProductoSimpleDto> getAllProductos() {
@@ -114,31 +118,32 @@ public class ProductoService {
     }
 
     public ProductoDto obtenerProductoPorId(Long id) {
-        Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
-        return new ProductoDto(producto);
+        Producto producto = getProductoEntityById(id);
+        return producto.mapToDto();
+    }
+
+    public ProductoConImagenesDto obtenerProductoConImagenesPorId(Long id) {
+        Producto producto = getProductoEntityById(id);
+        ProductoConImagenesDto productoDto = producto.mapToDtoConImagenes();
+        return addImagesToDtoConImagenes(productoDto, producto.getImagenes());
     }
 
     @Transactional
-    public String crearProducto(ProductoDto productoDto) {
-        if (productoDto.getNombre() == null || productoDto.getNombre().trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del producto es obligatorio");
+    public ProductoDto createProducto(ProductoRequestDto productoDto) {
+        productoDto.validateProductoDto();
+
+        Producto productoRepetido = productoRepository.findByNombre(productoDto.getNombre());
+        if (productoRepetido != null) {
+            throw new ProductoYaExisteException(Constants.ERROR_NOMBRE_PRODUCTO_YA_EXISTE);
         }
 
-        Producto nuevoProducto = new Producto();
-        nuevoProducto.setNombre(productoDto.getNombre());
-        nuevoProducto.setPrecio(productoDto.getPrecio());
-        nuevoProducto.setDescripcion(productoDto.getDescripcion());
-        nuevoProducto.setImagenes(productoDto.getImagenes()); // Agregada esta línea para incluir las imágenes
+        Producto nuevoProducto = productoDto.mapToEntity();
 
-        if (productoDto.getCategorias() != null && !productoDto.getCategorias().isEmpty()) {
-            List<Long> categoriaIds = productoDto.getCategorias().stream()
-                    .map(CategoriaSimpleDto::getId)
-                    .collect(Collectors.toList());
+        if (productoDto.getCategoriasIds() != null && !productoDto.getCategoriasIds().isEmpty()) {
+            List<Long> categoriasIds = productoDto.getCategoriasIds();
+            List<Categoria> categorias = categoriaRepository.findAllById(categoriasIds);
 
-            List<Categoria> categorias = categoriaRepository.findAllById(categoriaIds);
-
-            if (categorias.size() != categoriaIds.size()) {
+            if (categorias.size() != categoriasIds.size()) {
                 throw new RuntimeException("Una o más categorías no fueron encontradas");
             }
 
@@ -146,40 +151,71 @@ public class ProductoService {
 
             for (Categoria cat : categorias) {
                 cat.getProductos().add(nuevoProducto);
+                categoriaRepository.save(cat);
             }
         }
 
+        String[] imagenes = productoDto.getImagenes().stream()
+                .map(imagen -> imageService.saveImage(imagen, Constants.IMAGEN_PRODUCTO_CARPETA))
+                .toArray(String[]::new);
+
+        nuevoProducto.setImagenes(imagenes);
+
         productoRepository.save(nuevoProducto);
-        return "Producto creada con ID: " + nuevoProducto.getId();
+        return nuevoProducto.mapToDto();
     }
 
     @Transactional
-    public void borrarProducto(Long idProducto) {
-        Producto producto = productoRepository.findById(idProducto)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+    public void deleteProducto(Long idProducto) {
+        Producto producto = getProductoEntityById(idProducto);
 
         for (Categoria categoria : producto.getCategorias()) {
             categoria.getProductos().remove(producto);
         }
 
-        producto.getCategorias().clear(); // También desde el lado del producto
+        producto.getCategorias().clear();
         productoRepository.delete(producto);
     }
 
     @Transactional
-    public String modificarProducto(Long id, ProductoDto productoDto) {
-        Producto producto = productoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+    public ProductoDto modifyProducto(Long id, ProductoRequestDto productoDto) {
+        productoDto.validateProductoDto();
 
-        producto.setNombre(productoDto.getNombre());
-        producto.setPrecio(productoDto.getPrecio());
-        producto.setDescripcion(productoDto.getDescripcion());
-        producto.setImagenes(productoDto.getImagenes()); // Agregada esta línea para incluir las imágenes
+        Producto producto = getProductoEntityById(id);
 
-        if (productoDto.getCategorias() != null) {
-            Set<Long> categoriaIds = productoDto.getCategorias().stream()
-                    .map(CategoriaSimpleDto::getId)
-                    .collect(Collectors.toSet());
+        Producto productoRepetido = productoRepository.findByNombre(productoDto.getNombre());
+        if (productoRepetido != null && !productoRepetido.getId().equals(producto.getId())) {
+            throw new ProductoYaExisteException(Constants.ERROR_NOMBRE_PRODUCTO_YA_EXISTE);
+        }
+
+        producto.setDatosProducto(productoDto);
+
+        String[] productoImagenes = producto.getImagenes() == null ? new String[0] : producto.getImagenes();
+
+        List<String> imagenesAEliminar = productoDto.getImagenesAEliminar();
+        if (imagenesAEliminar != null && !imagenesAEliminar.isEmpty()) {
+            for (String filename : productoDto.getImagenesAEliminar()) {
+                imageService.deleteImage(filename);
+            }
+
+            productoImagenes = Arrays.stream(productoImagenes)
+                    .filter(imagen -> !imagenesAEliminar.contains(imagen))
+                    .toArray(String[]::new);
+        }
+
+        List<MultipartFile> imagenesNuevas = productoDto.getImagenes();
+        if (imagenesNuevas != null && !imagenesNuevas.isEmpty()) {
+            for (MultipartFile file : imagenesNuevas) {
+                String imagenPath = imageService.saveImage(file, Constants.IMAGEN_PRODUCTO_CARPETA);
+                productoImagenes = Arrays.copyOf(productoImagenes, productoImagenes.length + 1);
+                productoImagenes[productoImagenes.length - 1] = imagenPath;
+            }
+        }
+
+        producto.setImagenes(productoImagenes);
+
+        if (productoDto.getCategoriasIds() != null && !productoDto.getCategoriasIds().isEmpty()) {
+            List<Long> categoriaIds = productoDto.getCategoriasIds();
 
             List<Categoria> categoriasActuales = new ArrayList<>(producto.getCategorias());
             for (Categoria categoria : categoriasActuales) {
@@ -192,34 +228,41 @@ public class ProductoService {
 
             List<Categoria> categoriasAAgregar = categoriaRepository.findAllById(categoriaIds).stream()
                     .filter(categoria -> !producto.getCategorias().contains(categoria))
-                    .collect(Collectors.toList());
+                    .toList();
 
             for (Categoria categoria : categoriasAAgregar) {
                 producto.getCategorias().add(categoria);
                 categoria.getProductos().add(producto);
                 categoriaRepository.save(categoria);
             }
-        } else {
-            for (Categoria categoria : new ArrayList<>(producto.getCategorias())) {
-                categoria.getProductos().remove(producto);
-                categoriaRepository.save(categoria);
-            }
-            producto.getCategorias().clear();
         }
 
         productoRepository.save(producto);
 
-        return "Producto modificado exitosamente";
+        return producto.mapToDto();
     }
 
-    public Page<ProductoDto> listadoProductoPage(int pagina, int cantidad) {
+    public Page<ProductoSimpleDto> listadoProductoPage(int pagina, int cantidad) {
         Pageable pageable = PageRequest.of(pagina, cantidad, Sort.by("Id").descending());
         Page<Producto> productosPage = productoRepository.findAll(pageable);
-        return productosPage.map(this::mapToDto);
+        return productosPage.map(Producto::mapToDtoSimple);
     }
 
-    private ProductoDto mapToDto(Producto producto) {
-        return new ProductoDto(producto);
+    private Producto getProductoEntityById(Long idProducto) {
+        return productoRepository.findById(idProducto)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + idProducto));
+    }
+
+    private ProductoConImagenesDto addImagesToDtoConImagenes(ProductoConImagenesDto producto, String[] imagenes) {
+        if (imagenes != null && imagenes.length > 0) {
+            List<ImageDto> imagenesInfo = Arrays.stream(imagenes)
+                    .map(imageService::getImageInfo)
+                    .collect(Collectors.toList());
+            producto.setImagenes(imagenesInfo);
+        } else {
+            producto.setImagenes(Collections.emptyList());
+        }
+        return producto;
     }
 
     private List<Long> getCategoriasHijas(Long idCategoria) {
@@ -227,6 +270,4 @@ public class ProductoService {
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + idCategoria));
         return categoria.getIdsCategoriasHijas();
     }
-
 }
-

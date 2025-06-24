@@ -9,9 +9,4 @@ import ti.elibreriaalfa.business.entities.Categoria;
 public class CategoriaSimpleDto {
     private Long id;
     private String nombre;
-
-    public CategoriaSimpleDto(Categoria categoria) {
-        this.id = categoria.getId();
-        this.nombre = categoria.getNombre();
-    }
 }

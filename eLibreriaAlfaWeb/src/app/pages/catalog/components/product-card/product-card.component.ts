@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
-import { Producto } from '../../../../core/models/producto';
+import { ImageService } from '../../../../core/services/image.service';
+import { ProductoSimpleDto } from '../../../../core/models/producto';
 
 @Component({
   selector: 'app-product-card',
@@ -15,6 +16,19 @@ import { Producto } from '../../../../core/models/producto';
 })
 export class ProductCardComponent {
 
-  @Input() product!: Producto;
+  productImageUrl: string = 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
 
+  @Input() product!: ProductoSimpleDto;
+
+  constructor(
+    private imageService: ImageService
+  ) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['product']) {
+      if (this.product && this.product.imagenes && this.product.imagenes.length > 0) {
+        this.productImageUrl = this.imageService.getImageUrl(this.product.imagenes[0]);
+      }
+    }
+  }
 }

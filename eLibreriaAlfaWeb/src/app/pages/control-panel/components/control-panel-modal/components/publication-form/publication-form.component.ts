@@ -2,12 +2,14 @@ import { Component, computed, Input, signal, SimpleChanges } from '@angular/core
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { PublicationService } from '../../../../../../core/services/publication.service';
-import { Publicacion, PublicacionSimple, AgregarPublicacion } from '../../../../../../core/models/publicacion';
+import { PublicacionRequestDto, PublicacionConImagenDto } from '../../../../../../core/models/publicacion';
 import { ViewChild } from '@angular/core';
 
 import { FormTextInputComponent } from '../../../../../../shared/components/inputs/form-text-input/form-text-input.component';
 import { FormTextareaInputComponent } from '../../../../../../shared/components/inputs/form-textarea-input/form-textarea-input.component';
+import { ImageUploadInputComponent } from '../../../../../../shared/components/inputs/image-upload-input/image-upload-input.component';
 import { PrimaryButtonComponent } from '../../../../../../shared/components/buttons/primary-button/primary-button.component';
+import { ImageDto } from '../../../../../../core/models/image';
 
 @Component({
   selector: 'app-publication-form',
@@ -16,6 +18,7 @@ import { PrimaryButtonComponent } from '../../../../../../shared/components/butt
     Toast,
     FormTextInputComponent,
     FormTextareaInputComponent,
+    ImageUploadInputComponent,
     PrimaryButtonComponent
   ],
   providers: [
@@ -27,16 +30,21 @@ import { PrimaryButtonComponent } from '../../../../../../shared/components/butt
 export class PublicationFormComponent {
   @ViewChild('titleInput') titleInput: any;
   @ViewChild('contentInput') contentInput: any;
+  @ViewChild('imageInput') imageInput: any;
 
-  @Input() publication: PublicacionSimple | null = null;
+  @Input() publication: PublicacionConImagenDto | null = null;
 
   title: string = '';
   content: string = '';
+  existingImage: ImageDto[] = [];
+  newImage: File[] = [];
+  imageToDelete: string[] = [];
 
   formSubmitted = signal(false);
 
   isTitleInvalid: boolean = false;
   isContentInvalid: boolean = false;
+  isImageInvalid: boolean = false;
 
   titlePattern = /^.{1,200}$/;
   contentPattern = /^.{1,200}$/;
@@ -46,7 +54,8 @@ export class PublicationFormComponent {
     tempDiv.innerHTML = html;
     
     return tempDiv.textContent || tempDiv.innerText || '';
-  }   
+  } 
+
   get titleCharCount(): number {
     if (!this.title) return 0;
     return this.title?.length || 0;
@@ -89,6 +98,7 @@ export class PublicationFormComponent {
       this.resetForm();
     }
   }
+
   confirm() {
     this.formSubmitted.set(true);
     
@@ -102,116 +112,171 @@ export class PublicationFormComponent {
       return;
     }
     
-    if (!this.validateForm()) {
-      switch (this.publication) {
-        case null:
-          this.create();
-          break;        default:
-          const publicationData = (this.publication as any)?.publicacion || this.publication;
-          this.update();
-          break;
-      }
-    } else {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: "Datos ingresados inválidos", life: 4000 });
+    if (this.validateForm()) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: "Datos ingresados inválidos",
+        life: 4000
+      });
+      return;
     }
+    
+    this.publication ? this.update() : this.create();
   }
   
   create() {
-    const publicacion: AgregarPublicacion = {
-      titulo: this.title.trim(),
-      contenido: this.htmlToPlainText(this.content.trim()),
-      fechaCreacion: new Date().toISOString(),
-      comentarios: []
-    };
-
-    this.publicationService.createPublication(publicacion).subscribe({
-      next: (response: string) => {
-        console.log('Server response:', response);
-        this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Publicación creada exitosamente!", life: 4000 });
-        this.resetForm();
-      },
-      error: (err) => {
-        let errorMessage = "No fue posible conectar con el servidor";
-        
-        if (err.error && typeof err.error === 'string') {
-          errorMessage = err.error;
-        } else if (err.message) {
-          errorMessage = err.message;
-        }
-        
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage, life: 4000 });
-      }
+    const formData = this.createFormData();
+    
+    this.publicationService.post(formData).subscribe({
+      next: (response) => this.handleSuccess('creada', response),
+      error: (error) => this.handleError(error)
     });
-  }  
+  }
+
   update() {
+    const formData = this.createFormData();
+    
     const publicationData = (this.publication as any)?.publicacion || this.publication;
     const publicationId = publicationData?.id;
     
     if (!publicationId) {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se puede actualizar: ID de publicación no válido', life: 4000 });
+      this.messageService.add({ 
+        severity: 'error', 
+        summary: 'Error', 
+        detail: 'ID de publicación no válido', 
+        life: 4000 
+      });
       return;
     }
 
-    const publicacion: AgregarPublicacion = {
-      titulo: this.title.trim(),
-      contenido: this.htmlToPlainText(this.content.trim()),
-      fechaCreacion: new Date().toISOString(),
-      comentarios: []
-    };
-
-    this.publicationService.updatePublication(publicationId, publicacion).subscribe({
-      next: (response: string) => {
-        this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Publicación actualizada exitosamente!", life: 4000 });
-        this.resetForm();
-      },
-      error: (err) => {
-        console.log('Error details:', err);
-        let errorMessage = "No fue posible conectar con el servidor";
-        
-        if (err.error && typeof err.error === 'string') {
-          errorMessage = err.error;
-        } else if (err.message) {
-          errorMessage = err.message;
-        }
-        
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage, life: 4000 });
-      }
+    this.publicationService.put(publicationId, formData).subscribe({
+      next: (response) => this.handleSuccess('actualizada', response),
+      error: (error) => this.handleError(error)
     });
   }
 
   validateForm() {
-    return this.isTitleInvalid || this.isContentInvalid;
-  }  loadForm() {
+    return this.isTitleInvalid ||
+      this.isContentInvalid ||
+      this.isImageInvalid;
+  }
+  
+  loadForm() {
     if (this.publication) {
       
-      const publicationData = (this.publication as any).publicacion || this.publication;
-      
-      this.title = publicationData.titulo;
-      this.content = publicationData.contenido;
+      this.title = this.publication.titulo || '';
+      this.content = this.publication.contenido || '';
+      this.existingImage = this.publication.imagen ? [this.publication.imagen] : [];
 
-      this.isTitleInvalid = false;
-      this.isContentInvalid = false;
+      if (this.existingImage) {
+        setTimeout(() => {
+          if (this.imageInput) {
+            this.imageInput.setValue(this.existingImage);
+          }
+        }, 0);
+      }
 
-      if (this.titleInput?.setValue) {
-        this.titleInput.setValue(this.title);
-      }
-      
-      if (this.contentInput?.setValue) {
-        this.contentInput.setValue(this.content);
-      }
+      this.loadFormFields();
+      this.resetValidationState();
     }
   }
 
   resetForm() {
     this.formSubmitted.set(false);
+    
+    this.resetFormData();
 
-    this.title = '';
-    this.content = '';
+    this.resetValidationState();
+    
+    this.resetFormComponents();
+  }
 
+  onRemoveImage(event: { image: any, index: number } | null) {
+    if (!event?.image) return;
+    
+    const { image } = event;
+    
+    if (this.isExistingImage(image)) {
+      this.imageToDelete.push(image.relativePath);
+      this.existingImage = this.existingImage.filter(img => 
+        img.relativePath !== image.relativePath
+      );
+    } else if (this.isNewImage(image)) {
+      this.newImage = this.newImage.filter(file => file !== image.file);
+    }
+  }
+
+  private createFormData(): FormData {
+    const formData = new FormData();
+    
+    formData.append('titulo', this.title.trim());
+    formData.append('contenido', this.content.trim());
+    
+    if (this.newImage.length > 0) {
+      formData.append('imagen', this.newImage[0], this.newImage[0].name);
+    }
+    
+    if (this.publication && this.imageToDelete.length > 0) {
+      formData.append('imagenAEliminar', this.imageToDelete[0]);
+    }
+    
+    return formData;
+  }
+
+  private handleSuccess(action: string, response: any) {
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Éxito',
+      detail: `¡Publicación ${action} exitosamente!`,
+      life: 4000
+    });
+    
+    this.resetForm();
+  }
+
+  private handleError(error: any) {
+    const errorMessage = error?.error.error || error?.error.message || "No fue posible conectar con el servidor";
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: errorMessage,
+      life: 4000
+    });
+  }
+
+  private loadFormFields() {
+    setTimeout(() => {
+      this.titleInput?.setValue(this.title);
+      this.contentInput?.setValue(this.content);
+    }, 0);
+  }
+
+  private resetValidationState() {
     this.isTitleInvalid = false;
     this.isContentInvalid = false;
+    this.isImageInvalid = false;
+  }
 
+  private resetFormData() {
+    this.title = '';
+    this.content = '';
+    this.newImage = [];
+    this.existingImage = [];
+    this.imageToDelete = [];
+  }
+
+  private resetFormComponents() {
     this.titleInput?.reset();
     this.contentInput?.reset();
+    this.imageInput?.reset();
+  }
+
+  private isExistingImage(image: { relativePath: string; isExisting: true }) {
+    return image && ('relativePath' in image || 'filename' in image) && image.isExisting === true;
+  }
+
+  private isNewImage(image: { file: File; isExisting: false }) {
+    return image && 'file' in image && image.isExisting === false;
   }
 }

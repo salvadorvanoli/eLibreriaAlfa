@@ -1,15 +1,37 @@
-export interface Producto {
+import { CategoriaSimpleDto } from './categoria';
+import { ImageDto } from './image';
+
+export interface ProductoDto {
     id: number;
     nombre: string;
     precio: number;
-    imagenes: string[];
     descripcion: string;
+    imagenes: string[];
+    categorias: CategoriaSimpleDto[];
 }
 
-export interface ProductoSimple {
-    id: number; 
+export interface ProductoSimpleDto {
+    id: number;
     nombre: string;
-    precio: number; 
+    precio: number;
     descripcion: string;
-    imagenes: string[]; 
+    imagenes: string[];
+}
+
+export interface ProductoConImagenesDto {
+    id: number;
+    nombre: string;
+    precio: number;
+    descripcion: string;
+    imagenes: ImageDto[];
+    categorias: CategoriaSimpleDto[];
+}
+
+export interface ProductoRequestDto {
+    nombre: string;
+    precio: number;
+    descripcion: string;
+    imagenes: File[];
+    imagenesAEliminar: string[] | null;
+    categoriasIds: number[];
 }
