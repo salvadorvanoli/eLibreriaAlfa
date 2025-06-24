@@ -152,7 +152,7 @@ public class EncargueController {
     @GetMapping("/user/{userId}/history")
     public ResponseEntity<?> listarEncarguesFinalizadosPorUsuario(@PathVariable("userId") Long usuarioId) {
         var encargues = encargueService.listarEncarguesPorUsuarioEstados(usuarioId,
-                List.of(Encargue_Estado.CANCELADO, Encargue_Estado.ENTREGADO, Encargue_Estado.COMPLETADO));
+                List.of(Encargue_Estado.CANCELADO, Encargue_Estado.ENTREGADO, Encargue_Estado.COMPLETADO, Encargue_Estado.PENDIENTE));
         return ResponseEntity.ok(encargues);
     }
 
