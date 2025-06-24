@@ -77,4 +77,14 @@
     color: #475569;
     border: 1px solid #cbd5e1;
   }
+  
+  .p-button:disabled {
+    opacity: 0.4 !important;
+    cursor: not-allowed !important;
+  }
+  
+  .p-button[disabled] {
+    opacity: 0.4 !important;
+    cursor: not-allowed !important;
+  }
 }

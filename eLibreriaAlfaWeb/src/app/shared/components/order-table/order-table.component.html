@@ -65,11 +65,24 @@
                     </p-tag>
                 </div>
                 
-               
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-gray-700 mb-3">Seleccionar nuevo estado:</label>
+                    
+                    <!-- Mostrar mensaje si no hay estados disponibles -->
+                    <div *ngIf="getEstadosDisponibles(selectedOrderForEdit.estado).length === 0" 
+                         class="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-info-circle text-amber-600"></i>
+                            <span class="text-amber-800 text-sm">
+                                Las órdenes en estado "{{ selectedOrderForEdit.estado }}" no pueden ser modificadas.
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Dropdown solo si hay estados disponibles -->
                     <p-dropdown 
-                        [options]="estadosDisponibles" 
+                        *ngIf="getEstadosDisponibles(selectedOrderForEdit.estado).length > 0"
+                        [options]="getEstadosDisponibles(selectedOrderForEdit.estado)" 
                         [(ngModel)]="selectedNewState" 
                         placeholder="Seleccionar estado"
                         [disabled]="isUpdatingState"
@@ -93,6 +106,7 @@
                     (onClick)="cerrarModalEditarEstado()">
                 </p-button>
                 <p-button 
+                    *ngIf="getEstadosDisponibles(selectedOrderForEdit?.estado || '').length > 0"
                     label="Cambiar estado" 
                     icon="pi pi-check" 
                     severity="success"
@@ -258,8 +272,10 @@
                             [rounded]="true" 
                             [text]="true"
                             size="small"
+                            [disabled]="!puedeModificarEstado(order.estado)"
+                            [severity]="puedeModificarEstado(order.estado) ? 'primary' : 'secondary'"
                             (onClick)="editarEstado(order)"
-                            pTooltip="Modificar estado">
+                            [pTooltip]="puedeModificarEstado(order.estado) ? 'Modificar estado' : 'No se puede modificar el estado de órdenes canceladas o entregadas'">
                         </p-button>
                     }
                   </div>

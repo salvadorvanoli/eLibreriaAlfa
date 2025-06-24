@@ -1,16 +1,16 @@
-<div class="w-[1124px] bg-[#D9D9D9] border border-black p-6">
+<div class="w-full max-w-[1124px] bg-[#D9D9D9] border border-black p-3 md:p-6 mx-auto">
   <!-- Estado de carga -->
-  <div *ngIf="loading" class="flex justify-center py-8">
-    <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-900"></div>
+  <div *ngIf="loading" class="flex justify-center py-6 md:py-8">
+    <div class="animate-spin rounded-full h-8 w-8 md:h-10 md:w-10 border-t-2 border-b-2 border-gray-900"></div>
   </div>
 
   <!-- Mensaje cuando no hay productos -->
-  <div *ngIf="!loading && productos.length === 0" class="text-center py-8">
-    <p class="text-gray-600">No hay productos en tu pedido actual.</p>
+  <div *ngIf="!loading && productos.length === 0" class="text-center py-6 md:py-8">
+    <p class="text-sm md:text-base text-gray-600">No hay productos en tu pedido actual.</p>
   </div>
   
   <!-- Lista dinámica de productos -->
-  <div *ngFor="let producto of productos" class="mb-4">
+  <div *ngFor="let producto of productos" class="mb-3 md:mb-4">
     <app-product-card 
       [product]="{
         id: producto.id,
@@ -25,7 +25,7 @@
   </div>
   
   <!-- Paginador -->
-  <div class="mt-6 mb-6" *ngIf="!loading && totalRecords > 0">
+  <div class="mt-4 md:mt-6 mb-4 md:mb-6" *ngIf="!loading && totalRecords > 0">
     <app-paginator
         [first]="first"
         [rows]="rows"

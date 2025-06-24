@@ -1,43 +1,47 @@
-<app-select-profile 
-  [initialSection]="selectedSection"
-  (optionSelected)="onProfileOptionSelected($event)" 
-  class="mt-6">
-</app-select-profile>
+<div class="w-full max-w-7xl mx-auto">
+  <app-select-profile 
+    [initialSection]="selectedSection"
+    (optionSelected)="onProfileOptionSelected($event)" 
+    class="mt-6">
+  </app-select-profile>
 
-<!-- Sección de Información Personal -->
-@if (selectedSection === 'info') {
-  <app-title [text]="'Información personal'" [align]="'center'" class="mt-2"></app-title>
-  <app-profile-form></app-profile-form>
-}
+  <!-- Sección de Información Personal -->
+  @if (selectedSection === 'info') {
+    <app-title [text]="'Información personal'" [align]="'center'" class="mt-2 mb-8"></app-title>
+    <app-profile-form></app-profile-form>
+  }
 
-<!-- Sección de Pedido Actual -->
-@if (selectedSection === 'actual') {
-  @switch (orderState) {
-    @case ('none') {
-      <app-no-order-yet class="mt-0"></app-no-order-yet>
-    }
-    @case ('in-progress') {
-      <app-order-in-progress 
-        (noProductsLeft)="updateToLoading()" 
-        (orderSubmitted)="updateToSubmitted()">
-      </app-order-in-progress>
-    }
-    @case ('submitted') {
-      <app-order-submitted></app-order-submitted>
-    }
-    @default {
-      <!-- Mientras se carga -->
-      <div class="w-[1124px] flex justify-center p-8">
-        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
+  <!-- Sección de Pedido Actual -->
+  @if (selectedSection === 'actual') {
+    @switch (orderState) {
+      @case ('none') {
+        <app-no-order-yet class="mt-0"></app-no-order-yet>
+      }
+      @case ('in-progress') {
+        <app-order-in-progress 
+          (noProductsLeft)="updateToLoading()" 
+          (orderSubmitted)="updateToSubmitted()">
+        </app-order-in-progress>
+      }
+      @case ('submitted') {
+        <app-order-submitted></app-order-submitted>
+      }
+      @default {
+        <!-- Mientras se carga -->
+        <div class="w-full max-w-[1124px] mx-auto flex justify-center p-8">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+        </div>
+      }
     }
   }
-}
 
-<!-- Sección de Historial de Pedidos -->
-@if (selectedSection === 'historial') {
-  <div class="flex justify-center mt-1 mb-3">
-    <div class="justify-start text-black text-2xl font-semibold font-['Inter'] leading-7">Historial de órdenes</div>
-  </div>
-  <app-order-table [userRegistrado]="true"></app-order-table>
-}
+  <!-- Sección de Historial de Pedidos -->
+  @if (selectedSection === 'historial') {
+    <div class="flex justify-center mt-1 mb-3 px-4">
+      <div class="text-center text-black text-xl md:text-2xl font-semibold font-['Inter'] leading-7">Historial de órdenes</div>
+    </div>
+    <div class="w-full overflow-x-auto">
+      <app-order-table [userRegistrado]="true"></app-order-table>
+    </div>
+  }
+</div>

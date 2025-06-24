@@ -171,7 +171,7 @@
           </p-dropdown>
       </div>
 
-      <!-- Uploader de archivo PDF + Botón -->
+      <!-- Uploader de archivo + Botón -->
       <div class="self-stretch w-full flex flex-col sm:flex-row gap-3">
           <div class="flex-1 min-w-0">
               <div class="w-full px-4 py-3 bg-white rounded-lg outline outline-1 outline-offset-[-0.50px] outline-gray-200 inline-flex justify-start items-center overflow-hidden">
@@ -194,7 +194,14 @@
       <!-- Precio estimado -->
       <div class="self-stretch w-full flex flex-col gap-3">
           <div class="self-stretch p-3 bg-gray-50 rounded-lg border border-gray-200 flex justify-between items-center">
-              <div class="text-gray-800 text-base font-normal font-['Inter'] leading-none">Precio estimado:</div>
+              <div class="flex items-center gap-2">
+                  <div class="text-gray-800 text-base font-normal font-['Inter'] leading-none">Precio estimado:</div>
+                  <i class="pi pi-info-circle text-amber-500 text-sm cursor-help" 
+                     pTooltip="El precio es solo estimativo. Archivos Word y Excel son imprecisos." 
+                     tooltipPosition="top"
+                     [showDelay]="300">
+                  </i>
+              </div>
               <div class="text-black text-lg font-semibold font-['Inter'] leading-none">
                 @if (estimatedPrice > 0) {
                   ${{ estimatedPrice }}.00

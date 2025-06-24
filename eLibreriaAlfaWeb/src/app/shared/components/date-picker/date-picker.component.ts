@@ -1,4 +1,4 @@
-import { Component, forwardRef } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
@@ -16,10 +16,17 @@ import { FormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/f
     ]
 })
 export class DatePickerComponent implements ControlValueAccessor {
+    @Input() minDate: Date | null = null; 
+    @Input() maxDate: Date | null = null; 
+    
     date: Date | null = null;
     disabled = false;
     
-    // ControlValueAccessor implementation
+    constructor() {
+        this.minDate = new Date();
+        this.minDate.setHours(0, 0, 0, 0); 
+    }
+    
     onChange = (_: any) => {};
     onTouched = () => {};
     
@@ -39,7 +46,6 @@ export class DatePickerComponent implements ControlValueAccessor {
         this.disabled = isDisabled;
     }
     
-    // Internal handler
     onDateSelect(event: Date | null) {
         this.date = event;
         this.onChange(this.date);

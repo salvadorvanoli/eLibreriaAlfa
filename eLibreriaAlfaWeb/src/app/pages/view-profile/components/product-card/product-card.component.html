@@ -1,20 +1,20 @@
-<div *ngIf="product" class="flex items-start gap-6 p-6 bg-white rounded-lg border border-gray-200 relative">
+<div *ngIf="product" class="flex flex-col md:flex-row items-start gap-4 md:gap-6 p-4 md:p-6 bg-white rounded-lg border border-gray-200 relative">
   <!-- Imagen del producto -->
-  <img class="w-52 h-60 object-cover rounded" [src]="product.imageUrl" [alt]="product.title" />
+  <img class="w-full md:w-52 h-48 md:h-60 object-cover rounded mx-auto md:mx-0" [src]="product.imageUrl" [alt]="product.title" />
 
   <!-- Información del producto -->
-  <div class="flex-1 flex flex-col gap-2">
-    <h3 class="text-2xl font-semibold text-gray-900">{{ product.title }}</h3>
-    <p class="text-base font-semibold text-gray-900">${{ product.price | number:'1.2-2' }}</p>
-    <p class="text-base font-semibold text-gray-500">Cantidad: {{ product.quantity }}</p>
-    <p class="text-base text-gray-900">Subtotal: ${{ subtotal | number:'1.2-2' }}</p>
+  <div class="flex-1 flex flex-col gap-2 w-full">
+    <h3 class="text-xl md:text-2xl font-semibold text-gray-900 text-center md:text-left">{{ product.title }}</h3>
+    <p class="text-sm md:text-base font-semibold text-gray-900 text-center md:text-left">${{ product.price | number:'1.2-2' }}</p>
+    <p class="text-sm md:text-base font-semibold text-gray-500 text-center md:text-left">Cantidad: {{ product.quantity }}</p>
+    <p class="text-sm md:text-base text-gray-900 text-center md:text-left">Subtotal: ${{ subtotal | number:'1.2-2' }}</p>
   </div>
 
-  <!-- Botón Eliminar con dimensiones exactas -->
+  <!-- Botón Eliminar  -->
   <button 
     *ngIf="!readOnly" 
     (click)="onRemove()"
-    class="absolute right-6 bottom-6 w-[84px] h-[40px] bg-red-500 text-white rounded-lg border border-red-600 hover:bg-red-600 transition flex items-center justify-center">
+    class="md:absolute md:right-6 md:bottom-6 w-full md:w-[84px] h-[36px] md:h-[40px] bg-red-500 text-white text-sm md:text-base rounded-lg border border-red-600 hover:bg-red-600 transition flex items-center justify-center mt-4 md:mt-0">
     Eliminar
   </button>
 </div>

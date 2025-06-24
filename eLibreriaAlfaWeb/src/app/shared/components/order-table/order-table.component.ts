@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { OrderService } from '../../../core/services/order.services';
 import { SecurityService } from '../../../core/services/security.service';
-import { UserService } from '../../../core/services/user.service'; // <-- Agregar import
+import { UserService } from '../../../core/services/user.service';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -43,7 +43,7 @@ export class OrderTableComponent implements OnInit {
     @Output() orderEdit = new EventEmitter<Encargue>();
     
     orders: Encargue[] = [];
-    filteredOrders: Encargue[] = []; // <-- Cambiar a filteredOrders
+    filteredOrders: Encargue[] = [];
     estadoSeleccionado: string = '';
     
     isLoading: boolean = false;
@@ -87,7 +87,6 @@ export class OrderTableComponent implements OnInit {
     ngOnInit() {
         this.loadOrders();
     }
-
 
     filtrarOrdenes(): void {
         if (!this.estadoSeleccionado || this.estadoSeleccionado === '') {
@@ -161,9 +160,49 @@ export class OrderTableComponent implements OnInit {
         this.showCancelDialog = true;
     }
 
+    getEstadosDisponibles(estadoActual: string) {
+        switch (estadoActual) {
+            case 'PENDIENTE':
+                return [
+                    { label: 'Cancelado', value: 'CANCELADO' },
+                    { label: 'Completado', value: 'COMPLETADO' },
+                    { label: 'Entregado', value: 'ENTREGADO' }
+                ];
+            case 'COMPLETADO':
+                return [
+                    { label: 'Cancelado', value: 'CANCELADO' },
+                    { label: 'Entregado', value: 'ENTREGADO' }
+                ];
+            case 'CANCELADO':
+            case 'ENTREGADO':
+                return []; 
+            default:
+                return [
+                    { label: 'Pendiente', value: 'PENDIENTE' },
+                    { label: 'Entregado', value: 'ENTREGADO' },
+                    { label: 'Completado', value: 'COMPLETADO' },
+                    { label: 'Cancelado', value: 'CANCELADO' }
+                ];
+        }
+    }
+
+    puedeModificarEstado(estado: string): boolean {
+        return estado !== 'CANCELADO' && estado !== 'ENTREGADO';
+    }
+
     editarEstado(order: Encargue): void {
+        if (!this.puedeModificarEstado(order.estado)) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Acción no permitida',
+                detail: 'No se puede modificar el estado de órdenes canceladas o entregadas',
+                life: 3000
+            });
+            return;
+        }
+
         this.selectedOrderForEdit = order;
-        this.selectedNewState = order.estado;
+        this.selectedNewState = '';
         this.showEditStateDialog = true;
     }
 
@@ -178,7 +217,6 @@ export class OrderTableComponent implements OnInit {
         this.orderService.cambiarEstadoEncargue(this.selectedOrderForEdit.id, this.selectedNewState)
             .subscribe({
                 next: (res) => {
-                    console.log('Éxito:', res);
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
@@ -189,7 +227,6 @@ export class OrderTableComponent implements OnInit {
                     this.showConfirmEditStateDialog = false;
                 },
                 error: (err) => {
-                    console.error('Error:', err);
                     let errorMsg = 'No se pudo cambiar el estado';
                     if (err?.error) {
                         if (typeof err.error === 'string') {
@@ -224,9 +261,6 @@ export class OrderTableComponent implements OnInit {
         if (!this.selectedOrderToCancel) return;
 
         this.isCancelling = true;
-        
-        console.log('Cancelar order:', this.selectedOrderToCancel.id);
-        
 
         setTimeout(() => {
             this.messageService.add({
@@ -286,41 +320,26 @@ export class OrderTableComponent implements OnInit {
     }
 
     getClienteNombreCompleto(order: Encargue): string {
-        console.log('getClienteNombreCompleto llamado para orden:', order);
-        
         if ((order as any).clienteNombreCompleto) {
-            console.log('Nombre ya existe en orden:', (order as any).clienteNombreCompleto);
             return (order as any).clienteNombreCompleto;
         }
 
         const userId = (order as any).idUsuarioComprador;
-        console.log('idUsuarioComprador encontrado:', userId);
         
         if (userId) {
-            console.log('Haciendo llamada al UserService para idUsuarioComprador:', userId);
-            
             this.userService.getUserById(userId).subscribe({
                 next: (usuario) => {
-                    console.log('Usuario obtenido del backend:', usuario);
                     const nombreCompleto = `${usuario.nombre || ''} ${usuario.apellido || ''}`.trim();
-                    console.log('Nombre completo construido:', nombreCompleto);
-                    
                     (order as any).clienteNombreCompleto = nombreCompleto || 'Sin nombre';
-                    console.log('Nombre asignado a orden:', (order as any).clienteNombreCompleto);
                 },
                 error: (error) => {
-                    console.error('Error al cargar usuario:', error);
                     (order as any).clienteNombreCompleto = 'Error al cargar';
                 }
             });
             
-            console.log('Retornando "Cargando..." temporalmente');
             return 'Cargando...';
         }
 
-        console.log('No se encontró idUsuarioComprador, retornando "Usuario desconocido"');
         return 'Usuario desconocido';
     }
-
-
 }
