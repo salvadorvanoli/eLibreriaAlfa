@@ -133,14 +133,13 @@ public class ImageService {
 
     private ImageDto createImageDtoFromPath(Path path, String relativePath) {
         ImageDto dto = new ImageDto();
-        dto.setFilename(path.getFileName().toString());
+        dto.setRelativePath(relativePath.replace("\\", "/"));
         dto.setOriginalName(extractOriginalName(path.getFileName().toString()));
         try {
             dto.setSize(Files.size(path));
         } catch (IOException e) {
             throw new ImageException("Error al obtener el tamaño de la imagen: " + e.getMessage());
         }
-        dto.setUrl(relativePath.replace("\\", "/"));
         return dto;
     }
 

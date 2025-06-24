@@ -1,15 +1,15 @@
 package ti.elibreriaalfa.dtos.publicacion;
 
 import lombok.Data;
-import ti.elibreriaalfa.business.entities.Publicacion;
+import ti.elibreriaalfa.dtos.image.ImageDto;
 
 import java.time.LocalDateTime;
 
 @Data
-public class PublicacionSimpleDto {
+public class PublicacionConImagenDto {
     private Long id;
     private String titulo;
     private LocalDateTime fechaCreacion;
     private String contenido;
-    private String imagenUrl;
+    private ImageDto imagen;
 }

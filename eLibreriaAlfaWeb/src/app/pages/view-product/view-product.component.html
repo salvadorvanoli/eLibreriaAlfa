@@ -20,8 +20,7 @@
                 </div>
                 
                 <div class="w-full md:w-[484px] mt-2">
-                    <div class="text-Text-Default-Default text-sm md:text-base font-normal font-['Inter'] leading-snug">
-                       {{producto?.descripcion}}
+                    <div [innerHTML]="producto?.descripcion" class="text-Text-Default-Default text-sm md:text-base font-normal font-['Inter'] leading-snug">
                     </div>
                 </div>
 

@@ -1,6 +1,5 @@
 export interface ImageDto {
-    url: string;
+    relativePath: string;
     originalName: string;
     size: number;
-    filename: string;
 }

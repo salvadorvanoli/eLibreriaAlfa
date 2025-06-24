@@ -2,14 +2,13 @@ import { Component, computed, Input, signal, SimpleChanges } from '@angular/core
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ProductService } from '../../../../../../core/services/product.service';
-import { ImageService } from '../../../../../../core/services/image.service';
-import { ProductoDto, ProductoConImagenesDto, ProductoRequestDto } from '../../../../../../core/models/producto';
+import { ProductoDto, ProductoConImagenesDto } from '../../../../../../core/models/producto';
 import { ViewChild } from '@angular/core';
 
 import { FormTextInputComponent } from '../../../../../../shared/components/inputs/form-text-input/form-text-input.component';
 import { FormNumberInputComponent } from '../../../../../../shared/components/inputs/form-number-input/form-number-input.component';
-import { ImageUploadInputComponent } from '../../../../../../shared/components/inputs/image-upload-input/image-upload-input.component';
 import { FormTextareaInputComponent } from '../../../../../../shared/components/inputs/form-textarea-input/form-textarea-input.component';
+import { ImageUploadInputComponent } from '../../../../../../shared/components/inputs/image-upload-input/image-upload-input.component';
 import { PrimaryButtonComponent } from '../../../../../../shared/components/buttons/primary-button/primary-button.component';
 import { ImageDto } from '../../../../../../core/models/image';
 import { CategoryTreePopoverComponent } from "./components/category-tree-popover/category-tree-popover.component";
@@ -58,13 +57,11 @@ export class ProductFormComponent {
   areCategoriesInvalid: boolean = false;
 
   namePattern = /^.{1,200}$/;
-  pricePattern = /^\d+(\.\d{1,2})?$/;
   descriptionPattern = /^.{1,200}$/;
 
   constructor(
     private messageService: MessageService,
-    private productService: ProductService,
-    private imageService: ImageService
+    private productService: ProductService
   ) {}
 
   ngOnInit() {
@@ -135,33 +132,26 @@ export class ProductFormComponent {
       const categoriasIds = this.product.categorias.map(categoria => categoria.id);
       this.categories = categoriasIds || [];
 
-      if (this.product.imagenes && this.product.imagenes.length > 0) {
-        const imagesDtos: ImageDto[] = this.product.imagenes.map(file => ({
-          filename: file.url,
-          originalName: file.originalName,
-          size: 0,
-          url: this.imageService.getImageUrl(file.url)
-        }));
-        
-        this.existingImages = imagesDtos;
+      if (this.product.imagenes && this.product.imagenes.length > 0) {      
+        this.existingImages = this.product.imagenes;
         
         setTimeout(() => {
-          this.imagesInput?.setValue(imagesDtos);
+          this.imagesInput?.setValue(this.existingImages);
         }, 0);
       }
 
       this.loadFormFields();
     }
 
-    this.resetValidationFlags();
+    this.resetValidationState();
   }
 
   resetForm() {
     this.formSubmitted.set(false);
 
     this.resetFormData();
-    this.resetValidationFlags();
-    this.resetFormFields();
+    this.resetValidationState();
+    this.resetFormComponents();
   }
 
   onRemoveImage(event: { image: any, index: number } | null) {
@@ -170,9 +160,9 @@ export class ProductFormComponent {
     const { image } = event;
     
     if (this.isExistingImage(image)) {
-      this.imagesToDelete.push(image.filename);
+      this.imagesToDelete.push(image.relativePath);
       this.existingImages = this.existingImages.filter(img => 
-        img.filename !== image.filename
+        img.relativePath !== image.relativePath
       );
     } else if (this.isNewImage(image)) {
       this.newImages = this.newImages.filter(file => file !== image.file);
@@ -214,21 +204,13 @@ export class ProductFormComponent {
   }
 
   private handleError(error: any) {
-    const errorMessage = error?.error || error?.message || "No fue posible conectar con el servidor";
+    const errorMessage = error?.error.error || error?.error.message || "No fue posible conectar con el servidor";
     this.messageService.add({ 
       severity: 'error', 
       summary: 'Error', 
       detail: errorMessage, 
       life: 4000 
     });
-  }
-
-  private isExistingImage(image: { filename: string; isExisting: true }) {
-    return image && 'filename' in image && image.isExisting === true;
-  }
-
-  private isNewImage(image: { file: File; isExisting: false }) {
-    return image && 'file' in image && image.isExisting === false;
   }
 
   private loadFormFields() {
@@ -240,7 +222,7 @@ export class ProductFormComponent {
     }, 0);
   }
 
-  private resetValidationFlags() {
+  private resetValidationState() {
     this.isNameInvalid = false;
     this.isPriceInvalid = false;
     this.isDescriptionInvalid = false;
@@ -258,11 +240,19 @@ export class ProductFormComponent {
     this.categories = [];
   }
 
-  private resetFormFields() {
+  private resetFormComponents() {
     this.nameInput?.reset();
     this.priceInput?.reset();
     this.descriptionInput?.reset();
     this.imagesInput?.reset();
     this.categoriesInput?.reset();
+  }
+
+  private isExistingImage(image: { relativePath: string; isExisting: true }) {
+    return image && 'relativePath' in image && image.isExisting === true;
+  }
+
+  private isNewImage(image: { file: File; isExisting: false }) {
+    return image && 'file' in image && image.isExisting === false;
   }
 }

@@ -73,11 +73,11 @@ public class ProductoController {
     @Operation(description = "Esta función crea una nueva categoria")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<ProductoDto> createProducto(@ModelAttribute ProductoRequestDto producto) {
-        return new ResponseEntity<>(productoService.createProducto(producto), HttpStatus.OK);
+        return new ResponseEntity<>(productoService.createProducto(producto), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    //@PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Void> deleteProducto(@PathVariable(name = "id") Long idProducto) {
         productoService.deleteProducto(idProducto);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -31,6 +31,10 @@ export abstract class BaseHttpService<TRequest, TResponse> {
     return this.http.get<TResponse>(`${this.baseUrl}${this.end}/${id}`);
   }
 
+  getByIdWithImages(id: number): Observable<TResponse> {
+    return this.http.get<TResponse>(`${this.baseUrl}${this.end}/${id}/with-images`);
+  }
+
   post(item: TRequest): Observable<TResponse> {
     return this.http.post<TResponse>(`${this.baseUrl}${this.end}`, item, { withCredentials: true });
   }

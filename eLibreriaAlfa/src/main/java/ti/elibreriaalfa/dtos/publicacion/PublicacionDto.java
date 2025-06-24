@@ -10,31 +10,10 @@ import java.util.stream.Collectors;
 
 @Data
 public class PublicacionDto {
-
     private Long id;
-
     private String titulo;
-
     private LocalDateTime fechaCreacion;
-
     private String contenido;
-
+    private String imagenUrl;
     private List<ComentarioDto> comentarios;
-
-    public Publicacion mapToEntity() {
-        Publicacion publicacion = new Publicacion();
-
-        publicacion.setId(this.getId());
-        publicacion.setContenido(this.getContenido());
-        publicacion.setTitulo(this.getTitulo());
-        publicacion.setFechaCreacion(this.getFechaCreacion());
-        publicacion.setComentarios(
-                this.getComentarios()
-                        .stream()
-                        .map(ComentarioDto::mapToEntity)
-                        .collect(Collectors.toList())
-        );
-
-        return publicacion;
-    }
 }

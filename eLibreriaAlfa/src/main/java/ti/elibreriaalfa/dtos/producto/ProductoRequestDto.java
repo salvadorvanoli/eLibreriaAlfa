@@ -43,5 +43,9 @@ public class ProductoRequestDto {
         if (this.categoriasIds == null || this.categoriasIds.isEmpty()) {
             throw new ProductoException(Constants.ERROR_CATEGORIAS_PRODUCTO_INVALIDAS);
         }
+
+        if (this.imagenes == null || this.imagenes.isEmpty() || this.imagenes.stream().anyMatch(MultipartFile::isEmpty)) {
+            throw new ProductoException(Constants.ERROR_IMAGENES_PRODUCTO_VACIAS);
+        }
     }
 }

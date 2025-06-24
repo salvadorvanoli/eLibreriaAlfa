@@ -25,7 +25,7 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     @Size(min = Constants.MIN_NOMBRE_PRODUCTO_LENGTH, max = Constants.MAX_NOMBRE_PRODUCTO_LENGTH, message = Constants.ERROR_NOMBRE_PRODUCTO_INVALIDO)
     private String nombre;
 

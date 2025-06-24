@@ -95,7 +95,7 @@ public class UsuarioService {
         Usuario nuevoUsuario = usuario.mapToEntity();
 
         if (usuarioRepository.existsByEmail(usuario.getEmail()))
-            throw new UsuarioYaExisteException(Constants.ERROR_EMAIL_YA_EXISTE);
+            throw new UsuarioYaExisteException(Constants.ERROR_EMAIL_USUARIO_YA_EXISTE);
 
         String contraseniaEncriptada = passwordEncoder.encode(nuevoUsuario.getContrasenia());
         nuevoUsuario.setContrasenia(contraseniaEncriptada);
@@ -118,7 +118,7 @@ public class UsuarioService {
         usuarioDto.validateUsuarioDto();
 
         if (usuarioRepository.existsByEmail(usuarioDto.getEmail()))
-            throw new UsuarioYaExisteException(Constants.ERROR_EMAIL_YA_EXISTE);
+            throw new UsuarioYaExisteException(Constants.ERROR_EMAIL_USUARIO_YA_EXISTE);
 
         Usuario nuevoUsuario = usuarioDto.mapToEntity();
         String contraseniaEncriptada = passwordEncoder.encode(nuevoUsuario.getContrasenia());
@@ -144,7 +144,7 @@ public class UsuarioService {
         Usuario usuarioExistente = getUsuarioEntityById(id);
 
         if (!usuarioExistente.getEmail().equals(usuarioDto.getEmail()) && usuarioRepository.existsByEmail(usuarioDto.getEmail())) {
-            throw new UsuarioYaExisteException(Constants.ERROR_EMAIL_YA_EXISTE);
+            throw new UsuarioYaExisteException(Constants.ERROR_EMAIL_USUARIO_YA_EXISTE);
         }
 
         usuarioExistente.setDatosUsuario(usuarioDto);

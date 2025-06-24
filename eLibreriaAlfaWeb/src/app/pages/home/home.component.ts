@@ -3,6 +3,7 @@ import { TitleAndDescriptionComponent } from '../../shared/components/title-and-
 import { TitleWithBackgroundImageAndButtonsComponent } from '../../shared/components/title-with-background-image-and-buttons/title-with-background-image-and-buttons.component';
 import { DynamicCarouselComponent } from '../../shared/components/dynamic-carousel/dynamic-carousel.component';
 import { PublicationService } from '../../core/services/publication.service';
+import { ImageService } from '../../core/services/image.service';
 import { PublicacionSimple } from '../../core/models/publicacion';
 import { map } from 'rxjs/operators';
 
@@ -24,7 +25,10 @@ export class HomeComponent implements OnInit {
   pagina: number = 0;
   cantidad: number = 6;
 
-  constructor(private publicationService: PublicationService) {}
+  constructor(
+    private publicationService: PublicationService,
+    private imageService: ImageService
+  ) {}
 
   ngOnInit() {
     this.getPublications();
@@ -39,7 +43,8 @@ export class HomeComponent implements OnInit {
           id: item.id,
           titulo: item.titulo,
           contenido: item.contenido,
-          fechaCreacion: new Date(item.fechaCreacion)
+          fechaCreacion: new Date(item.fechaCreacion),
+          imagenUrl: item.imagenUrl ? this.imageService.getImageUrl(item.imagenUrl) : undefined,
         }));
       })
     )
@@ -61,4 +66,7 @@ export class HomeComponent implements OnInit {
     return '/publication/' + p.id;
   }
 
+  getImageUrl(p: PublicacionSimple): string {
+    return p.imagenUrl || 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
+  }
 }

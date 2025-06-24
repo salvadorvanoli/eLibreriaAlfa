@@ -11,7 +11,7 @@ import { ImageDto } from '../../../../core/models/image';
 
 interface ImageItem {
   id: string;
-  filename: string;
+  relativePath: string;
   originalName: string;
   size: number;
   preview: string;
@@ -68,7 +68,6 @@ export class ImageUploadInputComponent {
   onFileSelect(event: any) {
     const files: File[] = event.files || event.currentFiles || [];
     
-    // Validar cada archivo
     const validFiles: File[] = [];
     const errors: string[] = [];
 
@@ -86,13 +85,11 @@ export class ImageUploadInputComponent {
       return;
     }
 
-    // Verificar límite de archivos
     if (this.images().length + validFiles.length > this.maxFiles) {
       console.error(`No puede subir más de ${this.maxFiles} imágenes`);
       return;
     }
 
-    // Procesar archivos válidos
     this.processNewFiles(validFiles);
   }
 
@@ -105,7 +102,7 @@ export class ImageUploadInputComponent {
         
         const imageItem: ImageItem = {
           id: `new_${Date.now()}_${Math.random()}`,
-          filename: file.name,
+          relativePath: file.name,
           originalName: file.name,
           size: file.size,
           preview: preview,
@@ -119,11 +116,9 @@ export class ImageUploadInputComponent {
       }
     }
 
-    // Actualizar imágenes
     const currentImages = this.images();
     this.images.set([...currentImages, ...newImageItems]);
     
-    // Emitir cambios
     this.emitChanges();
   }
 
@@ -147,8 +142,6 @@ export class ImageUploadInputComponent {
   }
 
   setValue(existingImages: ImageDto[] | null) {
-    console.log('setValue llamado con:', existingImages);
-    
     if (!existingImages?.length) {
       this.images.set([]);
       this.emitChanges();
@@ -156,13 +149,12 @@ export class ImageUploadInputComponent {
     }
 
     const imageItems: ImageItem[] = existingImages.map((img, index) => {
-      const preview = img.url;
-      console.log(`Generando preview para ${img.filename}: ${preview}`);
+      const preview = this.imageService.getImageUrl(img.relativePath);
       
       return {
-        id: `existing_${img.filename}_${index}`,
-        filename: img.filename,
-        originalName: img.originalName || img.filename,
+        id: `existing_${img.relativePath}_${index}`,
+        relativePath: img.relativePath,
+        originalName: img.originalName || img.relativePath,
         size: img.size || 0,
         preview: preview,
         file: undefined,
@@ -175,7 +167,6 @@ export class ImageUploadInputComponent {
     this.emitChanges();
   }
 
-  // Método público para reset
   reset() {
     this.images.set([]);
     this.emitChanges();

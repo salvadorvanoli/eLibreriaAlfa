@@ -155,12 +155,9 @@ public class ProductoService {
             }
         }
 
-        String[] imagenes = null;
-
-        if (productoDto.getImagenes() != null && !productoDto.getImagenes().isEmpty())
-            imagenes = productoDto.getImagenes().stream()
-                    .map(imagen -> imageService.saveImage(imagen, "productos"))
-                    .toArray(String[]::new);
+        String[] imagenes = productoDto.getImagenes().stream()
+                .map(imagen -> imageService.saveImage(imagen, Constants.IMAGEN_PRODUCTO_CARPETA))
+                .toArray(String[]::new);
 
         nuevoProducto.setImagenes(imagenes);
 
@@ -176,7 +173,7 @@ public class ProductoService {
             categoria.getProductos().remove(producto);
         }
 
-        producto.getCategorias().clear(); // También desde el lado del producto
+        producto.getCategorias().clear();
         productoRepository.delete(producto);
     }
 
@@ -209,7 +206,7 @@ public class ProductoService {
         List<MultipartFile> imagenesNuevas = productoDto.getImagenes();
         if (imagenesNuevas != null && !imagenesNuevas.isEmpty()) {
             for (MultipartFile file : imagenesNuevas) {
-                String imagenPath = imageService.saveImage(file, "productos");
+                String imagenPath = imageService.saveImage(file, Constants.IMAGEN_PRODUCTO_CARPETA);
                 productoImagenes = Arrays.copyOf(productoImagenes, productoImagenes.length + 1);
                 productoImagenes[productoImagenes.length - 1] = imagenPath;
             }
