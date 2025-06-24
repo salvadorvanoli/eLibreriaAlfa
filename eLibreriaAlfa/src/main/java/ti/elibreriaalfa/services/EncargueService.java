@@ -307,8 +307,11 @@ public class EncargueService {
             boolean yaExisteEnCreacion = encargueRepository
                     .findByUsuario_IdAndEstado(usuario.getId(), Encargue_Estado.EN_CREACION)
                     .isPresent();
+            boolean yaExisteEnPendiente = encargueRepository
+                    .findByUsuario_IdAndEstado(usuario.getId(), Encargue_Estado.PENDIENTE)
+                    .isPresent();
 
-            if (!yaExisteEnCreacion) {
+            if (!yaExisteEnCreacion && !yaExisteEnPendiente) {
                 Encargue nuevoEncargue = new Encargue();
                 nuevoEncargue.setUsuario(usuario);
                 nuevoEncargue.setEstado(Encargue_Estado.EN_CREACION);
