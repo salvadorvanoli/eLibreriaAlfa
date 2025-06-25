@@ -162,7 +162,6 @@ export class ImageUploadInputComponent {
       };
     });
 
-    console.log('ImageItems generados:', imageItems);
     this.images.set(imageItems);
     this.emitChanges();
   }

@@ -61,7 +61,6 @@ export class ViewProfileComponent implements OnInit {
   }
   
   updateToLoading() {
-    console.log('ViewProfileComponent: Actualizando estado a "loading"');
     this.orderState = 'loading';
     
   
@@ -71,12 +70,10 @@ export class ViewProfileComponent implements OnInit {
   }
   
   updateToNoProducts() {
-    console.log('ViewProfileComponent: Actualizando estado a "none" porque no hay productos');
     this.orderState = 'none';
   }
   
   updateToSubmitted() {
-    console.log('ViewProfileComponent: Actualizando estado a "submitted" porque se ha enviado el pedido');
     this.orderState = 'loading';
     
     setTimeout(() => {
@@ -106,11 +103,9 @@ export class ViewProfileComponent implements OnInit {
       switchMap(usuarioRaw => {
         const usuario = usuarioRaw as { id?: number };
         if (!usuario || !usuario.id) {
-          console.log('No hay usuario autenticado o falta ID');
           return of(null);
         }
 
-        console.log('Usuario obtenido:', usuario.id);
         return this.orderService.usuarioTieneEncargueEnCreacion(usuario.id).pipe(
           catchError(error => {
             console.error('Error verificando encargue en creación:', error);
@@ -120,7 +115,6 @@ export class ViewProfileComponent implements OnInit {
             if (tieneEncargueEnCreacion === null) {
               return of(null);
             }
-            console.log('¿Tiene encargue en creación?', tieneEncargueEnCreacion);
 
             if (!tieneEncargueEnCreacion) {
               return of('submitted' as const);
@@ -133,7 +127,6 @@ export class ViewProfileComponent implements OnInit {
               1
             ).pipe(
               map(response => {
-                console.log('Productos encontrados en EN_CREACION:', response.totalElements);
                 if (response.totalElements > 0) {
                   return 'in-progress' as const;
                 } else {
@@ -155,9 +148,7 @@ export class ViewProfileComponent implements OnInit {
       timer(minLoaderTime)
     ]).subscribe({
       next: ([determinedState, _timerResult]) => {
-        console.log('Estado determinado por la lógica:', determinedState);
         this.orderState = determinedState as 'none' | 'in-progress' | 'submitted';
-        console.log('Estado final después de forkJoin:', this.orderState);
       },
       error: (error) => {
         console.error('Error en la subscripción principal de forkJoin:', error);

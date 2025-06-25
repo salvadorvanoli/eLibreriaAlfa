@@ -17,38 +17,25 @@ export class ImpresionService extends BaseHttpService<ImpresionRequest, Impresio
   }
 
   createPrintRequest(request: ImpresionRequest, archivo: File): Observable<string> {
-    console.log('=== CREANDO IMPRESIÓN CON ARCHIVO ===');
-    console.log('Request data:', request);
-    console.log('Archivo:', {
-      name: archivo.name,
-      size: archivo.size,
-      type: archivo.type
-    });
     
-    console.log('PASO 1: Subiendo archivo...');
     return this.uploadFile(archivo).pipe(
       tap(uploadResponse => {
-        console.log('✅ PASO 1 completado - Archivo subido:', uploadResponse);
+
       }),
       switchMap(uploadResponse => {
-        console.log('PASO 2: Creando impresión con archivo...');
         
         const requestConArchivo = {
           ...request,
           nombreArchivo: uploadResponse.filename
         };
         
-        console.log('Request con archivo:', requestConArchivo);
-        
         return this.http.post(`${this.baseUrl}${this.end}`, requestConArchivo, { responseType: 'text' }).pipe(
           tap(response => {
-            console.log('✅ PASO 2 completado - Impresión creada:', response);
             this.impresionCreatedSubject.next();
           })
         );
       }),
       catchError(error => {
-        console.error('❌ Error en el proceso:', error);
         if (error.url && error.url.includes('/upload')) {
           console.error('❌ Falló en PASO 1 (subir archivo)');
         } else {
@@ -81,12 +68,9 @@ export class ImpresionService extends BaseHttpService<ImpresionRequest, Impresio
   uploadFile(file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    
-    console.log('Enviando POST a:', `${this.baseUrl}/print/upload`);
-    
+        
     return this.http.post(`${this.baseUrl}/print/upload`, formData).pipe(
       tap(response => {
-        console.log('✅ Archivo subido exitosamente:', response);
       }),
       catchError(error => {
         console.error('❌ Error al subir archivo:', error);
@@ -96,16 +80,11 @@ export class ImpresionService extends BaseHttpService<ImpresionRequest, Impresio
   }
   
   downloadFile(filename: string): Observable<Blob> {
-    console.log('=== DESCARGANDO ARCHIVO ===');
-    console.log('Filename:', filename);
     
     const url = `${this.baseUrl}/print/download/${filename}`;
-    console.log('URL:', url);
     
     return this.http.get(url, { responseType: 'blob' }).pipe(
       tap(blob => {
-        console.log('✅ Archivo descargado exitosamente');
-        console.log('Tamaño:', blob.size, 'bytes');
       }),
       catchError(error => {
         console.error('❌ Error al descargar archivo:', error);

@@ -25,7 +25,6 @@ export class SpecifyOrderComponent implements OnInit {
   }
   
   onDateChange(event: Date) {
-    console.log('Fecha seleccionada:', event);
     this.selectedDate = event;
   }
   
@@ -34,7 +33,6 @@ export class SpecifyOrderComponent implements OnInit {
   }
   
   realizarPedido() {
-    console.log('Fecha al realizar pedido:', this.selectedDate);
     
     if (!this.selectedDate) {
       this.showDateAlert = true;
@@ -47,7 +45,6 @@ export class SpecifyOrderComponent implements OnInit {
     const year = this.selectedDate.getFullYear();
     
     const formattedDate = `${year}-${month}-${day}`;
-    console.log('Fecha formateada:', formattedDate);
     
     // Emitir el evento con la fecha formateada
     this.submitOrder.emit(formattedDate);
