@@ -34,8 +34,7 @@ public class ComentarioService {
     }
 
     public String crearComentario(ComentarioDto comentarioDto) {
-        log.info("Iniciando creación de comentario");
-        
+
         try {
             validarComentario(comentarioDto);
             
@@ -56,18 +55,15 @@ public class ComentarioService {
             Comentario comentario = comentarioDto.mapToEntity();
             Comentario comentarioGuardado = comentarioRepository.save(comentario);
             
-            log.info("Comentario creado exitosamente con ID: {}", comentarioGuardado.getId());
             return Constants.SUCCESS_COMENTARIO_CREADO + comentarioGuardado.getId();
             
         } catch (Exception e) {
-            log.error("Error al crear comentario: {}", e.getMessage(), e);
             throw e;
         }
     }
 
     public void borrarComentario(Long idComentario) {
-        log.info("Iniciando eliminación de comentario con ID: {}", idComentario);
-        
+
         if (idComentario == null || idComentario <= 0) {
             throw new ComentarioValidacionException("El ID del comentario debe ser un número positivo");
         }
@@ -79,7 +75,6 @@ public class ComentarioService {
         
         try {
             comentarioRepository.deleteById(idComentario);
-            log.info("Comentario eliminado exitosamente con ID: {}", idComentario);
         } catch (Exception e) {
             log.error("Error al eliminar comentario con ID {}: {}", idComentario, e.getMessage(), e);
             throw new ComentarioValidacionException("Error al eliminar el comentario: " + e.getMessage());
@@ -87,10 +82,7 @@ public class ComentarioService {
     }
 
     public Page<ComentarioDto> listadoComentariosPageByPublicacion(Integer pagina, Integer cantidad, Long idPublicacion) {
-        log.info("Obteniendo comentarios paginados para publicación ID: {}, página: {}, cantidad: {}", 
-                idPublicacion, pagina, cantidad);
         
-        // Validar parámetros
         if (pagina < 0) {
             throw new ComentarioValidacionException("El número de página no puede ser negativo");
         }

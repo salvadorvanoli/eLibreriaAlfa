@@ -1,5 +1,6 @@
 package ti.elibreriaalfa.api.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,12 +25,14 @@ public class SeguridadController {
     @Value("${JWT_EXPIRATION}")
     private String expiration;
 
+    @Operation(summary = "Obtener el usuario actual")
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Object> getUsuarioActual() {
         return new ResponseEntity<>(seguridadService.getUsuarioActual(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Autenticar un usuario")
     @PostMapping("/auth")
     @Transactional(readOnly = true)
     public ResponseEntity<Void> authenticateUser(@RequestBody AccesoUsuarioDto datosUsuario, HttpServletResponse response) {
@@ -38,6 +41,7 @@ public class SeguridadController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "Cerrar sesión de un usuario")
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletResponse response) {
         seguridadService.logout(response);

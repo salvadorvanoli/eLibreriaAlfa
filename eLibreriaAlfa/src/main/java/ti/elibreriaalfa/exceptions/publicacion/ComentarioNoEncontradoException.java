@@ -1,8 +1,5 @@
 package ti.elibreriaalfa.exceptions.publicacion;
 
-/**
- * Excepción lanzada cuando no se encuentra un comentario específico
- */
 public class ComentarioNoEncontradoException extends PublicacionException {
     
     public ComentarioNoEncontradoException(String message) {

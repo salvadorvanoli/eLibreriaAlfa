@@ -1,8 +1,5 @@
 package ti.elibreriaalfa.exceptions.publicacion;
 
-/**
- * Excepción lanzada cuando no se encuentra una publicación específica
- */
 public class PublicacionNoEncontradaException extends PublicacionException {
     
     public PublicacionNoEncontradaException(String message) {

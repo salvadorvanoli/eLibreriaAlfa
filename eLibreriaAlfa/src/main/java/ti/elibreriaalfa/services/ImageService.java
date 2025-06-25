@@ -32,8 +32,6 @@ public class ImageService {
 
     @PostConstruct
     public void init() throws IOException {
-       // Path basePathObj = Paths.get(basePath).toAbsolutePath().normalize();
-
         this.basePathObj = Paths.get(basePath).toAbsolutePath().normalize();
         Files.createDirectories(basePathObj);
     }
@@ -119,8 +117,6 @@ public class ImageService {
             throw new IllegalArgumentException("El archivo está vacío");
         }
 
-
-
         // Tipos permitidos para impresiones
         String contentType = file.getContentType();
         if (contentType == null) {
@@ -160,31 +156,18 @@ public class ImageService {
     }
 
     public String savePrint(MultipartFile file) throws IOException {
-        System.out.println("=== INICIANDO GUARDADO DE ARCHIVO ===");
-        System.out.println("Nombre original: " + file.getOriginalFilename());
-        System.out.println("Tamaño: " + file.getSize() + " bytes");
-        System.out.println("Tipo de contenido: " + file.getContentType());
 
         validatePrint(file);
-        System.out.println("✅ Validación completada");
 
         Path subfolderPath = getSubfolderPath("impresiones");
-        System.out.println("Ruta de subcarpeta: " + subfolderPath.toAbsolutePath());
 
         Files.createDirectories(subfolderPath);
-        System.out.println("✅ Directorio creado/verificado");
 
         String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        System.out.println("Nombre del archivo generado: " + filename);
 
         Path destination = subfolderPath.resolve(filename);
-        System.out.println("Ruta completa de destino: " + destination.toAbsolutePath());
 
         file.transferTo(destination.toFile());
-        System.out.println("✅ Archivo guardado exitosamente");
-        System.out.println("¿Archivo existe?: " + Files.exists(destination));
-        System.out.println("Tamaño del archivo guardado: " + Files.size(destination) + " bytes");
-        System.out.println("=== FIN GUARDADO DE ARCHIVO ===");
 
         return filename;
     }

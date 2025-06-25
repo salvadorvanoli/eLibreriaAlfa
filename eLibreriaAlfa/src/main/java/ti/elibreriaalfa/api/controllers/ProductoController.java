@@ -25,11 +25,13 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
+    @Operation(summary = "Obtener todos los productos")
     @GetMapping
     public ResponseEntity<List<ProductoSimpleDto>> getAllProductos() {
         return new ResponseEntity<>(productoService.getAllProductos(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener productos filtrados por categoria, texto de busqueda y orden")
     @GetMapping("/filtered")
     public ResponseEntity<List<ProductoSimpleDto>> getProductosFiltrados(
             @RequestParam(name = "categoria", required = false) Long idCategoria,
@@ -44,12 +46,14 @@ public class ProductoController {
         }
     }
 
+    @Operation(summary = "Obtener elementos de producto")
     @GetMapping("/elements")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Object> getElements() {
         return new ResponseEntity<>(productoService.getElements(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener elementos de producto filtrados por texto de busqueda y orden")
     @GetMapping("/filteredElements")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Object> getElementsFiltrados(
@@ -59,23 +63,26 @@ public class ProductoController {
         return new ResponseEntity<>(productoService.getElementsFiltrados(textoBusqueda, orden), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener un producto por su ID")
     @GetMapping("/{id}")
     public ResponseEntity<ProductoDto> getProductoPorId(@PathVariable(name = "id") Long idProducto) {
         return new ResponseEntity<>(productoService.obtenerProductoPorId(idProducto), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener un producto por su ID con imágenes")
     @GetMapping("/{id}/with-images")
     public ResponseEntity<ProductoConImagenesDto> getProductoConImagenesPorId(@PathVariable(name = "id") Long idProducto) {
         return new ResponseEntity<>(productoService.obtenerProductoConImagenesPorId(idProducto), HttpStatus.OK);
     }
 
+    @Operation(summary = "Crear un nuevo producto")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(description = "Esta función crea una nueva categoria")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<ProductoDto> createProducto(@ModelAttribute ProductoRequestDto producto) {
         return new ResponseEntity<>(productoService.createProducto(producto), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Eliminar un producto por su ID")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Void> deleteProducto(@PathVariable(name = "id") Long idProducto) {
@@ -83,6 +90,7 @@ public class ProductoController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "Modificar un producto por su ID")
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<ProductoDto> modifyProducto(
@@ -92,7 +100,7 @@ public class ProductoController {
         return new ResponseEntity<>(productoService.modifyProducto(idProducto, productoDto), HttpStatus.OK);
     }
 
-    //http://localhost:8080/product/paginado?pagina=0&cantidad=10
+    @Operation(summary = "Obtener una lista de productos paginados")
     @GetMapping("/paginado")
     public ResponseEntity<Page<ProductoSimpleDto>> productosPaginados(
             @RequestParam("pagina") Integer pagina,
@@ -100,44 +108,4 @@ public class ProductoController {
 
         return new ResponseEntity<>(productoService.listadoProductoPage(pagina, cantidad), HttpStatus.OK);
     }
-
- /* Ejemplos de Json para probar:
-
-    CREAR
-
-    1)
-    {
-    "nombre": "Licuadora",
-    "precio": 2590.99,
-    "descripcion": "Licuadora de 3 velocidades con vaso de vidrio.",
-    "categorias": []
-    }
-
-    2)
-    {
-    "nombre": "Horno Eléctrico",
-    "precio": 8990.50,
-    "descripcion": "Horno eléctrico 45L con temporizador y control de temperatura.",
-    "categorias": [
-        { "id": 1 },
-        { "id": 2 }
-        ]
-    }
-
-
-    MODIFICAR
-
-    {
-  "id": 54,
-  "nombre": "Laptop",
-  "categorias": [
-        {
-          "id": 2
-        }
-    ],
-  "precio": 899660.5,
-  "descripcion": "A."
-    }
-
-     */
 }

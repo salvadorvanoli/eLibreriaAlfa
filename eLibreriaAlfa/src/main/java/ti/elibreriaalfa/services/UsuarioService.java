@@ -182,5 +182,4 @@ public class UsuarioService {
         Usuario usuario = getUsuarioEntityById(usuarioId);
         return usuario.mapToDtoSimple();
     }
-    //a
 }

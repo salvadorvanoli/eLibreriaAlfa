@@ -1,5 +1,6 @@
 package ti.elibreriaalfa.api.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -31,11 +32,13 @@ public class ImpresionController {
         this.imageService = imageService;
     }
 
+    @Operation(summary = "Obtener todas las impresiones")
     @GetMapping
     public ResponseEntity<ResponseListadoImpresiones> getAllImpresiones() {
         return new ResponseEntity<>(impresionService.getAllImpresiones(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener una impresión por ID")
     @GetMapping("/{idImpresion}")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Object> getImpresionById(@PathVariable (name = "idImpresion") Long idImpresion) {
@@ -47,12 +50,14 @@ public class ImpresionController {
         }
     }
 
+    @Operation(summary = "Obtener todas las impresiones con paginación")
     @GetMapping("/page")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Page<ImpresionDto>> getImpresionPage(@RequestParam(name = "pagina") Integer pagina, @RequestParam(name = "cantidad") Integer cantidad) {
         return new ResponseEntity<>(impresionService.listadoImpresionPage(pagina, cantidad), HttpStatus.OK);
     }
 
+    @Operation(summary = "Crear una impresión")
     @PostMapping
     public ResponseEntity<String> createImpresion(@RequestBody ImpresionDto impresionDto) {
         String response = impresionService.crearImpresion(impresionDto);
@@ -64,6 +69,7 @@ public class ImpresionController {
         }
     }
 
+    @Operation(summary = "Eliminar una impresión por ID")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Void> borrarImpresion(@PathVariable(name = "id") Long idImpresion) {
@@ -72,11 +78,13 @@ public class ImpresionController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "Listar impresiones por usuario")
     @GetMapping("/user/{usuarioId}")
     public ResponseEntity<?> listarImpresionesPorUsuario(@PathVariable Long usuarioId) {
         return ResponseEntity.ok(impresionService.listarImpresionesPorUsuario(usuarioId));
     }
 
+    @Operation(summary = "Cambiar el estado de una impresión")
     @PatchMapping("/{idImpresion}/estado")
     public ResponseEntity<String> cambiarEstadoImpresion(
             @PathVariable(name = "idImpresion") Long idImpresion,
@@ -95,6 +103,7 @@ public class ImpresionController {
         }
     }
 
+    @Operation(summary = "Subir un archivo de impresión")
     @PostMapping("/upload")
     public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
@@ -115,32 +124,17 @@ public class ImpresionController {
         }
     }
 
+    @Operation(summary = "Descargar un archivo de impresión")
     @GetMapping("download/{filename}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String filename) {
         try {
-            System.out.println("=== DESCARGANDO ARCHIVO ===");
-            System.out.println("Filename solicitado: " + filename);
-            System.out.println("Ruta completa: impresiones/" + filename);
-
             Resource resource = imageService.loadImage("impresiones/" + filename);
-            System.out.println("✅ Recurso cargado exitosamente");
-            System.out.println("Descripción del recurso: " + resource.getDescription());
-            System.out.println("¿Existe?: " + resource.exists());
-            System.out.println("¿Es legible?: " + resource.isReadable());
-            System.out.println("URI: " + resource.getURI());
 
             String contentType = Files.probeContentType(resource.getFile().toPath());
-            System.out.println("Content type detectado: " + contentType);
 
             if (contentType == null) {
                 contentType = "application/octet-stream";
-                System.out.println("Content type asignado por defecto: " + contentType);
             }
-
-            System.out.println("Preparando respuesta...");
-            System.out.println("Content-Type final: " + contentType);
-            System.out.println("Content-Disposition: attachment; filename=\"" + filename + "\"");
-            System.out.println("✅ Enviando archivo al cliente...");
 
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType(contentType))

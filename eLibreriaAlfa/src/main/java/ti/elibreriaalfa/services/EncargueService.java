@@ -251,8 +251,6 @@ public class EncargueService {
         encargueRepository.save(encargue);
     }
 
-    // src/main/java/ti/elibreriaalfa/services/EncargueService.java
-
     @Transactional
     public void cancelarEncargueEnviadoYCrearNuevo(Long usuarioId) {
         // Buscar encargue PENDIENTE del usuario
@@ -322,5 +320,4 @@ public class EncargueService {
             }
         }
     }
-
 }
