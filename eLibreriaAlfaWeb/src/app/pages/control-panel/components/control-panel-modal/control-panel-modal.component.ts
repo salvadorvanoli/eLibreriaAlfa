@@ -4,6 +4,7 @@ import { FormTextInputComponent } from "../../../../shared/components/inputs/for
 import { UserFormComponent } from "./components/user-form/user-form.component";
 import { ProductFormComponent } from './components/product-form/product-form.component';
 import { PublicationFormComponent } from './components/publication-form/publication-form.component';
+import { CategoryFormComponent } from './components/category-form/category-form.component';
 
 @Component({
   selector: 'app-control-panel-modal',
@@ -13,6 +14,7 @@ import { PublicationFormComponent } from './components/publication-form/publicat
     UserFormComponent,
     ProductFormComponent,
     PublicationFormComponent,
+    CategoryFormComponent
 ],
   templateUrl: './control-panel-modal.component.html',
   styleUrl: './control-panel-modal.component.scss'

@@ -5,6 +5,7 @@ import { DataPanelComponent } from './components/data-panel/data-panel.component
 import { ControlPanelModalComponent } from './components/control-panel-modal/control-panel-modal.component';
 import { PrintsTableComponent } from '../../shared/components/prints-table/prints-table.component'; 
 import { OrderTableComponent } from '../../shared/components/order-table/order-table.component';
+import { CategoryTreePanelComponent } from './components/category-tree-panel/category-tree-panel.component';
 
 @Component({
   selector: 'app-control-panel',
@@ -15,7 +16,8 @@ import { OrderTableComponent } from '../../shared/components/order-table/order-t
     DataPanelComponent,
     ControlPanelModalComponent,
     PrintsTableComponent,
-    OrderTableComponent
+    OrderTableComponent,
+    CategoryTreePanelComponent
   ],
   templateUrl: './control-panel.component.html',
   styleUrl: './control-panel.component.scss'
@@ -33,6 +35,7 @@ export class ControlPanelComponent {
   }
 
   onItemSelected(item: any) {
+    console.log('Selected item:', item);
     this.selectedItem = item;
     this.modalIsVisible = true;
   }

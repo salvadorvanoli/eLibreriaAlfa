@@ -30,7 +30,7 @@ public class CategoriaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoriaDto> getCategoriaPorId(@PathVariable(name = "id") Long idCategoria) {
+    public ResponseEntity<CategoriaSimpleDto> getCategoriaPorId(@PathVariable(name = "id") Long idCategoria) {
         return new ResponseEntity<>(categoriaService.obtenerCategoriaPorId(idCategoria), HttpStatus.OK);
     }
 
@@ -38,23 +38,23 @@ public class CategoriaController {
     @Operation(description = "Esta función crea una nueva categoria")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<CategoriaSimpleDto> createCategoria(@RequestBody CategoriaRequestDto categoria) {
-        return new ResponseEntity<>(categoriaService.crearCategoria(categoria), HttpStatus.CREATED);
+        return new ResponseEntity<>(categoriaService.createCategoria(categoria), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<Void> borrarCategoria(@PathVariable(name = "id") Long idCategoria) {
-        categoriaService.borrarCategoria(idCategoria);
+    public ResponseEntity<Void> deleteCategoria(@PathVariable(name = "id") Long idCategoria) {
+        categoriaService.deleteCategoria(idCategoria);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<CategoriaSimpleDto> modificarCategoria(
+    public ResponseEntity<CategoriaSimpleDto> modifyCategoria(
             @PathVariable(name = "id") Long idCategoria,
             @RequestBody CategoriaRequestDto categoriaDto
     ) {
-        return new ResponseEntity<>(categoriaService.modificarCategoria(idCategoria, categoriaDto), HttpStatus.OK);
+        return new ResponseEntity<>(categoriaService.modifyCategoria(idCategoria, categoriaDto), HttpStatus.OK);
     }
 
     @GetMapping("/paginado")

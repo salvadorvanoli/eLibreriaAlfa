@@ -4,6 +4,9 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ti.elibreriaalfa.exceptions.categoria.CategoriaException;
+import ti.elibreriaalfa.exceptions.categoria.CategoriaNoEncontradaException;
+import ti.elibreriaalfa.exceptions.categoria.CategoriaYaExisteException;
 import ti.elibreriaalfa.exceptions.image.ImageException;
 import ti.elibreriaalfa.exceptions.image.ImageNotFoundException;
 import ti.elibreriaalfa.exceptions.producto.ProductoException;
@@ -127,6 +130,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
+    // Manejadores de excepciones de imagen
     @ExceptionHandler(ImageException.class)
     public ResponseEntity<Map<String, String>> handleImageException(ImageException ex) {
         Map<String, String> error = new HashMap<>();
@@ -139,5 +143,26 @@ public class GlobalExceptionHandler {
         Map<String, String> error = new HashMap<>();
         error.put("error", ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CategoriaException.class)
+    public ResponseEntity<Map<String, String>> handleCategoriaException(CategoriaException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CategoriaNoEncontradaException.class)
+    public ResponseEntity<Map<String, String>> handleCategoriaNoEncontradaException(CategoriaNoEncontradaException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CategoriaYaExisteException.class)
+    public ResponseEntity<Map<String, String>> handleCategoriaYaExisteException(CategoriaYaExisteException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }

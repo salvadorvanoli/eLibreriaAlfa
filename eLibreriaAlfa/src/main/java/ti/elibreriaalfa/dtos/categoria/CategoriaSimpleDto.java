@@ -9,4 +9,5 @@ import ti.elibreriaalfa.business.entities.Categoria;
 public class CategoriaSimpleDto {
     private Long id;
     private String nombre;
+    private Long padreId;
 }

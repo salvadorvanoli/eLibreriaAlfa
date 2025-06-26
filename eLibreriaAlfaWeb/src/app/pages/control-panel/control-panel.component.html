@@ -8,6 +8,8 @@
             <app-prints-table [userRegistrado]="false" />
         } @else if (selectedDataType() === 'Pedido') {
             <app-order-table [userRegistrado]="false"></app-order-table>
+        } @else if (selectedDataType() === 'Categoría') {
+            <app-category-tree-panel selectionMode="single" (categorySelection)="onItemSelected($event)" />
         } @else {
             <app-data-panel [itemType]="selectedDataType" (itemSelected)="onItemSelected($event)" />
         }

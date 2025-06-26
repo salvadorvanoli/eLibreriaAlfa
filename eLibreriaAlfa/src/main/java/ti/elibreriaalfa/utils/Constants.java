@@ -59,15 +59,20 @@ public class Constants {
 
     // Mensajes de error para validaciones de producto
     public static final String ERROR_NOMBRE_PRODUCTO_INVALIDO = "El nombre debe tener entre " + MIN_NOMBRE_PRODUCTO_LENGTH + " y " + MAX_NOMBRE_PRODUCTO_LENGTH + " caracteres";
-    public static final String ERROR_NOMBRE_PRODUCTO_YA_EXISTE = "El formato del correo electrónico no es válido";
+    public static final String ERROR_NOMBRE_PRODUCTO_YA_EXISTE = "Ya existe un producto con ese nombre";
     public static final String ERROR_PRECIO_PRODUCTO_INVALIDO = "El precio debe ser de al menos " + MIN_PRECIO_PRODUCTO;
     public static final String ERROR_DESCRIPCION_PRODUCTO_INVALIDA = "La descripción debe tener entre " + MIN_DESCRIPCION_PRODUCTO_LENGTH + " y " + MAX_DESCRIPCION_PRODUCTO_LENGTH + " caracteres";
     public static final String ERROR_CATEGORIAS_PRODUCTO_INVALIDAS = "El producto debe tener al menos una categoría asociada";
     public static final String ERROR_IMAGENES_PRODUCTO_VACIAS = "El producto debe tener al menos una imagen asociada";
     public static final String ERROR_PRODUCTO_NO_ENCONTRADO_ID = "No existe un producto con ese ID";
 
+    // Constantes de categoría
+    public static final int MIN_NOMBRE_CATEGORIA_LENGTH = 1;
+    public static final int MAX_NOMBRE_CATEGORIA_LENGTH = 50;
+
     // Mensajes de error para validaciones de categoría
-    public static final String ERROR_NOMBRE_CATEGORIA_VACIO = "El nombre de la categoría no puede estar vacío";
+    public static final String ERROR_NOMBRE_CATEGORIA_INVALIDO = "El nombre debe tener entre " + MIN_NOMBRE_CATEGORIA_LENGTH + " y " + MAX_NOMBRE_CATEGORIA_LENGTH + " caracteres";
+    public static final String ERROR_NOMBRE_CATEGORIA_YA_EXISTE = "Ya existe una categoría con ese nombre";
     public static final String ERROR_CATEGORIA_NO_ENCONTRADA = "No existe una categoría con ese ID";
 
     // Constantes de imagen

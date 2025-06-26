@@ -1,17 +1,17 @@
-import { Component, computed, Input, signal, SimpleChanges } from '@angular/core';
+import { Component, Input, signal, SimpleChanges } from '@angular/core';
+import { ViewChild } from '@angular/core';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ProductService } from '../../../../../../core/services/product.service';
 import { ProductoDto, ProductoConImagenesDto } from '../../../../../../core/models/producto';
-import { ViewChild } from '@angular/core';
+import { ImageDto } from '../../../../../../core/models/image';
 
 import { FormTextInputComponent } from '../../../../../../shared/components/inputs/form-text-input/form-text-input.component';
 import { FormNumberInputComponent } from '../../../../../../shared/components/inputs/form-number-input/form-number-input.component';
 import { FormTextareaInputComponent } from '../../../../../../shared/components/inputs/form-textarea-input/form-textarea-input.component';
 import { ImageUploadInputComponent } from '../../../../../../shared/components/inputs/image-upload-input/image-upload-input.component';
 import { PrimaryButtonComponent } from '../../../../../../shared/components/buttons/primary-button/primary-button.component';
-import { ImageDto } from '../../../../../../core/models/image';
-import { CategoryTreePopoverComponent } from "./components/category-tree-popover/category-tree-popover.component";
+import { CategoryTreeSelectComponent } from "../../../../../../shared/components/category-tree-select/category-tree-select.component";
 
 @Component({
   selector: 'app-product-form',
@@ -23,7 +23,7 @@ import { CategoryTreePopoverComponent } from "./components/category-tree-popover
     FormTextareaInputComponent,
     ImageUploadInputComponent,
     PrimaryButtonComponent,
-    CategoryTreePopoverComponent
+    CategoryTreeSelectComponent
 ],
   providers: [
     MessageService

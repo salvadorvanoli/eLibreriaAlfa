@@ -1,0 +1,16 @@
+<div class="card w-full">
+    @if (items && items.length > 0) {
+        <p class="text-lg mb-4 ml-8 mt-3">Selección</p>
+        <p-orderlist
+            [value]="items"
+            dataKey="id"
+            [selection]="[]"
+            [disabled]="isSelectionDisabled"
+            styleClass="w-full p-4"
+        >
+            <ng-template #item let-item>
+                {{ getItemLabel(item) }}
+            </ng-template>
+        </p-orderlist>
+    }
+</div>

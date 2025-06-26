@@ -2,14 +2,12 @@
     <div
         class="h-full p-6 border border-surface-200 bg-surface-0 rounded flex flex-col sm:col-span-12"
     >
-        <div class="bg-surface-50 flex justify-center rounded p-4 xs:min-h-40 xs:max-h-40">
-            <div class="relative mx-auto">
-                <img
-                    class="rounded w-full my-auto h-full object-contain"
-                    [src]="productImageUrl"
-                    [alt]="product.nombre"
-                />
-            </div>
+        <div class="product-image-container">
+            <img
+                [src]="productImageUrl"
+                [alt]="product.nombre"
+                (error)="onImageError($event)"
+            />
         </div>
         <div class="pt-6">
             <div class="flex flex-row justify-between products-start gap-2">

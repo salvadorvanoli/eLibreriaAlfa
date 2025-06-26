@@ -32,12 +32,7 @@ export class FormTextareaInputComponent {
   @Output() isInputInvalid = new EventEmitter<boolean>();
 
   @Input() editorModules = {
-    toolbar: [
-      ['bold', 'italic', 'underline'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      ['link'],
-      ['clean']
-    ]
+    toolbar: false
   };
 
   showErrorMessage = computed(() => {

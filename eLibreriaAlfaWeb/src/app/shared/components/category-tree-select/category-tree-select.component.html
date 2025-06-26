@@ -1,0 +1,30 @@
+<div class="w-full">
+    <p-floatlabel class="w-full" variant="on">
+        <p-treeselect
+            [(ngModel)]="selectedCategory"
+            [options]="categories"
+            [selectionMode]="selectionMode"
+            styleClass="w-full"
+            containerStyleClass="w-full"
+            [filter]="true"
+            [filterInputAutoFocus]="true"
+            size="large"
+            inputId="treeSelectLabel"
+            [appendTo]="'body'"
+            (onNodeSelect)="onNodeSelect($event)"
+            (onNodeUnselect)="onNodeUnselect($event)"
+        />
+        <label for="treeSelectLabel">{{ placeholder }}</label>
+    </p-floatlabel>
+
+    @if (showErrorMessage()) {
+        <p-message
+            class="w-full mt-2"
+            severity="error"
+            variant="simple"
+            size="small"
+        >
+            Debes seleccionar al menos una categoría
+        </p-message>
+    }
+</div>

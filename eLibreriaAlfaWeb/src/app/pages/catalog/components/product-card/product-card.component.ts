@@ -31,4 +31,8 @@ export class ProductCardComponent {
       }
     }
   }
+
+  onImageError(event: any): void {
+    event.target.src = this.productImageUrl = 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
+  }
 }

@@ -13,13 +13,10 @@
             <app-publication-form class="w-full" [publication]="item" />
         } @else if (dataType === 'Producto') {
             <app-product-form class="w-full" [product]="item" />
+        } @else if (dataType === 'Categoría') {
+            <app-category-form class="w-full" [category]="item" />
         }
-        <!-- @else if (dataType === 'Categoría') {
-            <app-category-form class="w-full" />
-        } @else if (dataType === 'Producto') {
-            <app-product-form class="w-full" />
-        } @else if (dataType === 'Publicación') {
-            <app-publication-form class="w-full" />
+        <!--
         } @else if (dataType === 'Pedido') {
             <app-order-form class="w-full" />
         } -->

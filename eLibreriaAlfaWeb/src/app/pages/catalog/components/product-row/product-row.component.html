@@ -3,11 +3,11 @@
         class="flex flex-col sm:flex-row sm:items-center p-6 gap-4"
         [ngClass]="{ 'border-t border-surface-200': !first }"
     >
-        <div class="sm:w-40 relative">
+        <div class="product-row-image-container">
             <img
-                class="block xl:block mx-auto rounded w-full"
                 [src]="productImageUrl"
                 [alt]="product.nombre"
+                (error)="onImageError($event)"
             />
         </div>
         <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">

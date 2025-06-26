@@ -6,5 +6,7 @@ import ti.elibreriaalfa.business.entities.Categoria;
 import java.util.List;
 
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
-    List<Categoria> findByPadreIsNull();
+    Categoria findByNombre(String nombre);
+
+    List<Categoria> findByPadreIsNullOrderByIdDesc();
 }

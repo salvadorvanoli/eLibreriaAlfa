@@ -10,6 +10,7 @@ export interface CategoriaDto {
 export interface CategoriaSimpleDto {
     id: number;
     nombre: string;
+    padreId?: number;
 }
 
 export interface CategoriaNodoDto {

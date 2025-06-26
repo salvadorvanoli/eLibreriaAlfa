@@ -33,13 +33,14 @@
         errorMessage="La descripción debe tener entre 1 y 200 caracteres"
         (textValue)="description = $event"
         (isInputInvalid)="isDescriptionInvalid = $event"
-        [editorModules]="{toolbar: []}"
     />
 
-    <app-category-tree-popover
+    <app-category-tree-select
         #categoriesInput
         class="w-full"
         [formSubmitted]="formSubmitted"
+        selectionMode="multiple"
+        placeholder="Seleccionar categorías"
         (categorySelection)="categories = $event"
         (isInputInvalid)="areCategoriesInvalid = $event"
     />

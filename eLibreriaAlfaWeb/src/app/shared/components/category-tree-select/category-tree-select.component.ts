@@ -1,33 +1,50 @@
-import { Component, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
+import { Component, Output, EventEmitter, Input, computed, signal } from '@angular/core';
 import { TreeNode } from 'primeng/api';
-import { Tree } from 'primeng/tree';
+import { FormsModule } from '@angular/forms';
+import { TreeSelect } from 'primeng/treeselect';
+import { FloatLabel } from 'primeng/floatlabel';
+import { Message } from 'primeng/message';
 import { CategoryService } from '../../../core/services/category.service';
 import { CategoriaNodoDto } from '../../../core/models/categoria';
 
 @Component({
-  selector: 'app-category-tree',
+  selector: 'app-category-tree-select',
   standalone: true,
   imports: [
-    Tree
+    FormsModule,
+    TreeSelect,
+    FloatLabel,
+    Message
   ],
-  templateUrl: './category-tree.component.html',
-  styleUrl: './category-tree.component.scss'
+  templateUrl: './category-tree-select.component.html',
+  styleUrl: './category-tree-select.component.scss'
 })
-export class CategoryTreeComponent {
+export class CategoryTreeSelectComponent {
   categories: TreeNode[] = [];
   selectedCategory: TreeNode | TreeNode[] | null = null;
   selectedDataNodes: CategoriaNodoDto[] = [];
   private categoriesLoaded = false;
 
-  @Input() selectionMode: 'single' | 'multiple' = 'single';
-  @Output() selection = new EventEmitter<number | number[]>();
-  @Output() selectionDataNode = new EventEmitter<CategoriaNodoDto[]>();
+  @Input() selectionMode: 'single' | 'multiple' = 'multiple';
+  @Input() placeholder: string = 'Selecciona categorías';
+  @Input() formSubmitted = signal(false);
+  @Input() required: boolean = true;
 
-  constructor(private categoryService: CategoryService) {}
+  @Output() categorySelection = new EventEmitter<number[]>();
+  @Output() categorySelectionDataNode = new EventEmitter<CategoriaNodoDto[]>();
+  @Output() isInputInvalid = new EventEmitter<boolean>();
+
+  constructor(
+    private categoryService: CategoryService
+  ) {}
 
   ngOnInit() {
     this.loadCategories();
   }
+
+  showErrorMessage = computed(() => {
+    return this.validateInput() && this.formSubmitted() && this.required;
+  });
 
   private loadCategories() {
     this.categoryService.getAllCategoriesTree().subscribe(data => {
@@ -45,9 +62,52 @@ export class CategoryTreeComponent {
     };
   }
 
-  // Este método se llama cuando hay cualquier cambio en la selección
-  onSelectionChange() {
+  onNodeSelect(event: any) {
+    console.log('Node selected:', event);
+    this.addNodeToSelection(event.node);
     this.emitSelection();
+    this.isInputInvalid.emit(this.validateInput());
+  }
+
+  onNodeUnselect(event: any) {
+    console.log('Node unselected:', event);
+    this.removeNodeFromSelection(event.node);
+    this.emitSelection();
+    this.isInputInvalid.emit(this.validateInput());
+  }
+
+  private addNodeToSelection(node: TreeNode) {
+    if (this.selectionMode === 'single') {
+      this.selectedCategory = node;
+      this.selectedDataNodes = [node.data];
+    } else {
+      if (!this.selectedCategory) {
+        this.selectedCategory = [];
+      }
+      
+      const selectedNodes = this.selectedCategory as TreeNode[];
+      const existingIndex = selectedNodes.findIndex(n => n.key === node.key);
+      
+      if (existingIndex === -1) {
+        selectedNodes.push(node);
+        this.selectedDataNodes = selectedNodes.map(n => n.data);
+      }
+    }
+  }
+
+  private removeNodeFromSelection(node: TreeNode) {
+    if (this.selectionMode === 'single') {
+      this.selectedCategory = null;
+      this.selectedDataNodes = [];
+    } else {
+      if (Array.isArray(this.selectedCategory)) {
+        const selectedNodes = this.selectedCategory as TreeNode[];
+        const filteredNodes = selectedNodes.filter(n => n.key !== node.key);
+        
+        this.selectedCategory = filteredNodes;
+        this.selectedDataNodes = filteredNodes.map(n => n.data);
+      }
+    }
   }
 
   private emitSelection() {
@@ -55,28 +115,25 @@ export class CategoryTreeComponent {
       const selectedNode = this.selectedCategory as TreeNode;
       const selectedId = selectedNode?.data?.id || 0;
       this.selectedDataNodes = selectedNode ? [selectedNode.data] : [];
-      this.selection.emit(selectedId);
-      this.selectionDataNode.emit(selectedNode ? [selectedNode.data] : []);
+      const selectedIds = selectedId ? [selectedId] : [];
+      this.categorySelection.emit(selectedIds);
+      this.categorySelectionDataNode.emit(this.selectedDataNodes);
     } else {
       const selectedNodes = this.selectedCategory as TreeNode[];
       const selectedIds = selectedNodes 
         ? selectedNodes.map(node => node.data?.id).filter(id => id !== undefined && id !== null)
         : [];
       this.selectedDataNodes = selectedNodes ? selectedNodes.map(node => node.data) : [];
-      this.selection.emit(selectedIds);
-      this.selectionDataNode.emit(selectedNodes ? selectedNodes.map(node => node.data) : []);
+      this.categorySelection.emit(selectedIds);
+      this.categorySelectionDataNode.emit(this.selectedDataNodes);
     }
-  }
-
-  // Métodos públicos para obtener selección actual
-  getSelectedCategoryId(): number {
-    if (this.selectionMode === 'single' && this.selectedCategory) {
-      return (this.selectedCategory as TreeNode).data?.id || 0;
-    }
-    return 0;
   }
 
   getSelectedCategoryIds(): number[] {
+    if (this.selectionMode === 'single' && this.selectedCategory) {
+      const id = (this.selectedCategory as TreeNode).data?.id;
+      return id ? [id] : [];
+    }
     if (this.selectionMode === 'multiple' && Array.isArray(this.selectedCategory)) {
       return this.selectedCategory
         .map(node => node.data?.id)
@@ -85,7 +142,6 @@ export class CategoryTreeComponent {
     return [];
   }
 
-  // Método para establecer selección programáticamente
   setValue(selectedCategories?: number | number[] | null) {
     if (!this.categoriesLoaded) {
       return;
@@ -93,6 +149,7 @@ export class CategoryTreeComponent {
 
     if (!selectedCategories || (Array.isArray(selectedCategories) && selectedCategories.length === 0)) {
       this.selectedCategory = this.selectionMode === 'single' ? null : [];
+      this.selectedDataNodes = [];
       return;
     }
 
@@ -104,17 +161,28 @@ export class CategoryTreeComponent {
       const selectedIds = Array.isArray(selectedCategories) ? selectedCategories : [selectedCategories];
       this.selectedCategory = this.findNodesByIds(selectedIds);
       this.selectedDataNodes = this.selectedCategory ? 
-        (this.selectedCategory).map(node => node.data) : [];
+        (this.selectedCategory as TreeNode[]).map(node => node.data) : [];
     }
   }
 
-  // Método para resetear selección
   reset() {
     this.selectedCategory = this.selectionMode === 'single' ? null : [];
     this.selectedDataNodes = [];
+    this.categorySelection.emit([]);
+    this.categorySelectionDataNode.emit([]);
+    this.isInputInvalid.emit(false);
   }
 
-  // Métodos auxiliares privados
+  private validateInput(): boolean {
+    if (!this.required) return false;
+    
+    if (this.selectionMode === 'single') {
+      return !this.selectedCategory;
+    } else {
+      return !this.selectedCategory || (Array.isArray(this.selectedCategory) && this.selectedCategory.length === 0);
+    }
+  }
+
   private findNodeById(id: number): TreeNode | null {
     return this.findNodeByIdRecursive(this.categories, id);
   }

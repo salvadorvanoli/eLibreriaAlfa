@@ -27,7 +27,6 @@
         errorMessage="El título debe tener entre 1 y 200 caracteres"
         (textValue)="content = $event"
         (isInputInvalid)="isContentInvalid = $event"
-        [editorModules]="{toolbar: []}"
     />
     <div class="w-full text-right text-sm character-counter" [class]="contentCharCountClass">
         {{ contentCharCount }}/200 caracteres

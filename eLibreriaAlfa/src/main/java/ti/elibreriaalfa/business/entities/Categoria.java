@@ -2,11 +2,14 @@ package ti.elibreriaalfa.business.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import ti.elibreriaalfa.dtos.categoria.CategoriaDto;
 import ti.elibreriaalfa.dtos.categoria.CategoriaNodoDto;
+import ti.elibreriaalfa.dtos.categoria.CategoriaRequestDto;
 import ti.elibreriaalfa.dtos.categoria.CategoriaSimpleDto;
 import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
+import ti.elibreriaalfa.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,8 @@ public class Categoria {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
+    @Size(min = Constants.MIN_NOMBRE_CATEGORIA_LENGTH, max = Constants.MAX_NOMBRE_CATEGORIA_LENGTH, message = Constants.ERROR_NOMBRE_CATEGORIA_INVALIDO)
     private String nombre;
 
     @ManyToMany(mappedBy = "categorias")
@@ -61,6 +65,7 @@ public class Categoria {
         CategoriaSimpleDto categoriaSimpleDto = new CategoriaSimpleDto();
         categoriaSimpleDto.setId(this.id);
         categoriaSimpleDto.setNombre(this.nombre);
+        categoriaSimpleDto.setPadreId(this.padre != null ? this.padre.getId() : null);
         return categoriaSimpleDto;
     }
 
@@ -71,6 +76,10 @@ public class Categoria {
         List<CategoriaNodoDto> hijos = this.hijos.stream().map(Categoria::mapToNodoDto).toList();
         categoriaNodoDto.setHijos(hijos);
         return categoriaNodoDto;
+    }
+
+    public void setDatosCategoria(CategoriaRequestDto categoriaDto) {
+        this.nombre = categoriaDto.getNombre();
     }
 
     public List<Long> getIdsCategoriasHijas() {
