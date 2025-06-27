@@ -62,10 +62,12 @@ export class RegisterFormComponent {
       
       this.userService.post(usuario).subscribe({
         next: (response: UsuarioSimple) => {
+          this.messageService.clear();
           this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Usuario creado exitosamente!", life: 4000 });
           this.resetForm();
         },
         error: (err) => {
+          this.messageService.clear();
           if (err.error.error !== undefined) {
             this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.error, life: 4000 });
           } else {
@@ -75,6 +77,7 @@ export class RegisterFormComponent {
       });
 
     } else {
+      this.messageService.clear();
       this.messageService.add({ severity: 'error', summary: 'Error', detail: "Datos ingresados inválidos", life: 4000 });
     }
   }

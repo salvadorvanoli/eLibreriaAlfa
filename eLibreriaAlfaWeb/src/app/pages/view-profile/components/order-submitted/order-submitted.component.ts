@@ -107,6 +107,7 @@ export class OrderSubmittedComponent implements OnInit {
   onModalConfirm() {
     if (this.modalType === 'cancel') {
       if (!this.usuarioId) {
+        this.messageService.clear();
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -119,6 +120,7 @@ export class OrderSubmittedComponent implements OnInit {
       this.orderService.cancelarEncargueEnviado(this.usuarioId)
         .pipe(
           catchError(error => {
+            this.messageService.clear();
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
@@ -131,6 +133,7 @@ export class OrderSubmittedComponent implements OnInit {
           })
         )
         .subscribe(() => {
+          this.messageService.clear();
           this.messageService.add({
             severity: 'success',
             summary: 'Éxito',

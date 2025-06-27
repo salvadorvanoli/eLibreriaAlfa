@@ -71,11 +71,20 @@ export class CatalogComponent {
 
   onSearchTextChange(searchText: string) {
     this.searchText = searchText;
-    this.filterProducts();
   }
 
   onSortChange(order: string) {
     this.order = order;
+    this.filterProducts();
+  }
+
+  applyFilters() {
+    this.filterProducts();
+  }
+
+  resetFilters() {
+    this.searchText = '';
+    this.order = '';
     this.filterProducts();
   }
 

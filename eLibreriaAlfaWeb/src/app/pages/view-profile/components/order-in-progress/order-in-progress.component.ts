@@ -52,6 +52,7 @@ export class OrderInProgressComponent {
   // Este método se llama cuando se hace clic en "Realizar pedido"
   onSubmitOrder(fecha: string): void {
     if (!this.encargueId) {
+      this.messageService.clear();
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
@@ -72,6 +73,7 @@ export class OrderInProgressComponent {
         this.orderService.marcarEncargueComoEnviado(this.encargueId!, fecha)
           .pipe(
             catchError(error => {
+              this.messageService.clear();
               this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
@@ -84,6 +86,7 @@ export class OrderInProgressComponent {
             })
           )
           .subscribe(() => {
+            this.messageService.clear();
             this.messageService.add({
               severity: 'success',
               summary: 'Éxito',

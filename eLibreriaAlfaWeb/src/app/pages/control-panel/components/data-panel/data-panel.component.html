@@ -11,11 +11,11 @@
     >
         <ng-template #header>
             <div class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-11 gap-4 content-center">
-                <app-search-bar class="md:col-span-3" (textValue)="searchText = $event" />
-                <app-form-select-input class="md:col-span-3" [options]="sortOptions" placeholder="Ordenar por " (textValue)="onOrderChange($event)" />
+                <app-search-bar #searchBar class="md:col-span-3" (textValue)="onSearchTextChange($event)" />
+                <app-form-select-input #orderSelect class="md:col-span-3" [options]="sortOptions" placeholder="Ordenar por " (textValue)="onOrderChange($event)" />
                 <div class="col-span-1 sm:col-span-2 md:col-span-5 gap-4 grid grid-cols-2">
-                    <app-primary-button label="Aplicar filtros" classes="w-full" (onClick)="applyFilters()" />
-                    <app-primary-button label="Refrescar busqueda" classes="w-full" (onClick)="resetFilters()" />
+                    <app-primary-button label="Buscar" classes="w-full" (onClick)="applyFilters()" />
+                    <app-primary-button label="Restablecer" classes="w-full" (onClick)="resetFilters()" />
                 </div>
             </div>
         </ng-template>
@@ -23,6 +23,7 @@
             <div *ngFor="let item of items; let first = first">
                 <app-item-row
                     [item]="item"
+                    [itemType]="itemType()"
                     [first]="first"
                     (details)="sendDetails($event)"
                 />

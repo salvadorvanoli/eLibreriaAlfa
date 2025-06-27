@@ -192,6 +192,7 @@ export class OrderTableComponent implements OnInit {
 
     editarEstado(order: Encargue): void {
         if (!this.puedeModificarEstado(order.estado)) {
+            this.messageService.clear();
             this.messageService.add({
                 severity: 'warn',
                 summary: 'Acción no permitida',
@@ -217,6 +218,7 @@ export class OrderTableComponent implements OnInit {
         this.orderService.cambiarEstadoEncargue(this.selectedOrderForEdit.id, this.selectedNewState)
             .subscribe({
                 next: (res) => {
+                    this.messageService.clear();
                     this.messageService.add({
                         severity: 'success',
                         summary: 'Éxito',
@@ -235,6 +237,7 @@ export class OrderTableComponent implements OnInit {
                             errorMsg = err.error.message;
                         }
                     }
+                    this.messageService.clear();
                     this.messageService.add({
                         severity: 'error',
                         summary: 'Error',
@@ -263,6 +266,7 @@ export class OrderTableComponent implements OnInit {
         this.isCancelling = true;
 
         setTimeout(() => {
+            this.messageService.clear();
             this.messageService.add({
                 severity: 'success',
                 summary: 'Éxito',

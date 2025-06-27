@@ -18,7 +18,16 @@ import { FormsModule } from '@angular/forms';
 })
 export class SearchBarComponent {
 
-  text = signal('');
+  text: string = '';
 
   @Output() textValue = new EventEmitter<string>();
+
+  onInputChange(): void {
+    this.textValue.emit(this.text);
+  }
+
+  reset() {
+    this.text = '';
+    this.textValue.emit('');
+  }
 }

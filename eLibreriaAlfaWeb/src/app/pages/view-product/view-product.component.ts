@@ -95,6 +95,7 @@ export class ViewProductComponent implements OnInit {
       next: (tieneEncargue) => {
         if (!tieneEncargue) {
           this.addingToOrder = false;
+          this.messageService.clear();
           this.messageService.add({
             severity: 'warn',
             summary: 'Encargue no disponible',
@@ -113,6 +114,7 @@ export class ViewProductComponent implements OnInit {
           next: () => {
             this.modalVisible = true;
             this.addingToOrder = false;
+            this.messageService.clear();
             this.messageService.add({
               severity: 'success',
               summary: 'Producto agregado',
@@ -123,7 +125,7 @@ export class ViewProductComponent implements OnInit {
           error: (error) => {
             console.error('Error al agregar el producto al pedido:', error);
             this.addingToOrder = false;
-            
+            this.messageService.clear();
             if (error.status === 500) {
               this.messageService.add({
                 severity: 'info',
@@ -145,6 +147,7 @@ export class ViewProductComponent implements OnInit {
       error: (error) => {
         console.error('Error al verificar encargue en creación:', error);
         this.addingToOrder = false;
+        this.messageService.clear();
         this.messageService.add({
           severity: 'error',
           summary: 'Error',

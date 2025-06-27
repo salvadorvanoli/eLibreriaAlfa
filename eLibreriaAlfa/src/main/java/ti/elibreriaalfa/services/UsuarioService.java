@@ -41,13 +41,13 @@ public class UsuarioService {
         return usuarioRepository.findAll().stream().map(Usuario::mapToDtoSimple).toList();
     }
 
-    public List<ElementoListaDto> getElements() {
+    public List<UsuarioSimpleDto> getElements() {
         return usuarioRepository.findAll().stream()
-                .map(Usuario::mapToElementoListaDto)
+                .map(Usuario::mapToDtoSimple)
                 .toList();
     }
 
-    public List<ElementoListaDto> getElementsFiltrados(String textoBusqueda, String orden) {
+    public List<UsuarioSimpleDto> getElementsFiltrados(String textoBusqueda, String orden) {
         Specification<Usuario> spec = Specification.where(null);
 
         if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
@@ -73,7 +73,7 @@ public class UsuarioService {
         List<Usuario> usuarios = usuarioRepository.findAll(spec, sort);
 
         return usuarios.stream()
-                .map(Usuario::mapToElementoListaDto)
+                .map(Usuario::mapToDtoSimple)
                 .toList();
     }
 

@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ElementoLista } from '../models/elemento-lista';
 
 export abstract class BaseHttpService<TRequest, TResponse> {
 
@@ -15,12 +14,12 @@ export abstract class BaseHttpService<TRequest, TResponse> {
     return this.http.get<TResponse[]>(`${this.baseUrl}${this.end}`);
   }
 
-  getElements(): Observable<ElementoLista[]> {
-    return this.http.get<ElementoLista[]>(`${this.baseUrl}${this.end}/elements`, { withCredentials: true });
+  getElements(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}${this.end}/elements`, { withCredentials: true });
   }
 
-  getFiltered(searchText: string, order: string): Observable<ElementoLista[]> {
-    return this.http.get<ElementoLista[]>(`${this.baseUrl}${this.end}/filteredElements?textoBusqueda=${searchText}&orden=${order}`, { withCredentials: true });
+  getFiltered(searchText: string, order: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}${this.end}/filteredElements?textoBusqueda=${searchText}&orden=${order}`, { withCredentials: true });
   }
 
   getPaginated(page: number, size: number): Observable<TResponse[]> {

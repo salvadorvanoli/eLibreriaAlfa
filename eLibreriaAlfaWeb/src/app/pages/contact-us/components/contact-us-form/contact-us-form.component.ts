@@ -53,6 +53,7 @@ export class ContactUsFormComponent {
         this.formSubmitted.set(true);
 
         if (this.validateForm()) {
+            this.messageService.clear();
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Por favor, corrige los errores en el formulario.' });
             return;
         }
@@ -66,10 +67,12 @@ export class ContactUsFormComponent {
 
         this.emailService.sendEmail(emailData).subscribe({
             next: () => {
+                this.messageService.clear();
                 this.messageService.add({ severity: 'success', summary: 'Éxito', detail: 'El correo fue enviado correctamente.' });
                 this.resetForm();
             },
             error: () => {
+                this.messageService.clear();
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hubo un problema al enviar el correo.' });
             }
         });

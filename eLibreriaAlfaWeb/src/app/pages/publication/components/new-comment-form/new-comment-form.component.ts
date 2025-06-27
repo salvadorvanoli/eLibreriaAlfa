@@ -133,6 +133,7 @@ export class NewCommentFormComponent {
   }
 
   private showSuccess(message: string): void {
+    this.messageService.clear();
     this.messageService.add({
       severity: 'success',
       summary: 'Éxito',
@@ -141,6 +142,7 @@ export class NewCommentFormComponent {
   }
 
   private showError(message: string): void {
+    this.messageService.clear();
     this.messageService.add({
       severity: 'error',
       summary: 'Error',

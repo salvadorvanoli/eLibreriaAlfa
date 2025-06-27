@@ -13,7 +13,6 @@ import ti.elibreriaalfa.business.entities.Producto;
 import ti.elibreriaalfa.business.repositories.CategoriaRepository;
 import ti.elibreriaalfa.business.repositories.ProductoRepository;
 import ti.elibreriaalfa.dtos.image.ImageDto;
-import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
 import ti.elibreriaalfa.dtos.producto.ProductoConImagenesDto;
 import ti.elibreriaalfa.dtos.producto.ProductoDto;
 import ti.elibreriaalfa.dtos.producto.ProductoRequestDto;
@@ -84,13 +83,13 @@ public class ProductoService {
                 .collect(Collectors.toList());
     }
 
-    public List<ElementoListaDto> getElements() {
+    public List<ProductoDto> getElements() {
         return productoRepository.findAll().stream()
-                .map(Producto::mapToElementoListaDto)
+                .map(Producto::mapToDto)
                 .toList();
     }
 
-    public List<ElementoListaDto> getElementsFiltrados(String textoBusqueda, String orden) {
+    public List<ProductoDto> getElementsFiltrados(String textoBusqueda, String orden) {
         Specification<Producto> spec = Specification.where(null);
 
         if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
@@ -113,7 +112,7 @@ public class ProductoService {
         List<Producto> productos = productoRepository.findAll(spec, sort);
 
         return productos.stream()
-                .map(Producto::mapToElementoListaDto)
+                .map(Producto::mapToDto)
                 .toList();
     }
 

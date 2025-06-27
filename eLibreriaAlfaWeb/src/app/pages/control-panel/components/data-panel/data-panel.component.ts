@@ -10,7 +10,6 @@ import { ButtonModule } from 'primeng/button';
 import { ItemRowComponent } from '../item-row/item-row.component';
 import { MessageComponent } from '../../../../shared/components/message/message.component';
 import { ControlPanelService } from '../../../../core/services/control-panel.service';
-import { ElementoLista } from '../../../../core/models/elemento-lista';
 
 @Component({
   selector: 'app-data-panel',
@@ -35,8 +34,10 @@ import { ElementoLista } from '../../../../core/models/elemento-lista';
 export class DataPanelComponent {
 
   @ViewChild('dv') dataView: DataView | undefined;
+  @ViewChild('searchBar') searchBar!: SearchBarComponent;
+  @ViewChild('orderSelect') orderSelect!: FormSelectInputComponent;
 
-  items!: ElementoLista[];
+  items!: any[];
   searchText: string = '';
   order: string = "";
   sortOptions: { label: string, value: string }[] = [
@@ -95,6 +96,7 @@ export class DataPanelComponent {
   }
 
   resetFilters() {
+    this.resetChildComponents();
     this.searchText = '';
     this.order = '';
     this.first = 0;
@@ -105,9 +107,7 @@ export class DataPanelComponent {
   }
 
   applyFilters() {
-    if (this.order != '' || this.searchText.trim() != '') {
-      this.filterItems();
-    }
+    this.filterItems();
   }
 
   onOrderChange(order: string) {
@@ -115,14 +115,12 @@ export class DataPanelComponent {
     this.filterItems();
   }
 
-  onSearchTextChange() {
-    if (this.searchText.trim() !== '' && this.searchText.length >= 3) {
-      this.filterItems();
-    }
+  onSearchTextChange(text: string) {
+    this.searchText = text;
   }
 
-  sendDetails(item: ElementoLista) {
-    const id = this.itemType() === 'Usuario' ? item.texto2 : item.id;
+  sendDetails(item: any) {
+    const id = this.itemType() === 'Usuario' ? item.email : item.id;
     this.controlPanelService.getElementByTypeAndId(this.itemType(), id)?.subscribe({
       next: (response: any) => {
         this.itemSelected.emit(response);
@@ -141,6 +139,11 @@ export class DataPanelComponent {
   
   onRowsChange(event: any) {
     this.rows = event.value;
+  }
+
+  private resetChildComponents() {
+    this.searchBar?.reset();
+    this.orderSelect?.reset();
   }
 
 }

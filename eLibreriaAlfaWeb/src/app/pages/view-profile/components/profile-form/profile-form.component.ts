@@ -96,6 +96,7 @@ export class ProfileFormComponent implements OnInit {
     }
 
     if (!this.isFormValid()) {
+      this.messageService.clear();
       this.messageService.add({
         severity: 'error',
         summary: 'Error de validación',
@@ -115,6 +116,7 @@ export class ProfileFormComponent implements OnInit {
     
     this.userService.updateProfile(this.userEmail, profileData).subscribe({
       next: (updatedUser) => {
+        this.messageService.clear();
         this.messageService.add({
           severity: 'success',
           summary: 'Éxito',
@@ -126,6 +128,7 @@ export class ProfileFormComponent implements OnInit {
         this.loading = false;
       },
       error: (error) => {
+        this.messageService.clear();
         this.messageService.add({
           severity: 'error',
           summary: 'Error',

@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import ti.elibreriaalfa.dtos.categoria.CategoriaSimpleDto;
-import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
 import ti.elibreriaalfa.dtos.producto.ProductoConImagenesDto;
 import ti.elibreriaalfa.dtos.producto.ProductoDto;
 import ti.elibreriaalfa.dtos.producto.ProductoRequestDto;
@@ -101,18 +100,5 @@ public class Producto {
         this.nombre = productoDto.getNombre();
         this.precio = productoDto.getPrecio();
         this.descripcion = productoDto.getDescripcion();
-    }
-
-    public ElementoListaDto mapToElementoListaDto() {
-        ElementoListaDto elementoListaDto = new ElementoListaDto();
-        elementoListaDto.setId(this.id);
-        String imagen = (this.imagenes != null && this.imagenes.length > 0) ? this.imagenes[0] : null;
-        elementoListaDto.setImagen(imagen);
-        String texto1 = (this.categorias != null && !this.categorias.isEmpty()) ?
-                this.categorias.stream().map(Categoria::getNombre).reduce((a, b) -> a + " - " + b).orElse("") : "Sin categorías";
-        elementoListaDto.setTexto1(texto1);
-        elementoListaDto.setTexto2(this.nombre);
-        elementoListaDto.setTexto4(this.precio.toString());
-        return elementoListaDto;
     }
 }

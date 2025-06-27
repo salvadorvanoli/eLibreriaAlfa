@@ -30,6 +30,7 @@ export class FormSelectInputComponent {
   @Output() isInputInvalid = new EventEmitter<boolean>();
 
   onValueChange(event: any) {
+    this.value = event;
     this.textValue.emit(event);
     this.validateText();
   }

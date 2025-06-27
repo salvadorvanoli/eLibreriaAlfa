@@ -65,6 +65,7 @@ export class CategoryFormComponent {
     this.formSubmitted.set(true);
     
     if (this.validateForm()) {
+      this.messageService.clear();
       this.messageService.add({ 
         severity: 'error', 
         summary: 'Error', 
@@ -129,6 +130,7 @@ export class CategoryFormComponent {
   }
 
   private handleSuccess(action: string, response: any) {
+    this.messageService.clear();
     this.messageService.add({ 
       severity: 'success', 
       summary: 'Éxito', 
@@ -140,6 +142,7 @@ export class CategoryFormComponent {
 
   private handleError(error: any) {
     const errorMessage = error?.error.error || error?.error.message || "No fue posible conectar con el servidor";
+    this.messageService.clear();
     this.messageService.add({ 
       severity: 'error', 
       summary: 'Error', 

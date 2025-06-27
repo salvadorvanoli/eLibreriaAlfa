@@ -125,6 +125,7 @@ export class PrintsTableComponent implements OnInit {
             this.selectedNewState
         ).subscribe({
             next: (response) => {
+                this.messageService.clear();
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Éxito',
@@ -136,6 +137,7 @@ export class PrintsTableComponent implements OnInit {
             },
             error: (error) => {
                 console.error('Error al cambiar estado:', error);
+                this.messageService.clear();
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -166,6 +168,7 @@ export class PrintsTableComponent implements OnInit {
             'Cancelado'
         ).subscribe({
             next: (response) => {
+                this.messageService.clear();
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Éxito',
@@ -177,6 +180,7 @@ export class PrintsTableComponent implements OnInit {
             },
             error: (error) => {
                 console.error('Error al cancelar impresión:', error);
+                this.messageService.clear();
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -237,6 +241,7 @@ export class PrintsTableComponent implements OnInit {
 
     descargarArchivo(impresion: Impresion): void {
         if (!impresion.nombreArchivo) {
+            this.messageService.clear();
             this.messageService.add({
                 severity: 'warning',
                 summary: 'Advertencia',
@@ -269,6 +274,7 @@ export class PrintsTableComponent implements OnInit {
             },
             error: (error) => {
                 console.error('❌ Error al descargar archivo:', error);
+                this.messageService.clear();
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',
@@ -321,6 +327,7 @@ export class PrintsTableComponent implements OnInit {
             },
             error: (error) => {
                 console.error('Error al cargar todas las impresiones:', error);
+                this.messageService.clear();
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Error',

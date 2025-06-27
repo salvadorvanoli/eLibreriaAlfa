@@ -98,6 +98,7 @@ export class UserFormComponent {
           break;
       }
     } else {
+      this.messageService.clear();
       this.messageService.add({ severity: 'error', summary: 'Error', detail: "Datos ingresados inválidos", life: 4000 });
     }
   }
@@ -114,10 +115,12 @@ export class UserFormComponent {
     
     this.userService.create(usuario).subscribe({
       next: (response: Usuario) => {
+        this.messageService.clear();
         this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Usuario creado exitosamente!", life: 4000 });
         this.resetForm();
       },
       error: (err) => {
+        this.messageService.clear();
         if (err.error.error !== undefined) {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.error, life: 4000 });
         } else {
@@ -139,10 +142,12 @@ export class UserFormComponent {
 
     this.userService.put(this.user?.id!, usuario).subscribe({
       next: (response: Usuario) => {
+        this.messageService.clear();
         this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Usuario actualizado exitosamente!", life: 4000 });
         this.resetForm();
       },
       error: (err) => {
+        this.messageService.clear();
         if (err.error.error !== undefined) {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.error, life: 4000 });
         } else {

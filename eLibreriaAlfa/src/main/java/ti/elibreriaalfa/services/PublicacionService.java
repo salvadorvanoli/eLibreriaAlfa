@@ -14,7 +14,6 @@ import ti.elibreriaalfa.business.entities.Publicacion;
 import ti.elibreriaalfa.business.repositories.PublicacionRepository;
 import ti.elibreriaalfa.business.repositories.UsuarioRepository;
 import ti.elibreriaalfa.dtos.image.ImageDto;
-import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
 import ti.elibreriaalfa.dtos.publicacion.PublicacionConImagenDto;
 import ti.elibreriaalfa.dtos.publicacion.PublicacionDto;
 import ti.elibreriaalfa.dtos.publicacion.PublicacionRequestDto;
@@ -24,7 +23,6 @@ import ti.elibreriaalfa.exceptions.publicacion.PublicacionNoEncontradaException;
 import ti.elibreriaalfa.exceptions.publicacion.PublicacionValidacionException;
 import ti.elibreriaalfa.utils.Constants;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -86,13 +84,13 @@ public class PublicacionService {
         return response;
     }
 
-    public List<ElementoListaDto> getElements() {
+    public List<PublicacionDto> getElements() {
         return publicacionRepository.findAll().stream()
-                .map(Publicacion::mapToElementoListaDto)
+                .map(Publicacion::mapToDto)
                 .toList();
     }
 
-    public List<ElementoListaDto> getElementsFiltrados(String textoBusqueda, String orden) {
+    public List<PublicacionDto> getElementsFiltrados(String textoBusqueda, String orden) {
         Specification<Publicacion> spec = Specification.where(null);
 
         if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
@@ -115,7 +113,7 @@ public class PublicacionService {
         List<Publicacion> publicaciones = publicacionRepository.findAll(spec, sort);
 
         return publicaciones.stream()
-                .map(Publicacion::mapToElementoListaDto)
+                .map(Publicacion::mapToDto)
                 .toList();
     }
 

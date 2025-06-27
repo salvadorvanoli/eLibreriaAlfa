@@ -224,6 +224,7 @@ export class EspecificacionesComponent {
       
       const maxSizeInBytes = 10 * 1024 * 1024;
       if (file.size > maxSizeInBytes) {
+        this.messageService.clear();
         this.messageService.add({
           severity: 'warn',
           summary: 'Archivo excede tamaño permitido',
@@ -253,6 +254,7 @@ export class EspecificacionesComponent {
       const allowedExtensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'png', 'jpg', 'jpeg', 'cdr'];
       
       if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
+        this.messageService.clear();
         this.messageService.add({
           severity: 'error',
           summary: 'Formato no válido',
@@ -409,6 +411,7 @@ export class EspecificacionesComponent {
     }
 
     if (!this.securityService.isAuthenticated()) {
+      this.messageService.clear();
       this.messageService.add({
         severity: 'warn',
         summary: 'Acceso requerido',
@@ -431,6 +434,7 @@ export class EspecificacionesComponent {
     this.securityService.getActualUser().subscribe({
       next: (currentUser) => {
         if (!currentUser || !currentUser.id) {
+          this.messageService.clear();
           this.messageService.add({
             severity: 'error',
             summary: 'Error',
@@ -453,6 +457,7 @@ export class EspecificacionesComponent {
 
         this.impresionService.createPrintRequest(request, this.selectedFile!).subscribe({
           next: (response) => {
+            this.messageService.clear();
             this.messageService.add({
               severity: 'success',
               summary: 'Éxito',
@@ -466,6 +471,7 @@ export class EspecificacionesComponent {
             this.cdr.detectChanges();
           },
           error: (error) => {
+            this.messageService.clear();
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
@@ -479,6 +485,7 @@ export class EspecificacionesComponent {
         });
       },
       error: (error) => {
+        this.messageService.clear();
         this.messageService.add({
           severity: 'error',
           summary: 'Error',

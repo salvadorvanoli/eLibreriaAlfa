@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
 import ti.elibreriaalfa.dtos.usuario.ModificarPerfilUsuarioDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
 import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
@@ -79,16 +78,5 @@ public class Usuario {
         this.apellido = usuarioDto.getApellido();
         this.telefono = usuarioDto.getTelefono();
         this.rol = usuarioDto.getRol();
-    }
-
-    public ElementoListaDto mapToElementoListaDto() {
-        ElementoListaDto elementoListaDto = new ElementoListaDto();
-        elementoListaDto.setId(this.id);
-        elementoListaDto.setTexto1(this.rol.toString());
-        elementoListaDto.setTexto2(this.email);
-        String texto3 = (this.nombre != null && this.apellido != null) ? this.nombre + " " + this.apellido : "Sin nombre completo";
-        elementoListaDto.setTexto3(texto3);
-        elementoListaDto.setTexto4(this.telefono != null ? this.telefono : "Sin teléfono");
-        return elementoListaDto;
     }
 }

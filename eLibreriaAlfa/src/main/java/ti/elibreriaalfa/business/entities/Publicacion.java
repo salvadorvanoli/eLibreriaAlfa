@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import ti.elibreriaalfa.dtos.modelos.ElementoListaDto;
 import ti.elibreriaalfa.dtos.publicacion.PublicacionConImagenDto;
 import ti.elibreriaalfa.dtos.publicacion.PublicacionDto;
 import ti.elibreriaalfa.dtos.publicacion.PublicacionRequestDto;
@@ -99,14 +98,4 @@ public class Publicacion {
         this.titulo = publicacionDto.getTitulo();
         this.contenido = publicacionDto.getContenido();
     }
-
-    public ElementoListaDto mapToElementoListaDto() {
-        ElementoListaDto elementoListaDto = new ElementoListaDto();
-        elementoListaDto.setId(this.id);
-        elementoListaDto.setTexto2(this.titulo);
-        elementoListaDto.setTexto3(this.comentarios.size() + " comentarios");
-        elementoListaDto.setTexto4("Creado el " + this.fechaCreacion.toString());
-        return elementoListaDto;
-    }
-
 }
