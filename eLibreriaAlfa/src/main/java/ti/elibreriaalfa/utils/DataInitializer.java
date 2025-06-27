@@ -40,8 +40,6 @@ public class DataInitializer {
     @PostConstruct
     @Transactional
     public void init() {
-        log.info("Inicializando datos de prueba...");
-
         // Crear usuarios
         crearUsuarios();
 
@@ -51,11 +49,9 @@ public class DataInitializer {
         // Crear productos
         crearProductos(categorias);
 
-        log.info("Datos de prueba inicializados correctamente");
     }
 
     private void crearUsuarios() {
-        log.info("Creando usuarios...");
 
         // Administrador
         Usuario admin = new Usuario();
@@ -100,7 +96,6 @@ public class DataInitializer {
     }
 
     private List<Categoria> crearCategorias() {
-        log.info("Creando categorías...");
 
         // Crear árbol de categorías
         Categoria libros = new Categoria();
@@ -189,7 +184,6 @@ public class DataInitializer {
     }
 
     private void crearProductos(List<Categoria> categorias) {
-        log.info("Creando productos...");
 
         // Buscar categorías por nombre para asignar productos
         Categoria novela = categorias.stream().filter(c -> c.getNombre().equals("Novela")).findFirst().orElse(null);

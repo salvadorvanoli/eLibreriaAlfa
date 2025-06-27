@@ -63,8 +63,6 @@ public class SeguridadService {
                 .httpOnly(true)
                 .secure(false)
                 .path("/")
-                /*.sameSite("None")
-                .secure(true)*/
                 .sameSite("Lax")
                 .secure(false)
                 .maxAge(Integer.parseInt(expiration))

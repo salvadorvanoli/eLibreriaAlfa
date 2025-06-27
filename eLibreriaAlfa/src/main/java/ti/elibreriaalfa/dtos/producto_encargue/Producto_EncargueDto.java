@@ -5,8 +5,6 @@ import lombok.NoArgsConstructor;
 import ti.elibreriaalfa.business.entities.Producto_Encargue;
 import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
 
-
-
 @Data
 @NoArgsConstructor
 public class Producto_EncargueDto {

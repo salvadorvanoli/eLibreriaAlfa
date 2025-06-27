@@ -41,11 +41,9 @@ export class OrderInProgressComponent {
 
   setEncargueId(id: number): void {
     this.encargueId = id;
-    console.log('OrderInProgressComponent: Recibido encargueId:', id);
   }
 
   onNoProductsLeft(): void {
-    console.log('OrderInProgressComponent: No quedan productos, notificando al componente padre');
     this.noProductsLeft.emit();
   }
 

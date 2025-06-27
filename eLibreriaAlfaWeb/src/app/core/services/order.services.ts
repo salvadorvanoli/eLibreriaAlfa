@@ -36,14 +36,12 @@ export class OrderService extends BaseHttpService<Encargue, Encargue> {
     super(http, '/order');
   }
 
-
   usuarioTieneEncargueEnCreacion(usuarioId: number): Observable<boolean> {
     return this.http.get<boolean>(
       `${this.baseUrl}${this.end}/usuario/${usuarioId}/tiene-en-creacion`,
       { withCredentials: true }
     );
   }
-
 
   listarProductosEncarguePorUsuarioYEstado(
     usuarioId: number, 
@@ -55,8 +53,6 @@ export class OrderService extends BaseHttpService<Encargue, Encargue> {
       .set('pagina', pagina.toString())
       .set('cantidad', cantidad.toString());
 
-    console.log(`Solicitando productos: Usuario=${usuarioId}, Estado=${estado}, Página=${pagina}, Cantidad=${cantidad}`);
-
     return this.http.get<PageResponse<ProductoEncargue>>(
       `${this.baseUrl}${this.end}/usuario/${usuarioId}/estado/${estado}/productos`, 
       { params, withCredentials: true }
@@ -65,14 +61,12 @@ export class OrderService extends BaseHttpService<Encargue, Encargue> {
 
 
   eliminarProductoDeEncargue(encargueId: number, productoEncargueId: number): Observable<void> {
-    console.log(`Enviando petición para eliminar producto ${productoEncargueId} del encargue ${encargueId}`);
     
     return this.http.delete<void>(
       `${this.baseUrl}${this.end}/${encargueId}/producto/${productoEncargueId}`,
       { withCredentials: true }
     );
   }
-
 
   agregarProductoAEncargue(usuarioId: number, producto: any): Observable<void> {
     return this.http.post<void>(
@@ -82,14 +76,12 @@ export class OrderService extends BaseHttpService<Encargue, Encargue> {
     );
   }
 
-
   obtenerEncargueEnCreacion(): Observable<Encargue> {
     return this.http.get<Encargue>(
       `${this.baseUrl}${this.end}/en-creacion`,
       { withCredentials: true }
     );
   }
-
 
   marcarEncargueComoEnviado(encargueId: number, fecha: string): Observable<void> {
     return this.http.post<void>(
@@ -99,7 +91,6 @@ export class OrderService extends BaseHttpService<Encargue, Encargue> {
     );
   }
 
-
   cancelarEncargueEnviado(usuarioId: number): Observable<void> {
     return this.http.post<void>(
       `${this.baseUrl}${this.end}/usuario/${usuarioId}/cancelar-enviado`,
@@ -108,16 +99,13 @@ export class OrderService extends BaseHttpService<Encargue, Encargue> {
     );
   }
 
-
   listarEncarguesFinalizadosPorUsuario(usuarioId: number): Observable<Encargue[]> {
     const url = `${this.baseUrl}${this.end}/user/${usuarioId}/history`;
-    console.log('Llamando a endpoint de historial:', url);
     return this.http.get<Encargue[]>(
       url,
       { withCredentials: true }
     );
   }
-
 
   getEncargues(): Observable<any> {
     return this.http.get<any>(

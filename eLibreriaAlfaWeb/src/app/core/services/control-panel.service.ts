@@ -14,8 +14,7 @@ export class ControlPanelService {
     private userService: UserService,
     private categoryService: CategoryService,
     private productService: ProductService,
-    private publicationService: PublicationService,
-    //private orderService: OrderService
+    private publicationService: PublicationService
   ) {}
 
   getDataByType(type: string): Observable<any[]> | null {
@@ -28,8 +27,6 @@ export class ControlPanelService {
         return this.productService.getElements();
       case 'Publicación':
         return this.publicationService.getElements();
-      //case 'Pedido':
-        //return this.orderService.getElements();
       default:
         return null;
     }
@@ -45,8 +42,6 @@ export class ControlPanelService {
         return this.productService.getFiltered(searchText, order);
       case 'Publicación':
         return this.publicationService.getFiltered(searchText, order);
-      //case 'Pedido':
-        //return this.orderService.getFiltered(searchText, order);
       default:
         return null;
     }
@@ -62,8 +57,6 @@ export class ControlPanelService {
         return this.productService.getByIdWithImages(id);
       case 'Publicación':
         return this.publicationService.getByIdWithImages(id);
-      //case 'Pedido':
-        //return this.orderService.getById(id);
       default:
         return null;
     }

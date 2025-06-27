@@ -250,13 +250,8 @@ export class PrintsTableComponent implements OnInit {
             return;
         }
 
-        console.log('=== DESCARGANDO ARCHIVO ===');
-        console.log('Impresión:', impresion);
-        console.log('Archivo a descargar:', impresion.nombreArchivo);
-
         this.impresionService.downloadFile(impresion.nombreArchivo).subscribe({
             next: (blob) => {
-                console.log('✅ Blob recibido:', blob);
                 
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
@@ -269,8 +264,6 @@ export class PrintsTableComponent implements OnInit {
                 document.body.removeChild(link);
                 
                 window.URL.revokeObjectURL(url);
-                
-                console.log('✅ Descarga iniciada exitosamente');
             },
             error: (error) => {
                 console.error('❌ Error al descargar archivo:', error);
@@ -347,5 +340,4 @@ export class PrintsTableComponent implements OnInit {
         }
         return 'Usuario desconocido';
     }
-    //a
 }

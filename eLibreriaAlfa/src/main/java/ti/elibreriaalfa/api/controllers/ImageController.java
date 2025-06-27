@@ -1,5 +1,6 @@
 package ti.elibreriaalfa.api.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ public class ImageController {
         this.imageService = imageService;
     }
 
+    @Operation(summary = "Obtener una imagen por su ruta relativa")
     @GetMapping("/**")
     public ResponseEntity<Object> getImage(HttpServletRequest request) {
         try {

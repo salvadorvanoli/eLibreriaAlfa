@@ -24,23 +24,26 @@ public class CategoriaController {
         this.categoriaService = categoriaService;
     }
 
+    @Operation(summary = "Obtener todas las categorías en formato árbol")
     @GetMapping
     public ResponseEntity<List<CategoriaNodoDto>> getAllCategoriasTree() {
         return new ResponseEntity<>(categoriaService.getAllCategoriasTree(), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener categoría por ID")
     @GetMapping("/{id}")
     public ResponseEntity<CategoriaSimpleDto> getCategoriaPorId(@PathVariable(name = "id") Long idCategoria) {
         return new ResponseEntity<>(categoriaService.obtenerCategoriaPorId(idCategoria), HttpStatus.OK);
     }
 
+    @Operation(summary = "Crear una nueva categoría")
     @PostMapping
-    @Operation(description = "Esta función crea una nueva categoria")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<CategoriaSimpleDto> createCategoria(@RequestBody CategoriaRequestDto categoria) {
         return new ResponseEntity<>(categoriaService.createCategoria(categoria), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Borrar una categoría por ID")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Void> deleteCategoria(@PathVariable(name = "id") Long idCategoria) {
@@ -48,6 +51,7 @@ public class CategoriaController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Operation(summary = "Modificar una categoría por ID")
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<CategoriaSimpleDto> modifyCategoria(
@@ -57,6 +61,7 @@ public class CategoriaController {
         return new ResponseEntity<>(categoriaService.modifyCategoria(idCategoria, categoriaDto), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener todas las categorías paginadas")
     @GetMapping("/paginado")
     public ResponseEntity<Page<CategoriaDto>> categoriasPaginadas(
             @RequestParam("pagina")  Integer pagina,
@@ -64,38 +69,4 @@ public class CategoriaController {
     ) {
         return new ResponseEntity<>(categoriaService.listadoCategoriaPage(pagina, cantidad), HttpStatus.OK);
     }
-
-
-    /* Ejemplos de Json para probar:
-
-    http://localhost:8080/category/paginado?pagina=0&cantidad=10
-
-    CREAR
-
-    1)
-    {
-    "nombre": "Electrodomésticos"
-    }
-
-    2)
-    {
-    "nombre": "Heladeras",
-    "padreId": 1
-    }
-
-    MODIFICAR
-
-   {
-  "id": 2,
-  "nombre": "Heladeras",
-  "padre": {
-        "id": 1
-        },
-  "productos": [
-        { "id": 53 },
-        { "id": 54 }
-         ]
-    }
-     */
-
 }

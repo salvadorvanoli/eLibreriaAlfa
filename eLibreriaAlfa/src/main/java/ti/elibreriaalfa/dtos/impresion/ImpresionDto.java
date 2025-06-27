@@ -27,7 +27,6 @@ public class ImpresionDto {
 
     private String estado;
 
-   
     public Impresion mapToEntity() {
 
         Impresion impresion = new Impresion();

@@ -42,13 +42,6 @@ public class PublicacionService {
 
         Publicacion publicacion = publicacionDto.mapToEntity();
 
-        /*
-        Publicacion publicacionRepetida = publicacionRepository.existsByTitulo(publicacion.getTitulo());
-        if (publicacionRepetida != null) {
-            throw new PublicacionYaExisteException("Ya existe una publicación con el título especificado");
-        }
-        */
-
         String imagen = imageService.saveImage(publicacionDto.getImagen(), Constants.IMAGEN_PUBLICACION_CARPETA);
         publicacion.setImagen(imagen);
 
@@ -58,8 +51,7 @@ public class PublicacionService {
     }
 
     public void deletePublicacion(Long idPublicacion) {
-        log.info("Iniciando eliminación de publicación con ID: {}", idPublicacion);
-        
+
         if (idPublicacion == null || idPublicacion <= 0) {
             throw new PublicacionValidacionException("El ID de la publicación debe ser un número positivo");
         }
@@ -71,7 +63,6 @@ public class PublicacionService {
 
         try {
             publicacionRepository.deleteById(idPublicacion);
-            log.info("Publicación eliminada exitosamente con ID: {}", idPublicacion);
         } catch (Exception e) {
             log.error("Error al eliminar publicación con ID {}: {}", idPublicacion, e.getMessage(), e);
             throw new PublicacionException("Error al eliminar la publicación: " + e.getMessage());
@@ -118,8 +109,7 @@ public class PublicacionService {
     }
 
     public ResponsePublicacion getPublicacionById(Long id) {
-        log.info("Buscando publicación con ID: {}", id);
-        
+
         if (id == null || id <= 0) {
             throw new PublicacionValidacionException("El ID de la publicación debe ser un número positivo");
         }
@@ -129,7 +119,6 @@ public class PublicacionService {
         ResponsePublicacion response = new ResponsePublicacion();
         response.setPublicacion(publicacion.mapToDto());
         
-        log.info("Publicación encontrada exitosamente: {}", publicacion.getTitulo());
         return response;
     }
 

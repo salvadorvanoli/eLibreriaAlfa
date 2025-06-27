@@ -108,7 +108,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-    // Manejadores de exceptiones de producto
+    // Manejadores de excepciones de producto
     @ExceptionHandler(ProductoException.class)
     public ResponseEntity<Map<String, String>> handleProductoException(ProductoException ex) {
         Map<String, String> error = new HashMap<>();

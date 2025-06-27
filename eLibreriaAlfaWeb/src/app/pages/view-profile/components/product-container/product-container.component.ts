@@ -61,9 +61,7 @@ export class ProductContainerComponent implements OnInit {
         if (usuario && usuario.id) {
           
           const pagina = Math.floor(this.first / this.rows);
-          
-          console.log(`Cargando página ${pagina} con ${this.rows} elementos por página para el estado ${this.estadoEncargue}`);
-          
+                    
           this.orderService.listarProductosEncarguePorUsuarioYEstado(
             usuario.id,
             this.estadoEncargue, // Usar el estado proporcionado
@@ -73,14 +71,11 @@ export class ProductContainerComponent implements OnInit {
             next: (response) => {
               this.productos = response.content;
               this.totalRecords = response.totalElements;
-              console.log('Productos cargados:', this.productos);
-              console.log('Total de registros:', this.totalRecords);
               
               // Intentar obtener el encargueId si hay productos
               if (this.productos.length > 0) {
                 // Usar la propiedad encargueId directamente, según la interfaz
                 this.encargueId = this.productos[0].encargueId;
-                console.log('EncargueId obtenido:', this.encargueId);
                 // Emitir el encargueId al componente padre
                 if (this.encargueId) {
                   this.encargueIdChange.emit(this.encargueId);
@@ -108,7 +103,6 @@ export class ProductContainerComponent implements OnInit {
   
   // Método para manejar el cambio de página
   onPageChange(event: any) {
-    console.log('Evento de paginación:', event);
     this.first = event.first;
     this.rows = event.rows;
     
@@ -125,12 +119,10 @@ export class ProductContainerComponent implements OnInit {
       return;
     }
     
-    console.log(`Eliminando producto ${productoId} del encargue ${this.encargueId}`);
     this.loading = true;
     
     this.orderService.eliminarProductoDeEncargue(this.encargueId, productoId).subscribe({
       next: () => {
-        console.log('Producto eliminado correctamente');
         // Recargar productos para reflejar los cambios
         this.securityService.getActualUser().subscribe({
           next: (usuario) => {
@@ -144,7 +136,6 @@ export class ProductContainerComponent implements OnInit {
                 next: (response) => {
                   if (response.totalElements === 0) {
                     // Si no quedan productos, emitir el evento
-                    console.log('No quedan productos en el encargue, notificando...');
                     this.noProductsLeft.emit();
                   } else {
                     // Solo recarga la lista si todavía hay productos

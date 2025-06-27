@@ -106,7 +106,6 @@ public class CategoriaService {
         return categoria.mapToSimpleDto();
     }
 
-
     @Transactional
     public void deleteCategoria(Long idCategoria) {
         Categoria categoria = getCategoriaEntityById(idCategoria);

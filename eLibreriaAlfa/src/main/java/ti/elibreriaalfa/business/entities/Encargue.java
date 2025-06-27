@@ -33,13 +33,4 @@ public class Encargue {
     @Column
     private LocalDate fecha = null;
 
-    /*
-    @ManyToMany
-    @JoinTable(name = "encargue_producto",
-            joinColumns = @JoinColumn(name = "encargue_id"),
-            inverseJoinColumns = @JoinColumn(name = "producto_id"))
-    private List<Producto> productos;
-    */
-
-
 }

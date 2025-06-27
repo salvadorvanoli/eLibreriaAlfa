@@ -29,14 +29,15 @@ public class EncargueController {
         this.encargueService = encargueService;
     }
 
+    @Operation(summary = "Obtener un listado de encargues")
     @GetMapping
     public ResponseEntity<ResponseListadoEncargues> getEncargues() {
         ResponseListadoEncargues response = encargueService.listadoEncargues();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @Operation(summary = "Crear un nuevo encargue")
     @PostMapping
-    @Operation(description = "Esta función crea un nuevo encargue")
     public ResponseEntity<String> createEncargue(@RequestBody EncargueDto encargue) {
         String response = encargueService.crearEncargue(encargue);
         if (response == null) {
@@ -46,6 +47,7 @@ public class EncargueController {
         }
     }
 
+    @Operation(summary = "Borrar un encargue por ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> borrarEncargue(@PathVariable(name = "id") Long idEncargue) {
         try {
@@ -58,6 +60,7 @@ public class EncargueController {
         }
     }
 
+    @Operation(summary = "Modificar un encargue por ID")
     @PutMapping("/{id}")
     public ResponseEntity<String> modificarEncargue(
             @PathVariable(name = "id") Long idEncargue,
@@ -75,6 +78,7 @@ public class EncargueController {
         }
     }
 
+    @Operation(summary = "Obtener los encargues paginados")
     @GetMapping("/paginado")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
     public ResponseEntity<Page<EncargueDto>> encarguesPaginados(
@@ -84,7 +88,7 @@ public class EncargueController {
         return new ResponseEntity<>(encargueService.listadoEncarguePage(pagina, cantidad), HttpStatus.OK);
     }
 
-    // Agregar producto a un encargue
+    @Operation(summary = "Agregar un producto a un encargue")
     @PostMapping("/usuario/{usuarioId}/producto")
     public ResponseEntity<Void> agregarProductoAEncarguePorUsuario(
             @PathVariable("usuarioId") Long usuarioId,
@@ -93,7 +97,7 @@ public class EncargueController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    // Eliminar producto de un encargue
+    @Operation(summary = "Eliminar un producto de un encargue")
     @DeleteMapping("/{id}/producto/{productoEncargueId}")
     public ResponseEntity<Void> eliminarProductoDeEncargue(
             @PathVariable("id") Long encargueId,
@@ -102,7 +106,7 @@ public class EncargueController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    // Obtener encargue por usuario y estado
+    @Operation(summary = "Obtener encargue por usuario y estado")
     @GetMapping("/usuario/{usuarioId}/estado/{estado}")
     public ResponseEntity<EncargueDto> obtenerEncarguePorUsuarioYEstado(
             @PathVariable("usuarioId") Long usuarioId,
@@ -111,6 +115,7 @@ public class EncargueController {
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
+    @Operation(summary = "Listar productos paginados de un encargue por usuario y estado")
     @GetMapping("/usuario/{usuarioId}/estado/{estado}/productos")
     public ResponseEntity<Page<Producto_EncargueDto>> listarProductosEncarguePorUsuarioYEstado(
             @PathVariable("usuarioId") Long usuarioId,
@@ -122,12 +127,14 @@ public class EncargueController {
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
+    @Operation(summary = "Retornar booleano según si el usuario tiene un encargue en creación")
     @GetMapping("/usuario/{usuarioId}/tiene-en-creacion")
     public ResponseEntity<Boolean> usuarioTieneEncargueEnCreacion(@PathVariable("usuarioId") Long usuarioId) {
         boolean tiene = encargueService.usuarioTieneEncargueEnCreacion(usuarioId);
         return new ResponseEntity<>(tiene, HttpStatus.OK);
     }
 
+    @Operation(summary = "Marcar un encargue como enviado")
     @PostMapping("/{id}/enviar")
     public ResponseEntity<Void> marcarComoEnviado(
             @PathVariable("id") Long idEncargue,
@@ -141,14 +148,14 @@ public class EncargueController {
         return ResponseEntity.ok().build();
     }
 
-    // src/main/java/ti/elibreriaalfa/api/controllers/EncargueController.java
-
+    @Operation(summary = "Cancelar un encargue enviado y crear uno nuevo")
     @PostMapping("/usuario/{usuarioId}/cancelar-enviado")
     public ResponseEntity<Void> cancelarEnviadoYCrearNuevo(@PathVariable("usuarioId") Long usuarioId) {
         encargueService.cancelarEncargueEnviadoYCrearNuevo(usuarioId);
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Listar encargues finalizados por usuario")
     @GetMapping("/user/{userId}/history")
     public ResponseEntity<?> listarEncarguesFinalizadosPorUsuario(@PathVariable("userId") Long usuarioId) {
         var encargues = encargueService.listarEncarguesPorUsuarioEstados(usuarioId,
@@ -156,6 +163,7 @@ public class EncargueController {
         return ResponseEntity.ok(encargues);
     }
 
+    @Operation(summary = "Cambiar el estado de un encargue")
     @PatchMapping("/{id}/estado")
     public ResponseEntity<String> cambiarEstadoEncargue(
             @PathVariable("id") Long idEncargue,
@@ -171,34 +179,4 @@ public class EncargueController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-/* Ejemplos de Json para probar:
-
-    //http://localhost:8080/order/paginado?pagina=0&cantidad=10
-
-    CREAR
-
-    1)
-    {
-        "idUsuarioComprador": 10,
-            "productos": [
-            {
-            "producto": { "id": 1 },
-            "cantidad": 2
-            },
-            {
-            "producto": { "id": 3 },
-            "cantidad": 1
-            },
-            {
-            "producto": { "id": 54 },
-            "cantidad": 3
-            }
-        ]
-    }
-
-    MODIFICAR
-
-
-*/
 }
