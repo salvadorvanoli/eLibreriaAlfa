@@ -7,4 +7,12 @@
         [(selection)]="selectedCategory"
         (selectionChange)="onSelectionChange()"
     />
+    @if (showMessage && categoriesLoaded && selectionMode === 'single' && selectedCategory) {
+        <app-message
+            classes="p-2 m-4"
+            severity="secondary"
+            icon="pi pi-info-circle"
+            [message]="'Categoría seleccionada: ' + selectedDataNodes[0].nombre"
+        />
+    }
 </div>

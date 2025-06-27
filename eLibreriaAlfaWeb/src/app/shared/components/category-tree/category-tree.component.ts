@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { Tree } from 'primeng/tree';
+import { MessageComponent } from '../../../shared/components/message/message.component';
 import { CategoryService } from '../../../core/services/category.service';
 import { CategoriaNodoDto } from '../../../core/models/categoria';
 
@@ -8,7 +9,8 @@ import { CategoriaNodoDto } from '../../../core/models/categoria';
   selector: 'app-category-tree',
   standalone: true,
   imports: [
-    Tree
+    Tree,
+    MessageComponent
   ],
   templateUrl: './category-tree.component.html',
   styleUrl: './category-tree.component.scss'
@@ -17,9 +19,10 @@ export class CategoryTreeComponent {
   categories: TreeNode[] = [];
   selectedCategory: TreeNode | TreeNode[] | null = null;
   selectedDataNodes: CategoriaNodoDto[] = [];
-  private categoriesLoaded = false;
+  categoriesLoaded = false;
 
   @Input() selectionMode: 'single' | 'multiple' = 'single';
+  @Input() showMessage: boolean = false;
   @Output() selection = new EventEmitter<number | number[]>();
   @Output() selectionDataNode = new EventEmitter<CategoriaNodoDto[]>();
 

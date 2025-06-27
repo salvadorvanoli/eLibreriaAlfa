@@ -3,13 +3,19 @@
     @if (products && products.length > 0) {
         <div class="py-8 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             <div class="col-span-1 sm:pt-12"> <!-- class="sm:pt-12" -->
-                <app-category-tree (selection)="onCategorySelection($event)" />
+                <app-category-tree (selection)="onCategorySelection($event)" [showMessage]="true" />
             </div>
             <div class="col-span-1 sm:m-5 sm:col-span-2 md:col-span-3 lg:col-span-4">
                 <app-products-catalog [products]="products" (searchTextChange)="onSearchTextChange($event)" (sortChange)="onSortChange($event)" (applyFilters)="applyFilters()" (resetFilters)="resetFilters()" />
             </div>
         </div>
     } @else {
-        <app-message classes="p-2 m-10" icon="pi pi-info-circle" message="No hay productos disponibles" />
+        <app-message
+            classes="p-2 m-10"
+            textClasses="text-3xl text-center"
+            iconStyle="font-size: 1.5rem"
+            icon="pi pi-info-circle"
+            message="No hay productos disponibles"
+        />
     }
 </div>

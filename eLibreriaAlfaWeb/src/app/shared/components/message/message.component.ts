@@ -15,4 +15,6 @@ export class MessageComponent {
   @Input() icon?: string;
   @Input() message: string = "";
   @Input() classes: string = "";
+  @Input() textClasses: string = "";
+  @Input() iconStyle: string = "";
 }
