@@ -29,6 +29,24 @@ export class ControlPanelComponent {
   selectedDataType = signal('Usuario');
   selectedItem: any = null;
 
+  private dataTypes = [
+    'Usuario',
+    'Categoría',
+    'Producto',
+    'Publicación',
+    'Pedido',
+    'Impresión'
+  ]
+
+  ngOnInit() {
+    const storedDataType = localStorage.getItem('selectedDataType');
+    if (storedDataType && this.dataTypes.includes(storedDataType)) {
+      this.selectedDataType.set(storedDataType);
+    } else {
+      this.selectedDataType.set('Usuario');
+    }
+  }
+
   onDataTypeSelected(dataType: string) {
     this.selectedDataType.set(dataType);
     this.closeModal();

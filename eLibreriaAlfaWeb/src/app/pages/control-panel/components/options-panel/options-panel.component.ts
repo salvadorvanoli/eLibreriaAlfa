@@ -52,6 +52,7 @@ export class OptionsPanelComponent {
   @Output() dataType = new EventEmitter<string>();
 
   sendDataType(type: string) {
+    localStorage.setItem('selectedDataType', type);
     this.dataType.emit(type);
   }
 
