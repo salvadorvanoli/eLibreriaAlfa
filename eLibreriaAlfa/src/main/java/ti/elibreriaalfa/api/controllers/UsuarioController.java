@@ -90,7 +90,7 @@ public class UsuarioController {
 
     @Operation(summary = "Obtener usuario por ID")
     @GetMapping("/id/{usuarioId}")
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR') || hasAuthority('EMPLEADO')")
     public ResponseEntity<Object> getUsuarioById(@PathVariable(name = "usuarioId") Long usuarioId) {
         return new ResponseEntity<>(usuarioService.getUsuarioById(usuarioId), HttpStatus.OK);
     }

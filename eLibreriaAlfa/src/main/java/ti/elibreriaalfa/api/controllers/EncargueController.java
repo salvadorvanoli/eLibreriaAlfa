@@ -80,7 +80,7 @@ public class EncargueController {
 
     @Operation(summary = "Obtener los encargues paginados")
     @GetMapping("/paginado")
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR') || hasAuthority('EMPLEADO')")
     public ResponseEntity<Page<EncargueDto>> encarguesPaginados(
             @RequestParam("pagina")  Integer pagina,
             @RequestParam("cantidad") Integer cantidad) {

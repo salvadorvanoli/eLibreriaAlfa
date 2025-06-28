@@ -43,7 +43,7 @@ export class ControlPanelComponent {
     if (storedDataType && this.dataTypes.includes(storedDataType)) {
       this.selectedDataType.set(storedDataType);
     } else {
-      this.selectedDataType.set('Usuario');
+      this.selectedDataType.set('Pedido');
     }
   }
 

@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { MenuModule } from 'primeng/menu';
 import { PrimaryButtonComponent } from "../../../../shared/components/buttons/primary-button/primary-button.component";
+import { SecurityService } from '../../../../core/services/security.service';
 
 @Component({
   selector: 'app-options-panel',
@@ -12,9 +13,16 @@ import { PrimaryButtonComponent } from "../../../../shared/components/buttons/pr
   templateUrl: './options-panel.component.html',
   styleUrl: './options-panel.component.scss'
 })
-export class OptionsPanelComponent {
+export class OptionsPanelComponent implements OnInit {
 
   @Output() modalIsVisible = new EventEmitter<boolean>();
+  @Output() dataType = new EventEmitter<string>();
+  
+  selectedDataType: string = '';
+
+  constructor(
+    private securityService: SecurityService
+  ) {}
 
   items = [
     {
@@ -49,9 +57,16 @@ export class OptionsPanelComponent {
     }
   ];
 
-  @Output() dataType = new EventEmitter<string>();
+  ngOnInit(): void {
+    this.securityService.getActualUser().subscribe(usuarioActual => {
+      if (usuarioActual && usuarioActual.rol === 'EMPLEADO') {
+        this.items = this.items.filter(item => item.label === 'Pedidos' || item.label === 'Impresiones');
+      }
+    });
+  }
 
   sendDataType(type: string) {
+    this.selectedDataType = type;
     localStorage.setItem('selectedDataType', type);
     this.dataType.emit(type);
   }

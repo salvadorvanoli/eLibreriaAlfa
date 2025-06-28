@@ -215,7 +215,7 @@ export class PublicationFormComponent {
     const formData = new FormData();
     
     formData.append('titulo', this.title.trim());
-    formData.append('contenido', this.content.trim());
+    formData.append('contenido', this.htmlToPlainText(this.content).trim());
     
     if (this.newImage.length > 0) {
       formData.append('imagen', this.newImage[0], this.newImage[0].name);

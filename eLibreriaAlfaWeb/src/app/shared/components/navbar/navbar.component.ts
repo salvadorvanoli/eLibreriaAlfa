@@ -43,7 +43,7 @@ export class NavbarComponent {
           { label: 'Mi cuenta', icon: 'pi pi-user', routerLink: '/perfil' }
         );
 
-        if (userEntity.rol === "ADMINISTRADOR") {
+        if (userEntity.rol === "ADMINISTRADOR" || userEntity.rol === "EMPLEADO") {
           this.items.push({ label: 'Panel de control', icon: 'pi pi-cog', routerLink: '/panel' });
         }
 

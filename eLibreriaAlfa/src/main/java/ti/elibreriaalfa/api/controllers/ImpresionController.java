@@ -40,7 +40,7 @@ public class ImpresionController {
 
     @Operation(summary = "Obtener una impresión por ID")
     @GetMapping("/{idImpresion}")
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR') || hasAuthority('EMPLEADO')")
     public ResponseEntity<Object> getImpresionById(@PathVariable (name = "idImpresion") Long idImpresion) {
         try {
             ResponseImpresion response = impresionService.getImpresionById(idImpresion);
@@ -52,7 +52,7 @@ public class ImpresionController {
 
     @Operation(summary = "Obtener todas las impresiones con paginación")
     @GetMapping("/page")
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR') || hasAuthority('EMPLEADO')")
     public ResponseEntity<Page<ImpresionDto>> getImpresionPage(@RequestParam(name = "pagina") Integer pagina, @RequestParam(name = "cantidad") Integer cantidad) {
         return new ResponseEntity<>(impresionService.listadoImpresionPage(pagina, cantidad), HttpStatus.OK);
     }
@@ -71,7 +71,7 @@ public class ImpresionController {
 
     @Operation(summary = "Eliminar una impresión por ID")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR') || hasAuthority('EMPLEADO')")
     public ResponseEntity<Void> borrarImpresion(@PathVariable(name = "id") Long idImpresion) {
         impresionService.borrarImpresion(idImpresion);
 
