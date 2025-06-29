@@ -16,4 +16,11 @@ export class CategoryService extends BaseHttpService<CategoriaRequestDto, any> {
   getAllCategoriesTree(): Observable<CategoriaNodoDto[]> {
     return this.http.get<CategoriaNodoDto[]>(`${this.baseUrl}${this.end}`);
   }
+  
+  deleteCategory(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.baseUrl}${this.end}/${id}`,
+      { withCredentials: true }
+    );
+  }
 }

@@ -11,7 +11,9 @@
         <img 
           [src]="getImageUrl(item)" 
           alt="Imagen de la publicación" 
-          class="mx-auto rounded" />
+          class="mx-auto rounded"
+          onerror="this.onerror=null;this.src='https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';" 
+        />
       </div>
       <div class="font-medium text-lg">
         {{ getTitle(item) }}

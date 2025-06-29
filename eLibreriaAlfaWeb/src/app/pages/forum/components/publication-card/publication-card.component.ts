@@ -32,7 +32,8 @@ export class PublicationCardComponent {
     }
 
     onImageError(event: any): void {
-        event.target.style.display = 'none';
+        event.target.onerror = null;
+        event.target.src = this.defaultImageUrl;
     }
 
     hasImage(): boolean {

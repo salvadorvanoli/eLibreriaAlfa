@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { ProductService } from '../../../../core/services/product.service'; 
 import { CarouselModule } from 'primeng/carousel';
 import { ButtonModule } from 'primeng/button';
@@ -39,7 +39,8 @@ export class CarouselComponent {
     @Input() product!: ProductoDto | undefined;
 
     constructor(
-        private imageService: ImageService
+        private imageService: ImageService,
+        private cdr: ChangeDetectorRef
     ) {}
 
     ngOnChanges(changes: SimpleChanges) {
@@ -49,12 +50,40 @@ export class CarouselComponent {
     }
 
     loadProductImages() {
+        const placeholder = 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
         if (this.product && this.product.imagenes && this.product.imagenes.length > 0) {
-            this.productImagesUrls = this.product.imagenes.map(image => {
-                return this.imageService.getImageUrl(image);
+            const urls = this.product.imagenes
+                .filter(img => !!img)
+                .map(image => this.imageService.getImageUrl(image));
+            const validUrls: string[] = [];
+            let checked = 0;
+
+            urls.forEach((url, idx) => {
+                const img = new window.Image();
+                img.onload = () => {
+                    validUrls[idx] = url;
+                    checked++;
+                    if (checked === urls.length) {
+                        this.productImagesUrls = validUrls.filter(Boolean).length > 0 ? validUrls.filter(Boolean) : [placeholder];
+                        this.cdr.detectChanges();
+                    }
+                };
+                img.onerror = () => {
+                    validUrls[idx] = '';
+                    checked++;
+                    if (checked === urls.length) {
+                        this.productImagesUrls = validUrls.filter(Boolean).length > 0 ? validUrls.filter(Boolean) : [placeholder];
+                        this.cdr.detectChanges();
+                    }
+                };
+                img.src = url;
             });
+
+            if (urls.length === 0) {
+                this.productImagesUrls = [placeholder];
+            }
         } else {
-            this.productImagesUrls = [];
+            this.productImagesUrls = [placeholder];
         }
     }
 
