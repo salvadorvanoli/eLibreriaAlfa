@@ -58,22 +58,25 @@ public class ImageService {
     }
 
     public Resource loadImage(String relativePath) {
+        if (relativePath == null || relativePath.isEmpty()) {
+            return null;
+        }
+
         String decodedPath = URLDecoder.decode(relativePath, StandardCharsets.UTF_8);
         Path path = basePathObj.resolve(decodedPath).normalize();
 
-        verifyGeneratedPath(path);
-
-        Resource resource;
         try {
-            resource = new UrlResource(path.toUri());
-        } catch (MalformedURLException e) {
-            throw new ImageNotFoundException("Ruta del archivo malformada: " + relativePath);
-        }
+            verifyGeneratedPath(path);
 
-        if (resource.exists() && resource.isReadable()) {
-            return resource;
-        } else {
-            throw new ImageNotFoundException("Archivo no encontrado: " + relativePath);
+            Resource resource = new UrlResource(path.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                return resource;
+            } else {
+                return null;
+            }
+        } catch (MalformedURLException | SecurityException e) {
+            return null;
         }
     }
 
@@ -90,10 +93,23 @@ public class ImageService {
     }
 
     public ImageDto getImageInfo(String relativePath) {
-        Path path = basePathObj.resolve(relativePath).normalize();
-        verifyGeneratedPath(path);
+        if (relativePath == null || relativePath.isEmpty()) {
+            return null;
+        }
 
-        return createImageDtoFromPath(path, relativePath);
+        Path path = basePathObj.resolve(relativePath).normalize();
+
+        try {
+            verifyGeneratedPath(path);
+
+            if (Files.exists(path) && Files.isReadable(path)) {
+                return createImageDtoFromPath(path, relativePath);
+            } else {
+                return null;
+            }
+        } catch (SecurityException e) {
+            return null;
+        }
     }
 
     private Path getSubfolderPath(String type) {
@@ -101,9 +117,28 @@ public class ImageService {
     }
 
     private void validateImage(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new ImageException("La imagen está vacía");
+        }
+
+        long maxSize = 5 * 1024 * 1024;
+        if (file.getSize() > maxSize) {
+            throw new ImageException("La imagen excede el tamaño máximo permitido de 5MB");
+        }
+
         String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/") || contentType.equals("image/gif"))
-            throw new ImageException("El archivo no es una imagen válida");
+        if (contentType == null) {
+            throw new ImageException("No se pudo determinar el tipo de archivo");
+        }
+
+        List<String> allowedTypes = Arrays.asList(
+                "image/jpeg", "image/jpg", "image/png", "image/webp",
+                "image/svg+xml", "image/bmp", "image/tiff"
+        );
+
+        if (!allowedTypes.contains(contentType.toLowerCase())) {
+            throw new ImageException("Formato de imagen no permitido. Formatos válidos: JPG, PNG, WEBP, SVG, BMP, TIFF");
+        }
     }
 
     private void verifyGeneratedPath(Path path) {
@@ -144,13 +179,11 @@ public class ImageService {
             throw new IllegalArgumentException("Tipo de archivo no permitido para impresión: " + contentType);
         }
 
-        // Validaciones específicas para impresiones
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null || originalFilename.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del archivo no puede estar vacío");
         }
 
-        // Verificar extensión del archivo
         String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
         return extension;
     }

@@ -175,7 +175,11 @@ public class PublicacionService {
     private PublicacionConImagenDto addImageToDtoConImagen(PublicacionConImagenDto publicacion, String imagen) {
         if (imagen != null) {
             ImageDto imagenInfo = imageService.getImageInfo(imagen);
-            publicacion.setImagen(imagenInfo);
+            if (imagenInfo != null) {
+                publicacion.setImagen(imagenInfo);
+            } else {
+                publicacion.setImagen(null);
+            }
         } else {
             publicacion.setImagen(null);
         }

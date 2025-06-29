@@ -14,6 +14,7 @@ import ti.elibreriaalfa.dtos.producto.ProductoSimpleDto;
 import ti.elibreriaalfa.services.ProductoService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "product")
@@ -111,8 +112,12 @@ public class ProductoController {
 
     @PatchMapping("/enable/{id}")
     @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-    public ResponseEntity<ProductoSimpleDto> enableProducto(@PathVariable(name = "id") Long idProducto) {
-        return new ResponseEntity<>(productoService.enableProducto(idProducto), HttpStatus.OK);
+    public ResponseEntity<?> enableProducto(@PathVariable(name = "id") Long idProducto) {
+        try {
+            return new ResponseEntity<>(productoService.enableProducto(idProducto), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PatchMapping("/disable/{id}")
