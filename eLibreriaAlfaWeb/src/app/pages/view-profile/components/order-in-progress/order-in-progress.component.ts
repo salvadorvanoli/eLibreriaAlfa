@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductContainerComponent } from '../product-container/product-container.component';
 import { SpecifyOrderComponent } from '../specify-order/specify-order.component';
@@ -33,12 +33,14 @@ export class OrderInProgressComponent {
   @Output() noProductsLeft = new EventEmitter<void>();
   @Output() orderSubmitted = new EventEmitter<void>();
 
+  @ViewChild(ProductContainerComponent) productContainerComponent!: ProductContainerComponent;
+
   constructor(
     private orderService: OrderService,
     private securityService: SecurityService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private imageService: ImageService // ← Inyectar si necesitas imágenes
+    private imageService: ImageService 
   ) {}
 
   setEncargueId(id: number): void {
@@ -49,7 +51,6 @@ export class OrderInProgressComponent {
     this.noProductsLeft.emit();
   }
 
-  // Este método se llama cuando se hace clic en "Realizar pedido"
   onSubmitOrder(fecha: string): void {
     if (!this.encargueId) {
       this.messageService.clear();
@@ -61,7 +62,19 @@ export class OrderInProgressComponent {
       return;
     }
 
-    // Mostrar diálogo de confirmación
+    // Verificar si todos los productos están deshabilitados
+    const productosHabilitados = this.getProductosHabilitados();
+    
+    if (productosHabilitados.length === 0) {
+      this.messageService.clear();
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Productos Deshabilitados',
+        detail: 'Todos los productos de su pedido han sido deshabilitados. No es posible procesar el pedido.'
+      });
+      return;
+    }
+
     this.confirmationService.confirm({
       message: '¿Estás seguro de que deseas realizar este pedido?',
       header: 'Confirmación de Pedido',
@@ -69,16 +82,28 @@ export class OrderInProgressComponent {
       accept: () => {
         this.loading = true;
         
-        // Llamar al servicio para marcar el encargue como enviado
         this.orderService.marcarEncargueComoEnviado(this.encargueId!, fecha)
           .pipe(
             catchError(error => {
               this.messageService.clear();
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Error al enviar el pedido: ' + (error.message || 'Intente nuevamente')
-              });
+              
+              // Verificar si es error por productos deshabilitados del backend
+              if (error.status === 400 && 
+                  (error.error?.message?.includes('deshabilitado') || 
+                   error.error?.message?.includes('inhabilitado') ||
+                   error.error?.message?.includes('disabled'))) {
+                this.messageService.add({
+                  severity: 'warn',
+                  summary: 'Productos Deshabilitados',
+                  detail: 'Algunos productos de su pedido han sido deshabilitados recientemente. No es posible procesar el pedido.'
+                });
+              } else {
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: 'Error al enviar el pedido: ' + (error.message || 'Intente nuevamente')
+                });
+              }
               return of(void 0); 
             }),
             finalize(() => {
@@ -93,20 +118,34 @@ export class OrderInProgressComponent {
               detail: 'Pedido enviado correctamente'
             });
             
-            // Emitir evento para actualizar la vista
             this.orderSubmitted.emit();
           });
       }
     });
   }
 
-  /**
-   * Método para obtener URL de imagen si lo necesitas
-   */
   getProductImageUrl(imageName: string): string {
     if (!imageName) {
       return 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
     }
     return this.imageService.getImageUrl(imageName);
+  }
+
+  // Método auxiliar para obtener productos habilitados
+  private getProductosHabilitados(): any[] {
+    // Acceder a los productos del ProductContainerComponent
+    const productContainer = this.getProductContainer();
+    if (!productContainer || !productContainer.productos) {
+      return [];
+    }
+    
+    return productContainer.productos.filter(producto => 
+      producto.producto?.habilitado === true
+    );
+  }
+
+  // Método para acceder al ProductContainerComponent
+  private getProductContainer(): ProductContainerComponent | null {
+    return this.productContainerComponent || null;
   }
 }
