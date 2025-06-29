@@ -10,6 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { ItemRowComponent } from '../item-row/item-row.component';
 import { MessageComponent } from '../../../../shared/components/message/message.component';
 import { ControlPanelService } from '../../../../core/services/control-panel.service';
+import { ElementoLista } from '../../../../core/models/elemento-lista';
 
 @Component({
   selector: 'app-data-panel',
@@ -58,7 +59,9 @@ export class DataPanelComponent {
 
   constructor(
     private messageService: MessageService,
-    private controlPanelService: ControlPanelService
+    private controlPanelService: ControlPanelService,
+    private publicationService: PublicationService,
+    private productService: ProductService
   ) {
     effect(() => {
       this.resetFilters();
@@ -82,7 +85,12 @@ export class DataPanelComponent {
           this.items = response;
         } else {
           this.messageService.clear();
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: "No se encontraron elementos acordes los filtros especificados", life: 4000 });
+          this.messageService.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: "No se encontraron elementos acordes los filtros especificados", 
+            life: 4000 
+          });
         }
       },
       error: (error: any) => {
@@ -127,7 +135,12 @@ export class DataPanelComponent {
       },
       error: (error: any) => {
         this.messageService.clear();
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: "No se pudo obtener el elemento seleccionado", life: 4000 });
+        this.messageService.add({ 
+          severity: 'error', 
+          summary: 'Error', 
+          detail: "No se pudo obtener el elemento seleccionado", 
+          life: 4000 
+        });
       }
     });
   }
@@ -144,6 +157,80 @@ export class DataPanelComponent {
   private resetChildComponents() {
     this.searchBar?.reset();
     this.orderSelect?.reset();
+  }
+
+  handleDelete(event: {action: string, item: ElementoLista}): void {
+    switch (event.action) {
+        case 'eliminar':
+            this.eliminarPublicacion(event.item);
+            break;
+        case 'inhabilitar':
+            this.inhabilitarProducto(event.item);
+            break;
+        case 'habilitar':
+            this.habilitarProducto(event.item);
+            break;
+    }
+  }
+
+  private eliminarPublicacion(item: ElementoLista): void {
+    this.publicationService.delete(item.id).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Publicación eliminada correctamente'
+        });
+        this.getItems();
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo eliminar la publicación'
+        });
+      }
+    });
+  }
+
+  private inhabilitarProducto(item: ElementoLista): void {
+    this.productService.disable(item.id).subscribe({
+      next: (response: ProductoSimpleDto) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Producto deshabilitado correctamente'
+        });
+        this.getItems();
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo deshabilitar el producto'
+        });
+      }
+    });
+  }
+
+  private habilitarProducto(item: ElementoLista): void {
+    this.productService.enable(item.id).subscribe({
+      next: (response: ProductoSimpleDto) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Producto habilitado correctamente'
+        });
+        this.getItems();
+      },
+      error: (error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo habilitar el producto'
+        });
+      }
+    });
   }
 
 }

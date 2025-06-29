@@ -13,4 +13,5 @@ public class ProductoSimpleDto {
     private Float precio;
     private String descripcion;
     private String[] imagenes;
+    private boolean habilitado;
 }

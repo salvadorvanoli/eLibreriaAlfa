@@ -17,4 +17,20 @@ export class ProductService extends BaseHttpService<any, any> {
     return this.http.get<ProductoSimpleDto[]>(`${this.baseUrl}${this.end}/filtered?categoria=${category}&textoBusqueda=${searchText}&orden=${order}`);
   }
 
+  enable(id: number): Observable<ProductoSimpleDto> {
+    return this.http.patch<ProductoSimpleDto>(
+      `${this.baseUrl}${this.end}/enable/${id}`, 
+      {}, 
+      { withCredentials: true }
+    );
+  }
+
+  disable(id: number): Observable<ProductoSimpleDto> {
+    return this.http.patch<ProductoSimpleDto>(
+      `${this.baseUrl}${this.end}/disable/${id}`, 
+      {}, 
+      { withCredentials: true }
+    );
+  }
+
 }

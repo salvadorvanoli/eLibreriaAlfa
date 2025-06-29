@@ -45,7 +45,7 @@ public class ProductoService {
     }
 
     public List<ProductoSimpleDto> getProductosFiltrados(Long idCategoria, String textoBusqueda, String orden) {
-        Specification<Producto> spec = Specification.where(null);
+        Specification<Producto> spec = Specification.where((root, query, cb) -> cb.equal(root.get("habilitado"), true));
 
         if (idCategoria != null && idCategoria > 0) {
             try {
@@ -269,4 +269,21 @@ public class ProductoService {
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada con ID: " + idCategoria));
         return categoria.getIdsCategoriasHijas();
     }
+
+    @Transactional
+    public ProductoSimpleDto enableProducto(Long idProducto) {
+        Producto producto = getProductoEntityById(idProducto);
+        producto.setHabilitado(true);
+        productoRepository.save(producto);
+        return producto.mapToDtoSimple();
+    }
+
+    @Transactional
+    public ProductoSimpleDto disableProducto(Long idProducto) {
+        Producto producto = getProductoEntityById(idProducto);
+        producto.setHabilitado(false);
+        productoRepository.save(producto);
+        return producto.mapToDtoSimple();
+    }
+
 }

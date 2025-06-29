@@ -119,4 +119,29 @@ export class ItemRowComponent {
     }
   }
 
+  /*isProductoHabilitado(): boolean {
+        return this.itemType === 'Producto' ? this.item.habilitado : true;
+    }
+
+    descartarOInhabilitar(): void {
+        if (this.itemType === 'Publicación') {
+            this.actionExecuted.emit({
+                action: 'eliminar',
+                item: this.item
+            });
+        } else if (this.itemType === 'Producto') {
+            this.actionExecuted.emit({
+                action: 'inhabilitar',
+                item: this.item
+            });
+        }
+    }
+
+    habilitarProducto(): void {
+        this.actionExecuted.emit({
+            action: 'habilitar',
+            item: this.item
+        });
+    }
+*/
 }

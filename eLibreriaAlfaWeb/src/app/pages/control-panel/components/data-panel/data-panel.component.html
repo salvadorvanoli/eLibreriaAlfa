@@ -25,7 +25,9 @@
                     [item]="item"
                     [itemType]="itemType()"
                     [first]="first"
+                    [itemType]="itemType()"
                     (details)="sendDetails($event)"
+                    (actionExecuted)="handleDelete($event)"
                 />
             </div>
         </ng-template>
