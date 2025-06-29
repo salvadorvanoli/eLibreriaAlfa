@@ -101,6 +101,18 @@ public class ProductoController {
         return new ResponseEntity<>(productoService.listadoProductoPage(pagina, cantidad), HttpStatus.OK);
     }
 
+    @PatchMapping("/enable/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<ProductoSimpleDto> enableProducto(@PathVariable(name = "id") Long idProducto) {
+        return new ResponseEntity<>(productoService.enableProducto(idProducto), HttpStatus.OK);
+    }
+
+    @PatchMapping("/disable/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<ProductoSimpleDto> disableProducto(@PathVariable(name = "id") Long idProducto) {
+        return new ResponseEntity<>(productoService.disableProducto(idProducto), HttpStatus.OK);
+    }
+
  /* Ejemplos de Json para probar:
 
     CREAR

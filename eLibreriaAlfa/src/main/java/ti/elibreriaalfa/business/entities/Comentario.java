@@ -2,6 +2,8 @@ package ti.elibreriaalfa.business.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import ti.elibreriaalfa.dtos.comentario.ComentarioDto;
 
 import java.time.LocalDateTime;
@@ -30,6 +32,7 @@ public class Comentario {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "publicacion_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Publicacion publicacion;
 
     public ComentarioDto mapToDto() {

@@ -16,6 +16,7 @@ public class ProductoRequestDto {
     private List<MultipartFile> imagenes;
     private List<String> imagenesAEliminar;
     private List<Long> categoriasIds;
+    private boolean habilitado;
 
     public Producto mapToEntity() {
         Producto producto = new Producto();
