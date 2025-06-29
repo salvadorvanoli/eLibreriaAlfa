@@ -135,6 +135,7 @@ export class CategoryFormComponent {
             life: 4000 
           });
           this.categoryDeleted.emit(this.category!.id);
+          this.onDataReloaded();
           this.onItemDeleted();
           this.resetForm();
         },
@@ -227,6 +228,7 @@ export class CategoryFormComponent {
   }
 
   private onItemDeleted() {
+    console.log('Item deleted');
     this.itemDeleted.emit();
   }
 }

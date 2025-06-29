@@ -111,10 +111,6 @@ public class CategoriaService {
         Categoria categoria;
         categoria = getCategoriaEntityById(idCategoria);
 
-        List<Categoria> hijos = categoria.getHijos();
-        for (Categoria hijo : hijos)
-            deleteCategoria(hijo.getId());
-
         eliminarSubcategorias(categoria);
 
         List<Producto> productos = categoria.getProductos();
@@ -131,7 +127,6 @@ public class CategoriaService {
             categoriaRepository.save(categoria.getPadre());
         }
 
-        // Eliminar la categoría
         categoriaRepository.delete(categoria);
     }
 
