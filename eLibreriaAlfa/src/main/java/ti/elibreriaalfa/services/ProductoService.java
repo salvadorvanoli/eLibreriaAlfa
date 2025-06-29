@@ -41,7 +41,10 @@ public class ProductoService {
     }
 
     public List<ProductoSimpleDto> getAllProductos() {
-        return productoRepository.findAll().stream().map(Producto::mapToDtoSimple).collect(Collectors.toList());
+        Specification<Producto> spec = (root, query, cb) -> cb.equal(root.get("habilitado"), true);
+        return productoRepository.findAll(spec).stream()
+                .map(Producto::mapToDtoSimple)
+                .collect(Collectors.toList());
     }
 
     public List<ProductoSimpleDto> getProductosFiltrados(Long idCategoria, String textoBusqueda, String orden) {
