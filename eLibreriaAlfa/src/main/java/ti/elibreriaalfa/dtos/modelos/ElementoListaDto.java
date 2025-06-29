@@ -13,4 +13,5 @@ public class ElementoListaDto {
     private String texto2;
     private String texto3;
     private String texto4;
+    private Boolean habilitado;
 }
