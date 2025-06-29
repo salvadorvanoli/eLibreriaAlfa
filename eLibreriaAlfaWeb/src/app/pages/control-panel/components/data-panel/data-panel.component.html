@@ -24,7 +24,9 @@
                 <app-item-row
                     [item]="item"
                     [first]="first"
+                    [itemType]="itemType()"
                     (details)="sendDetails($event)"
+                    (actionExecuted)="handleDelete($event)"
                 />
             </div>
         </ng-template>

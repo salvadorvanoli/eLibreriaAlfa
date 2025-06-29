@@ -9,6 +9,7 @@ import { catchError, finalize, of } from 'rxjs';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { ImageService } from '../../../../core/services/image.service'; // ← Agregar si necesitas imágenes
 
 @Component({
   selector: 'app-order-in-progress',
@@ -36,7 +37,8 @@ export class OrderInProgressComponent {
     private orderService: OrderService,
     private securityService: SecurityService,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private imageService: ImageService // ← Inyectar si necesitas imágenes
   ) {}
 
   setEncargueId(id: number): void {
@@ -95,5 +97,15 @@ export class OrderInProgressComponent {
           });
       }
     });
+  }
+
+  /**
+   * Método para obtener URL de imagen si lo necesitas
+   */
+  getProductImageUrl(imageName: string): string {
+    if (!imageName) {
+      return 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
+    }
+    return this.imageService.getImageUrl(imageName);
   }
 }

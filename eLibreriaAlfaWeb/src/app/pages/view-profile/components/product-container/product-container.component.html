@@ -17,7 +17,8 @@
         title: producto.producto.nombre,
         price: producto.producto.precio,
         quantity: producto.cantidad,
-        imageUrl: producto.producto.imagenes && producto.producto.imagenes.length > 0 ? producto.producto.imagenes[0] : 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'
+        imageUrl: getProductImageUrl(producto.producto.imagenes && producto.producto.imagenes.length > 0 ? producto.producto.imagenes[0] : null),
+        habilitado: producto.producto.habilitado
       }"
       [readOnly]="readOnly"
       (removeProduct)="removeProduct($event)">

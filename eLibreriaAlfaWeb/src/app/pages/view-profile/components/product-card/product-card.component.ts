@@ -7,6 +7,7 @@ interface Product {
   price: number;
   quantity: number;
   imageUrl: string;
+  habilitado?: boolean; // ← Agregar este campo opcional
 }
 
 @Component({

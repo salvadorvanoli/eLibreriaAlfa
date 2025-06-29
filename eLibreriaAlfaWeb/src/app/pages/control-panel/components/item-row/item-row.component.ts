@@ -19,24 +19,46 @@ import { ElementoLista } from '../../../../core/models/elemento-lista';
   styleUrl: './item-row.component.scss'
 })
 export class ItemRowComponent {
+    itemImageUrl: string = 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
+    
+    @Input() itemType?: string;
+    @Input() item!: ElementoLista;
+    @Input() first!: boolean;
 
-  itemImageUrl: string = 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
+    @Output() details = new EventEmitter<ElementoLista>();
+    @Output() actionExecuted = new EventEmitter<{action: string, item: ElementoLista}>();
 
-  @Input() item!: ElementoLista;
-  @Input() first!: boolean;
+    constructor(private imageService: ImageService) {}
 
-  @Output() details = new EventEmitter<ElementoLista>();
-
-  constructor(
-    private imageService: ImageService
-  ) {}
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['item']) {
-      if (this.item && this.item.imagen) {
-        this.itemImageUrl = this.imageService.getImageUrl(this.item.imagen);
-      }
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['item'] && this.item?.imagen) {
+            this.itemImageUrl = this.imageService.getImageUrl(this.item.imagen);
+        }
     }
-  }
+
+    isProductoHabilitado(): boolean {
+        return this.itemType === 'Producto' ? this.item.habilitado : true;
+    }
+
+    descartarOInhabilitar(): void {
+        if (this.itemType === 'Publicación') {
+            this.actionExecuted.emit({
+                action: 'eliminar',
+                item: this.item
+            });
+        } else if (this.itemType === 'Producto') {
+            this.actionExecuted.emit({
+                action: 'inhabilitar',
+                item: this.item
+            });
+        }
+    }
+
+    habilitarProducto(): void {
+        this.actionExecuted.emit({
+            action: 'habilitar',
+            item: this.item
+        });
+    }
 
 }

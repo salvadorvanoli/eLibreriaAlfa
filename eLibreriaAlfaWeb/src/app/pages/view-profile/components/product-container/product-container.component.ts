@@ -4,6 +4,7 @@ import { ProductCardComponent } from '../product-card/product-card.component';
 import { PaginatorComponent } from '../../../../shared/components/paginator/paginator.component';
 import { OrderService, EncargueEstado } from '../../../../core/services/order.services';
 import { SecurityService } from '../../../../core/services/security.service';
+import { ImageService } from '../../../../core/services/image.service'; // ← Agregar import
 import { ProductoEncargue } from '../../../../core/models/producto-encargue';
 import { catchError, finalize, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -37,7 +38,8 @@ export class ProductContainerComponent implements OnInit {
   
   constructor(
     private orderService: OrderService,
-    private securityService: SecurityService
+    private securityService: SecurityService,
+    private imageService: ImageService // ← Inyectar ImageService
   ) {}
   
   ngOnInit() {
@@ -104,6 +106,16 @@ export class ProductContainerComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+  
+  /**
+   * Obtiene la URL completa de la imagen del producto usando ImageService
+   */
+  getProductImageUrl(imageName: string | null): string {
+    if (!imageName) {
+      return 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
+    }
+    return this.imageService.getImageUrl(imageName);
   }
   
   // Método para manejar el cambio de página

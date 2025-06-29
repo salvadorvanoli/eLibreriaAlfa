@@ -6,4 +6,5 @@ export interface ElementoLista {
     texto2: string;
     texto3?: string;
     texto4: string;
+    habilitado: boolean;
 }
