@@ -45,7 +45,6 @@ export class DataPanelComponent {
     { label: "Más antiguos", value: "asc" }
   ]
 
-  // Attributes for pagination
   rows: number = 10;
   first: number = 0;
   rowsPerPageOptions: number[] = [10, 20, 30];
@@ -130,6 +129,10 @@ export class DataPanelComponent {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: "No se pudo obtener el elemento seleccionado", life: 4000 });
       }
     });
+  }
+  
+  onReloadData() {
+    this.filterItems();
   }
 
   onPageChange(event: any) {

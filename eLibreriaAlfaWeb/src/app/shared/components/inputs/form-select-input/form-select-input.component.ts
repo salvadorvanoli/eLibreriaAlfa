@@ -52,7 +52,6 @@ export class FormSelectInputComponent {
 
   reset() {
     this.value = '';
-    this.textValue.emit('');
     this.isInputInvalid.emit(false);
   }
 }

@@ -30,5 +30,14 @@ export class ControlPanelModalComponent {
   @Input() style: any = {};
 
   @Output() onClose = new EventEmitter<void>();
+  @Output() reloadData = new EventEmitter<void>();
+  @Output() itemDeleted = new EventEmitter<void>();
 
+  onDataReloaded() {
+    this.reloadData.emit();
+  }
+
+  onItemDeleted() {
+    this.itemDeleted.emit();
+  }
 }

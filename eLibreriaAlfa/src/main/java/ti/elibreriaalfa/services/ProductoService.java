@@ -1,5 +1,6 @@
 package ti.elibreriaalfa.services;
 
+import jakarta.persistence.criteria.JoinType;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -94,10 +95,14 @@ public class ProductoService {
 
         if (textoBusqueda != null && !textoBusqueda.trim().isEmpty()) {
             String busqueda = "%" + textoBusqueda.toLowerCase().trim() + "%";
-            spec = spec.and((root, query, cb) -> cb.or(
-                    cb.like(cb.lower(root.get("nombre")), busqueda),
-                    cb.like(cb.lower(root.get("descripcion")), busqueda)
-            ));
+            spec = spec.and((root, query, cb) -> {
+                Join<Producto, Categoria> categoriaJoin = root.join("categorias", JoinType.LEFT);
+                return cb.or(
+                        cb.like(cb.lower(root.get("nombre")), busqueda),
+                        cb.like(cb.lower(root.get("descripcion")), busqueda),
+                        cb.like(cb.lower(categoriaJoin.get("nombre")), busqueda)
+                );
+            });
         }
 
         Sort sort = Sort.unsorted();

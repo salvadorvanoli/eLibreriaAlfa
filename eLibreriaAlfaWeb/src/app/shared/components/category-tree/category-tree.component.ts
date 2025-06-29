@@ -32,46 +32,17 @@ export class CategoryTreeComponent {
     this.loadCategories();
   }
 
-  private loadCategories() {
+  loadCategories() {
     this.categoryService.getAllCategoriesTree().subscribe(data => {
       this.categories = data.map(category => this.createTreeNode(category));
       this.categoriesLoaded = true;
     });
   }
 
-  private createTreeNode(category: CategoriaNodoDto): TreeNode {
-    return {
-      key: category.id.toString(),
-      data: category,
-      label: category.nombre,
-      children: category.hijos.map(child => this.createTreeNode(child))
-    };
-  }
-
-  // Este método se llama cuando hay cualquier cambio en la selección
   onSelectionChange() {
     this.emitSelection();
   }
 
-  private emitSelection() {
-    if (this.selectionMode === 'single') {
-      const selectedNode = this.selectedCategory as TreeNode;
-      const selectedId = selectedNode?.data?.id || 0;
-      this.selectedDataNodes = selectedNode ? [selectedNode.data] : [];
-      this.selection.emit(selectedId);
-      this.selectionDataNode.emit(selectedNode ? [selectedNode.data] : []);
-    } else {
-      const selectedNodes = this.selectedCategory as TreeNode[];
-      const selectedIds = selectedNodes 
-        ? selectedNodes.map(node => node.data?.id).filter(id => id !== undefined && id !== null)
-        : [];
-      this.selectedDataNodes = selectedNodes ? selectedNodes.map(node => node.data) : [];
-      this.selection.emit(selectedIds);
-      this.selectionDataNode.emit(selectedNodes ? selectedNodes.map(node => node.data) : []);
-    }
-  }
-
-  // Métodos públicos para obtener selección actual
   getSelectedCategoryId(): number {
     if (this.selectionMode === 'single' && this.selectedCategory) {
       return (this.selectedCategory as TreeNode).data?.id || 0;
@@ -88,7 +59,6 @@ export class CategoryTreeComponent {
     return [];
   }
 
-  // Método para establecer selección programáticamente
   setValue(selectedCategories?: number | number[] | null) {
     if (!this.categoriesLoaded) {
       return;
@@ -111,13 +81,38 @@ export class CategoryTreeComponent {
     }
   }
 
-  // Método para resetear selección
   reset() {
     this.selectedCategory = this.selectionMode === 'single' ? null : [];
     this.selectedDataNodes = [];
   }
 
-  // Métodos auxiliares privados
+  private createTreeNode(category: CategoriaNodoDto): TreeNode {
+    return {
+      key: category.id.toString(),
+      data: category,
+      label: category.nombre,
+      children: category.hijos.map(child => this.createTreeNode(child))
+    };
+  }
+
+  private emitSelection() {
+    if (this.selectionMode === 'single') {
+      const selectedNode = this.selectedCategory as TreeNode;
+      const selectedId = selectedNode?.data?.id || 0;
+      this.selectedDataNodes = selectedNode ? [selectedNode.data] : [];
+      this.selection.emit(selectedId);
+      this.selectionDataNode.emit(selectedNode ? [selectedNode.data] : []);
+    } else {
+      const selectedNodes = this.selectedCategory as TreeNode[];
+      const selectedIds = selectedNodes 
+        ? selectedNodes.map(node => node.data?.id).filter(id => id !== undefined && id !== null)
+        : [];
+      this.selectedDataNodes = selectedNodes ? selectedNodes.map(node => node.data) : [];
+      this.selection.emit(selectedIds);
+      this.selectionDataNode.emit(selectedNodes ? selectedNodes.map(node => node.data) : []);
+    }
+  }
+
   private findNodeById(id: number): TreeNode | null {
     return this.findNodeByIdRecursive(this.categories, id);
   }

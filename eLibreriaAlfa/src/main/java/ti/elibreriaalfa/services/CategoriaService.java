@@ -108,7 +108,12 @@ public class CategoriaService {
 
     @Transactional
     public void deleteCategoria(Long idCategoria) {
-        Categoria categoria = getCategoriaEntityById(idCategoria);
+        Categoria categoria;
+        categoria = getCategoriaEntityById(idCategoria);
+
+        List<Categoria> hijos = categoria.getHijos();
+        for (Categoria hijo : hijos)
+            deleteCategoria(hijo.getId());
 
         List<Producto> productos = categoria.getProductos();
         for (Producto producto : productos) {

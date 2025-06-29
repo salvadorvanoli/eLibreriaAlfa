@@ -15,7 +15,7 @@
                 <app-form-select-input #orderSelect class="md:col-span-3" [options]="sortOptions" placeholder="Ordenar por " (textValue)="onOrderChange($event)" />
                 <div class="col-span-1 sm:col-span-2 md:col-span-5 gap-4 grid grid-cols-2">
                     <app-primary-button label="Buscar" classes="w-full" (onClick)="applyFilters()" />
-                    <app-primary-button label="Restablecer" classes="w-full" (onClick)="resetFilters()" />
+                    <app-primary-button label="Restablecer" classes="w-full" severity="secondary" (onClick)="resetFilters()" />
                 </div>
             </div>
         </ng-template>

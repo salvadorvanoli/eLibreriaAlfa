@@ -9,6 +9,7 @@ import { FormTextInputComponent } from '../../../../shared/components/inputs/for
 import { InteractivePasswordInputComponent } from '../interactive-password-input/interactive-password-input.component';
 import { FormPasswordInputComponent } from '../../../../shared/components/inputs/form-password-input/form-password-input.component';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-register-form',
@@ -65,6 +66,10 @@ export class RegisterFormComponent {
           this.messageService.clear();
           this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Usuario creado exitosamente!", life: 4000 });
           this.resetForm();
+
+          setTimeout(() => {
+            window.location.href = '/inicio-sesion';
+          }, 1500);
         },
         error: (err) => {
           this.messageService.clear();

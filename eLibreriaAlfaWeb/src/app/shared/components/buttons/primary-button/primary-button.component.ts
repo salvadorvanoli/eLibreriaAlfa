@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
+import { ButtonModule, ButtonSeverity } from 'primeng/button';
 
 @Component({
   selector: 'app-primary-button',
@@ -14,6 +14,7 @@ export class PrimaryButtonComponent {
   @Input() label: string = '';
   @Input() icon: string = '';
   @Input() classes: string = '';
+  @Input() severity: ButtonSeverity = 'primary';
 
   @Output() onClick = new EventEmitter<Event>();
 

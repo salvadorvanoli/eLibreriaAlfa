@@ -28,6 +28,5 @@ export class SearchBarComponent {
 
   reset() {
     this.text = '';
-    this.textValue.emit('');
   }
 }

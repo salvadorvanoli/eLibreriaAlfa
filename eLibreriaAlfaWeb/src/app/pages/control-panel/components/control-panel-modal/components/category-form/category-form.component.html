@@ -23,11 +23,27 @@
         (categorySelection)="parentCategory = $event"
     />
     
-    <app-primary-button
-        class="w-full"
-        styleClass="w-full"
-        [classes]="'w-full'"
-        [label]="'Confirmar'"
-        (onClick)="confirm()"
-    />
+    <div class="grid grid-cols-2 gap-2 w-full">
+        <app-primary-button
+            class="w-full"
+            styleClass="w-full"
+            classes="w-full"
+            label="Confirmar"
+            (onClick)="confirm()"
+        />
+        @if (category) {
+            <app-confirm-dialog-button
+                class="w-full"
+                buttonLabel="Eliminar"
+                buttonIcon="pi pi-trash"
+                buttonSeverity="danger"
+                header="Confirmar eliminación"
+                [message]="'¿Estás seguro de que deseas eliminar la categoría \'' + category.nombre + '\'?'"
+                icon='pi pi-exclamation-triangle'
+                acceptButtonLabel='Confirmar'
+                rejectButtonLabel='Cancelar'
+                [acceptMethod]="delete"
+            />
+        }
+    </div>
 </form>

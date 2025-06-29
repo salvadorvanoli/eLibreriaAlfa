@@ -1,4 +1,4 @@
-import { Component, computed, Input, signal, SimpleChanges } from '@angular/core';
+import { Component, computed, EventEmitter, Input, Output, signal, SimpleChanges } from '@angular/core';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { PublicationService } from '../../../../../../core/services/publication.service';
@@ -33,6 +33,8 @@ export class PublicationFormComponent {
   @ViewChild('imageInput') imageInput: any;
 
   @Input() publication: PublicacionConImagenDto | null = null;
+
+  @Output() reloadData = new EventEmitter<void>();
 
   title: string = '';
   content: string = '';
@@ -238,6 +240,7 @@ export class PublicationFormComponent {
     });
     
     this.resetForm();
+    this.onDataReloaded();
   }
 
   private handleError(error: any) {
@@ -284,5 +287,9 @@ export class PublicationFormComponent {
 
   private isNewImage(image: { file: File; isExisting: false }) {
     return image && 'file' in image && image.isExisting === false;
+  }
+
+  private onDataReloaded() {
+    this.reloadData.emit();
   }
 }

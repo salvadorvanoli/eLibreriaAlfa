@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, Input, Output, signal, ViewChild } from '@angular/core';
+import { Component, computed, EventEmitter, Input, Output, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { CategoryTreeComponent } from '../../../../shared/components/category-tree/category-tree.component';
 import { CategoriaNodoDto, CategoriaSimpleDto } from '../../../../core/models/categoria';
 import { CategoryService } from '../../../../core/services/category.service';
@@ -22,6 +22,10 @@ export class CategoryTreePanelComponent {
   constructor(
     private categoryService: CategoryService
   ) {}
+
+  onReloadData() {
+    this.categoryTree?.loadCategories();
+  }
 
   onCategorySelection(category: number | number[]) {
     this.selectedCategory = Array.isArray(category) && category.length > 0

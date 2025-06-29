@@ -1,4 +1,4 @@
-import { Component, Input, signal, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, SimpleChanges } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
@@ -39,6 +39,8 @@ export class ProductFormComponent {
   @ViewChild('categoriesInput') categoriesInput: any;
 
   @Input() product: ProductoConImagenesDto | null = null;
+
+  @Output() reloadData = new EventEmitter<void>();
 
   name: string = '';
   price: number | null = null;
@@ -202,7 +204,9 @@ export class ProductFormComponent {
       detail: `¡Producto ${action} exitosamente!`, 
       life: 4000 
     });
+    
     this.resetForm();
+    this.onDataReloaded();
   }
 
   private handleError(error: any) {
@@ -257,5 +261,9 @@ export class ProductFormComponent {
 
   private isNewImage(image: { file: File; isExisting: false }) {
     return image && 'file' in image && image.isExisting === false;
+  }
+
+  private onDataReloaded() {
+    this.reloadData.emit();
   }
 }

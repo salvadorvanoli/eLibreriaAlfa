@@ -1,0 +1,18 @@
+<div class="card flex justify-center">
+    <p-toast />
+    <p-confirmdialog>
+        <ng-template #message let-message>
+            <div class="flex flex-col items-center w-full gap-4 border-b border-surface-200">
+                <i [class]="message.icon" class="!text-6xl text-black mt-1"></i>
+                <p>{{ message.message }}</p>
+            </div>
+        </ng-template>
+    </p-confirmdialog>
+    <app-primary-button
+        [label]="buttonLabel"
+        [icon]="buttonIcon"
+        [classes]="buttonClasses"
+        [severity]="buttonSeverity"
+        (onClick)="confirm()"
+    />
+</div>

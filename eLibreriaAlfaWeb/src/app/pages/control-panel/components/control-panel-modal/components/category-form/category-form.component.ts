@@ -1,4 +1,4 @@
-import { Component, Input, signal, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { CategoryService } from '../../../../../../core/services/category.service';
@@ -7,6 +7,7 @@ import { CategoriaNodoDto, CategoriaRequestDto, CategoriaSimpleDto } from '../..
 import { FormTextInputComponent } from '../../../../../../shared/components/inputs/form-text-input/form-text-input.component';
 import { PrimaryButtonComponent } from '../../../../../../shared/components/buttons/primary-button/primary-button.component';
 import { CategoryTreeSelectComponent } from "../../../../../../shared/components/category-tree-select/category-tree-select.component";
+import { ConfirmDialogButtonComponent } from '../../../../../../shared/components/confirm-dialog-button/confirm-dialog-button.component';
 
 @Component({
   selector: 'app-category-form',
@@ -15,7 +16,8 @@ import { CategoryTreeSelectComponent } from "../../../../../../shared/components
     Toast,
     FormTextInputComponent,
     PrimaryButtonComponent,
-    CategoryTreeSelectComponent
+    CategoryTreeSelectComponent,
+    ConfirmDialogButtonComponent
   ],
   providers: [
     MessageService
@@ -28,6 +30,9 @@ export class CategoryFormComponent {
   @ViewChild('parentCategoryInput') parentCategoryInput: any;
 
   @Input() category: CategoriaSimpleDto | null = null;
+
+  @Output() reloadData = new EventEmitter<void>();
+  @Output() itemDeleted = new EventEmitter<void>();
 
   name: string = '';
   parentCategory: number[] | null = null;
@@ -95,6 +100,18 @@ export class CategoryFormComponent {
     });
   }
 
+  delete = () => {
+    if (!this.category) return;
+
+    this.categoryService.delete(this.category.id).subscribe({
+      next: (response) => {
+        this.handleSuccess('eliminada', response)
+        this.onItemDeleted();
+      },
+      error: (error) => this.handleError(error)
+    });
+  }
+
   validateForm() {
     return this.isNameInvalid
   }
@@ -123,8 +140,6 @@ export class CategoryFormComponent {
       nombre: this.name.trim(),
       padreId: this.parentCategory && this.parentCategory.length > 0 ? this.parentCategory[0] : undefined
     };
-
-    console.log('Categoria Request DTO:', categoria);
     
     return categoria;
   }
@@ -137,7 +152,9 @@ export class CategoryFormComponent {
       detail: `¡Categoría ${action} exitosamente!`, 
       life: 4000 
     });
+
     this.resetForm();
+    this.onDataReloaded();
   }
 
   private handleError(error: any) {
@@ -170,5 +187,13 @@ export class CategoryFormComponent {
   private resetFormComponents() {
     this.nameInput?.reset();
     this.parentCategoryInput?.reset();
+  }
+
+  private onDataReloaded() {
+    this.reloadData.emit();
+  }
+
+  private onItemDeleted() {
+    this.itemDeleted.emit();
   }
 }

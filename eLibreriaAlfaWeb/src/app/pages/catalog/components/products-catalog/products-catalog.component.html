@@ -14,7 +14,7 @@
             <app-form-select-input #orderSelect class="md:col-span-5" [options]="sortByPriceOptions" placeholder="Ordenar por precio" (textValue)="onSortChange($event)" />
             <div class="col-span-1 sm:col-span-2 md:col-span-8 gap-4 grid grid-cols-2">
                 <app-primary-button label="Buscar" classes="w-full" (onClick)="onApplyFilters()" />
-                <app-primary-button label="Restablecer" classes="w-full" (onClick)="onResetFilters()" />
+                <app-primary-button label="Restablecer" classes="w-full" severity="secondary" (onClick)="onResetFilters()" />
             </div>
             <div class="flex justify-end sm:col-span-2 md:col-span-4">
                 <p-selectbutton [(ngModel)]="layout" [options]="options" [allowEmpty]="false">

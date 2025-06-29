@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, EventEmitter, Output, signal, ViewChild } from '@angular/core';
 import { TitleAndDescriptionComponent } from '../../shared/components/title-and-description/title-and-description.component';
 import { OptionsPanelComponent } from './components/options-panel/options-panel.component';
 import { DataPanelComponent } from './components/data-panel/data-panel.component';
@@ -23,6 +23,8 @@ import { CategoryTreePanelComponent } from './components/category-tree-panel/cat
   styleUrl: './control-panel.component.scss'
 })
 export class ControlPanelComponent {
+  @ViewChild('categoryTreePanel') categoryTreePanel!: CategoryTreePanelComponent;
+  @ViewChild('dataPanel') dataPanel!: DataPanelComponent;
 
   modalIsVisible: boolean = false;
 
@@ -43,7 +45,7 @@ export class ControlPanelComponent {
     if (storedDataType && this.dataTypes.includes(storedDataType)) {
       this.selectedDataType.set(storedDataType);
     } else {
-      this.selectedDataType.set('Pedido');
+      this.selectedDataType.set('Usuario');
     }
   }
 
@@ -56,6 +58,18 @@ export class ControlPanelComponent {
     console.log('Selected item:', item);
     this.selectedItem = item;
     this.modalIsVisible = true;
+  }
+
+  onDataReloaded() {
+    if (this.selectedDataType() === 'Categoría') {
+      this.categoryTreePanel.onReloadData();
+    } else {
+      this.dataPanel.onReloadData();
+    }
+  }
+
+  onItemDeleted() {
+    this.closeModal();
   }
 
   closeModal() {

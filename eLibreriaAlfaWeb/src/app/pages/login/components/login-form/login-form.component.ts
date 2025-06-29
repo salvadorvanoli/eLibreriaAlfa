@@ -55,6 +55,10 @@ export class LoginFormComponent {
           this.messageService.clear();
           this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Has iniciado sesión exitosamente!", life: 4000 });
           this.resetForm();
+
+          setTimeout(() => {
+            window.location.href = '/inicio';
+          }, 1500);
         },
         error: (err) => {
           this.messageService.clear();

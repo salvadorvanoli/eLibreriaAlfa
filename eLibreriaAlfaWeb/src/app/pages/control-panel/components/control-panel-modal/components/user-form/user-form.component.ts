@@ -1,4 +1,4 @@
-import { Component, computed, Input, signal, SimpleChanges } from '@angular/core';
+import { Component, computed, EventEmitter, Input, Output, signal, SimpleChanges } from '@angular/core';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { UserService } from '../../../../../../core/services/user.service';
@@ -37,6 +37,8 @@ export class UserFormComponent {
   @ViewChild('surnameInput') surnameInput: any;
 
   @Input() user: UsuarioSimple | null = null;
+
+  @Output() reloadData = new EventEmitter<void>();
 
   email: string = '';
   password: string = '';
@@ -88,77 +90,45 @@ export class UserFormComponent {
 
   confirm() {
     this.formSubmitted.set(true);
-    if (!this.validateForm()) {
-      switch (this.user) {
-        case null:
-          this.create();
-          break;
-        default:
-          this.update();
-          break;
-      }
-    } else {
+    
+    if (this.validateForm()) {
       this.messageService.clear();
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: "Datos ingresados inválidos", life: 4000 });
+      this.messageService.add({ 
+        severity: 'error', 
+        summary: 'Error', 
+        detail: "Datos ingresados inválidos", 
+        life: 4000
+      });
+    } else {
+      this.user ? this.update() : this.create();
     }
   }
 
   create() {
-    const usuario: Usuario = {
-      email: this.email,
-      contrasenia: this.password,
-      rol: this.role as Rol,
-      telefono: this.telephone,
-      nombre: this.name,
-      apellido: this.surname
-    };
+    const usuario = this.createRequestDto();
     
     this.userService.create(usuario).subscribe({
-      next: (response: Usuario) => {
-        this.messageService.clear();
-        this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Usuario creado exitosamente!", life: 4000 });
-        this.resetForm();
-      },
-      error: (err) => {
-        this.messageService.clear();
-        if (err.error.error !== undefined) {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.error, life: 4000 });
-        } else {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: "No fue posible conectar con el servidor", life: 4000 });
-        }
-      }
+      next: (response: Usuario) => this.handleSuccess('creado', response),
+      error: (error) => this.handleError(error)
     });
   }
 
   update(){
-    const usuario: Usuario = {
-      email: this.email,
-      contrasenia: this.password,
-      rol: this.role as Rol,
-      telefono: this.telephone,
-      nombre: this.name,
-      apellido: this.surname
-    };
-
+    const usuario = this.createRequestDto();
+    
     this.userService.put(this.user?.id!, usuario).subscribe({
-      next: (response: Usuario) => {
-        this.messageService.clear();
-        this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Usuario actualizado exitosamente!", life: 4000 });
-        this.resetForm();
-      },
-      error: (err) => {
-        this.messageService.clear();
-        if (err.error.error !== undefined) {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error.error, life: 4000 });
-        } else {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: "No fue posible conectar con el servidor", life: 4000 });
-        }
-      }
+      next: (response: Usuario) => this.handleSuccess('actualizado', response),
+      error: (error) => this.handleError(error)
     });
   }
 
   validateForm() {
-    return this.isEmailInvalid || this.isPasswordInvalid || this.isRoleInvalid || this.isTelephoneInvalid || this.isNameInvalid || this.isSurnameInvalid;
+    return this.isEmailInvalid ||
+      this.isPasswordInvalid ||
+      this.isRoleInvalid ||
+      this.isTelephoneInvalid ||
+      this.isNameInvalid ||
+      this.isSurnameInvalid;
   }
 
   loadForm() {
@@ -169,44 +139,96 @@ export class UserFormComponent {
       this.name = this.user.nombre;
       this.surname = this.user.apellido;
 
-      this.isEmailInvalid = false;
-      this.isPasswordInvalid = false;
-      this.isRoleInvalid = false;
-      this.isTelephoneInvalid = false;
-      this.isNameInvalid = false;
-      this.isSurnameInvalid = false;
+      this.loadFormFields();
+    }
 
+    this.resetValidationState();
+  }
+
+  resetForm() {
+    this.formSubmitted.set(false);
+
+    this.resetFormData();
+    this.resetValidationState();
+    this.resetFormComponents();
+  }
+
+  private createRequestDto(): Usuario {
+    const usuario: Usuario = {
+      email: this.email,
+      contrasenia: this.password,
+      rol: this.role as Rol,
+      telefono: this.telephone,
+      nombre: this.name,
+      apellido: this.surname
+    };
+    
+    return usuario;
+  }
+
+  private handleSuccess(action: string, response: any) {
+    this.messageService.clear();
+    this.messageService.add({ 
+      severity: 'success', 
+      summary: 'Éxito', 
+      detail: `¡Usuario ${action} exitosamente!`, 
+      life: 4000 
+    });
+
+    this.resetForm();
+    this.onDataReloaded();
+  }
+
+  private handleError(error: any) {
+    const errorMessage = error?.error.error || error?.error.message || "No fue posible conectar con el servidor";
+    this.messageService.clear();
+    this.messageService.add({ 
+      severity: 'error', 
+      summary: 'Error', 
+      detail: errorMessage, 
+      life: 4000 
+    });
+  }
+
+  private loadFormFields() {
+    setTimeout(() => {
       this.emailInput?.setValue(this.email);
       this.passwordInput?.reset();
       this.roleSelect?.setValue(this.role);
       this.telephoneInput?.setValue(this.telephone);
       this.nameInput?.setValue(this.name);
       this.surnameInput?.setValue(this.surname);
-    }
+    }, 0);
   }
 
-  resetForm() {
-    this.formSubmitted.set(false);
-
-    this.email = '';
-    this.password = '';
-    this.role = '';
-    this.telephone = '';
-    this.name = '';
-    this.surname = '';
-
+  private resetValidationState() {
     this.isEmailInvalid = false;
     this.isPasswordInvalid = false;
     this.isRoleInvalid = false;
     this.isTelephoneInvalid = false;
     this.isNameInvalid = false;
     this.isSurnameInvalid = false;
+  }
 
+  private resetFormData() {
+    this.email = '';
+    this.password = '';
+    this.role = '';
+    this.telephone = '';
+    this.name = '';
+    this.surname = '';
+  }
+
+  private resetFormComponents() {
     this.emailInput?.reset();
     this.passwordInput?.reset();
     this.roleSelect?.reset();
     this.telephoneInput?.reset();
     this.nameInput?.reset();
     this.surnameInput?.reset();
+  }
+
+  private onDataReloaded() {
+    this.reloadData.emit();
   }
 }
