@@ -10,7 +10,9 @@ import { ButtonModule } from 'primeng/button';
 import { ItemRowComponent } from '../item-row/item-row.component';
 import { MessageComponent } from '../../../../shared/components/message/message.component';
 import { ControlPanelService } from '../../../../core/services/control-panel.service';
-import { ElementoLista } from '../../../../core/models/elemento-lista';
+import { PublicationService } from '../../../../core/services/publication.service';
+import { ProductService } from '../../../../core/services/product.service';
+import { ProductoSimpleDto } from '../../../../core/models/producto';
 
 @Component({
   selector: 'app-data-panel',
@@ -159,21 +161,21 @@ export class DataPanelComponent {
     this.orderSelect?.reset();
   }
 
-  handleDelete(event: {action: string, item: ElementoLista}): void {
+  handleDelete(event: {action: string, item: any}): void {
     switch (event.action) {
-        case 'eliminar':
-            this.eliminarPublicacion(event.item);
-            break;
-        case 'inhabilitar':
-            this.inhabilitarProducto(event.item);
-            break;
-        case 'habilitar':
-            this.habilitarProducto(event.item);
-            break;
+      case 'eliminar':
+        this.eliminarPublicacion(event.item);
+        break;
+      case 'inhabilitar':
+        this.inhabilitarProducto(event.item);
+        break;
+      case 'habilitar':
+        this.habilitarProducto(event.item);
+        break;
     }
   }
 
-  private eliminarPublicacion(item: ElementoLista): void {
+  private eliminarPublicacion(item: any): void {
     this.publicationService.delete(item.id).subscribe({
       next: (response) => {
         this.messageService.add({
@@ -193,7 +195,7 @@ export class DataPanelComponent {
     });
   }
 
-  private inhabilitarProducto(item: ElementoLista): void {
+  private inhabilitarProducto(item: any): void {
     this.productService.disable(item.id).subscribe({
       next: (response: ProductoSimpleDto) => {
         this.messageService.add({
@@ -213,7 +215,7 @@ export class DataPanelComponent {
     });
   }
 
-  private habilitarProducto(item: ElementoLista): void {
+  private habilitarProducto(item: any): void {
     this.productService.enable(item.id).subscribe({
       next: (response: ProductoSimpleDto) => {
         this.messageService.add({
@@ -224,13 +226,22 @@ export class DataPanelComponent {
         this.getItems();
       },
       error: (error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se pudo habilitar el producto'
-        });
+        if (error?.error?.message?.includes('categorías') || 
+            error?.error?.error?.includes('categorías') ||
+            error?.status === 400) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se puede habilitar el producto porque no tiene categorías asociadas'
+          });
+        } else {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'No se pudo habilitar el producto'
+          });
+        }
       }
     });
   }
-
 }

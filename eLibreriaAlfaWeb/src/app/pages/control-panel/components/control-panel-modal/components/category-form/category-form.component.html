@@ -1,4 +1,6 @@
 <p-toast />
+<p-confirmDialog header="Confirmación de eliminación" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
 <form novalidate action="" method="post" class="mx-auto flex flex-col items-center gap-4 w-full max-w-md">
     <app-form-text-input
         #nameInput
@@ -30,4 +32,14 @@
         [label]="'Confirmar'"
         (onClick)="confirm()"
     />
+    
+    <button 
+        *ngIf="category"
+        type="button" 
+        pButton 
+        pRipple 
+        label="Eliminar Categoría" 
+        class="p-button-danger w-full" 
+        (click)="showDeleteConfirmation()"
+    ></button>
 </form>

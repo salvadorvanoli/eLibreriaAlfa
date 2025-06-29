@@ -1,6 +1,10 @@
-import { Component, Input, signal, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, signal, SimpleChanges, ViewChild, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialog, ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 import { CategoryService } from '../../../../../../core/services/category.service';
 import { CategoriaNodoDto, CategoriaRequestDto, CategoriaSimpleDto } from '../../../../../../core/models/categoria';
 
@@ -12,13 +16,17 @@ import { CategoryTreeSelectComponent } from "../../../../../../shared/components
   selector: 'app-category-form',
   standalone: true,
   imports: [
+    CommonModule,
     Toast,
     FormTextInputComponent,
     PrimaryButtonComponent,
-    CategoryTreeSelectComponent
+    CategoryTreeSelectComponent,
+    ButtonModule,
+    ConfirmDialogModule
   ],
   providers: [
-    MessageService
+    MessageService,
+    ConfirmationService
   ],
   templateUrl: './category-form.component.html',
   styleUrl: './category-form.component.scss'
@@ -28,6 +36,7 @@ export class CategoryFormComponent {
   @ViewChild('parentCategoryInput') parentCategoryInput: any;
 
   @Input() category: CategoriaSimpleDto | null = null;
+  @Output() categoryDeleted = new EventEmitter<number>();
 
   name: string = '';
   parentCategory: number[] | null = null;
@@ -40,7 +49,8 @@ export class CategoryFormComponent {
 
   constructor(
     private messageService: MessageService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit() {
@@ -95,6 +105,41 @@ export class CategoryFormComponent {
     });
   }
 
+  showDeleteConfirmation() {
+    this.confirmationService.confirm({
+      message: '¡ADVERTENCIA! Al eliminar esta categoría, todas las subcategorías asociadas también serán eliminadas. ¿Desea continuar?',
+      header: 'Confirmar eliminación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger',
+      acceptLabel: 'Sí, eliminar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        this.deleteCategory();
+      }
+    });
+  }
+
+  deleteCategory() {
+    if (this.category && this.category.id) {
+      this.categoryService.deleteCategory(this.category.id).subscribe({
+        next: () => {
+          this.messageService.clear();
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: 'Éxito', 
+            detail: 'Categoría eliminada exitosamente', 
+            life: 4000 
+          });
+          this.categoryDeleted.emit(this.category!.id);
+          this.resetForm();
+        },
+        error: (error) => {
+          this.handleError(error);
+        }
+      });
+    }
+  }
+
   validateForm() {
     return this.isNameInvalid
   }
@@ -123,8 +168,6 @@ export class CategoryFormComponent {
       nombre: this.name.trim(),
       padreId: this.parentCategory && this.parentCategory.length > 0 ? this.parentCategory[0] : undefined
     };
-
-    console.log('Categoria Request DTO:', categoria);
     
     return categoria;
   }
