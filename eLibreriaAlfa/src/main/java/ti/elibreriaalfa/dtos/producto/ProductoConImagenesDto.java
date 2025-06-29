@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class ProductoConImagenesDto {
     private Long id;
+    private boolean habilitado;
     private String nombre;
     private Float precio;
     private String descripcion;

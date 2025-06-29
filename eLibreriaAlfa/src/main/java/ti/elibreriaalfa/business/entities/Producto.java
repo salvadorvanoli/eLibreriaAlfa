@@ -24,6 +24,8 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    private boolean habilitado = true;
+
     @Column(unique = true, nullable = false)
     @Size(min = Constants.MIN_NOMBRE_PRODUCTO_LENGTH, max = Constants.MAX_NOMBRE_PRODUCTO_LENGTH, message = Constants.ERROR_NOMBRE_PRODUCTO_INVALIDO)
     private String nombre;
@@ -52,6 +54,7 @@ public class Producto {
         ProductoDto producto = new ProductoDto();
 
         producto.setId(this.id);
+        producto.setHabilitado(this.habilitado);
         producto.setNombre(this.nombre);
         producto.setPrecio(this.precio);
         producto.setDescripcion(this.descripcion);
@@ -68,12 +71,18 @@ public class Producto {
 
     public ProductoSimpleDto mapToDtoSimple() {
         ProductoSimpleDto producto = new ProductoSimpleDto();
-
+        producto.setHabilitado(this.habilitado);
         producto.setId(this.id);
         producto.setNombre(this.nombre);
         producto.setPrecio(this.precio);
-        producto.setImagenes(this.imagenes);
         producto.setDescripcion(this.descripcion);
+
+        // Si no hay imágenes, enviar null directamente
+        if (this.imagenes == null || this.imagenes.length == 0) {
+            producto.setImagenes(null);
+        } else {
+            producto.setImagenes(this.imagenes);
+        }
 
         return producto;
     }
@@ -81,6 +90,7 @@ public class Producto {
     public ProductoConImagenesDto mapToDtoConImagenes() {
         ProductoConImagenesDto producto = new ProductoConImagenesDto();
 
+        producto.setHabilitado(this.habilitado);
         producto.setId(this.id);
         producto.setNombre(this.nombre);
         producto.setPrecio(this.precio);
@@ -100,5 +110,7 @@ public class Producto {
         this.nombre = productoDto.getNombre();
         this.precio = productoDto.getPrecio();
         this.descripcion = productoDto.getDescripcion();
+        this.habilitado = productoDto.isHabilitado();
     }
+
 }

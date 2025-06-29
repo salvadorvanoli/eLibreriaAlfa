@@ -16,6 +16,7 @@ export interface ProductoSimpleDto {
     precio: number;
     descripcion: string;
     imagenes: string[];
+    habilitado: boolean;
 }
 
 export interface ProductoConImagenesDto {

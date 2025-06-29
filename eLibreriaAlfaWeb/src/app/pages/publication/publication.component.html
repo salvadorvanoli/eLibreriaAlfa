@@ -36,7 +36,9 @@
               [src]="publicacionImageUrl" 
               [alt]="publicacion.titulo"
               class="publication-image"
-              loading="lazy">
+              loading="lazy"
+              onerror="this.onerror=null;this.src='https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg';"
+            >
           </div>
         } @else {
           <div class="publication-image-container">
@@ -44,6 +46,7 @@
               [src]="defaultImageUrl" 
               [alt]="publicacion.titulo"
               class="publication-image"
+              loading="lazy"
             >
           </div>
         }

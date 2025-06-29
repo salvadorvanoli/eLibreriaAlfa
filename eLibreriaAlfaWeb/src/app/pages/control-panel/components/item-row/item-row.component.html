@@ -8,6 +8,7 @@
                 class="block xl:block mx-auto rounded-border w-full"
                 [src]="itemImage"
                 [alt]="itemTitle"
+                onerror="this.onerror=null;this.src='https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';"
             />
         </div>
     }
@@ -31,6 +32,39 @@
                     label="Ver detalles"
                     (onClick)="details.emit(item)"
                 />
+              
+                @if (itemType === 'Publicación') {
+                    <button
+                        type="button"
+                        class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg flex items-center justify-center transition-colors hover:scale-105 cursor-pointer"
+                        title="Eliminar publicación"
+                        (click)="descartarOInhabilitar()">
+                        <i class="pi pi-trash text-sm"></i>
+                    </button>
+                }
+
+                @if (itemType === 'Producto') {
+                    @if (isProductoHabilitado()) {
+                        <!-- Producto HABILITADO - Botón para deshabilitar -->
+                        <button
+                            type="button"
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg flex items-center justify-center transition-colors hover:scale-105 cursor-pointer"
+                            title="Deshabilitar producto"
+                            (click)="descartarOInhabilitar()">
+                            <i class="pi pi-eye text-sm"></i>
+                        </button>
+                    } @else {
+                        <!-- Producto DESHABILITADO - Botón para habilitar -->
+                        <button
+                            type="button"
+                            class="bg-gray-400 hover:bg-gray-500 text-white px-3 py-2 rounded-lg flex items-center justify-center transition-colors hover:scale-105 cursor-pointer"
+                            title="Habilitar producto"
+                            (click)="habilitarProducto()">
+                            <i class="pi pi-eye-slash text-sm"></i>
+                        </button>
+                    }
+                }
+                
             </div>
         </div>
     </div>

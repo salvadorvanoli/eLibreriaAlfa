@@ -35,7 +35,6 @@ interface ImageItem {
   styleUrl: './image-upload-input.component.scss'
 })
 export class ImageUploadInputComponent {
-  // Señal principal que maneja todas las imágenes
   images = signal<ImageItem[]>([]);
 
   @Input() placeholder: string = "Seleccionar imágenes";
@@ -52,13 +51,11 @@ export class ImageUploadInputComponent {
 
   constructor(private imageService: ImageService) {}
 
-  // Computed para mostrar error
   showErrorMessage = computed(() => {
     const hasError = this.required && this.images().length === 0;
     return hasError && this.formSubmitted();
   });
 
-  // Computed para archivos nuevos
   newFiles = computed(() => {
     return this.images()
       .filter(img => !img.isExisting && img.file)

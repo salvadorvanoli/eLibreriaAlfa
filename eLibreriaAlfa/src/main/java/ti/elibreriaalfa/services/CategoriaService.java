@@ -64,8 +64,9 @@ public class CategoriaService {
         categoriaDto.validateCategoriaRequestDto();
 
         Categoria categoriaExistente = categoriaRepository.findByNombre(categoriaDto.getNombre());
-        if (categoriaExistente != null)
+        if (categoriaExistente != null) {
             throw new CategoriaYaExisteException(Constants.ERROR_NOMBRE_CATEGORIA_YA_EXISTE);
+        }
 
         Categoria nuevaCategoria = categoriaDto.mapToEntity();
 
@@ -73,7 +74,6 @@ public class CategoriaService {
             Categoria padre = getCategoriaEntityById(categoriaDto.getPadreId());
             nuevaCategoria.setPadre(padre);
             padre.getHijos().add(nuevaCategoria);
-            categoriaRepository.save(padre);
         }
 
         categoriaRepository.save(nuevaCategoria);
@@ -115,20 +115,47 @@ public class CategoriaService {
         for (Categoria hijo : hijos)
             deleteCategoria(hijo.getId());
 
+        eliminarSubcategorias(categoria);
+
         List<Producto> productos = categoria.getProductos();
         for (Producto producto : productos) {
             producto.getCategorias().remove(categoria);
-            /*
-            if (producto.getCategorias().isEmpty())
-                producto.setOculto(true);
-
-             */
+            if (producto.getCategorias().isEmpty()) {
+                producto.setHabilitado(false);
+            }
             productoRepository.save(producto);
         }
 
-        categoria.getProductos().clear();
+        if (categoria.getPadre() != null) {
+            categoria.getPadre().getHijos().remove(categoria);
+            categoriaRepository.save(categoria.getPadre());
+        }
 
+        // Eliminar la categoría
         categoriaRepository.delete(categoria);
+    }
+
+    private void eliminarSubcategorias(Categoria categoria) {
+        List<Categoria> hijos = new ArrayList<>(categoria.getHijos());
+
+        for (Categoria hijo : hijos) {
+            eliminarSubcategorias(hijo);
+
+            List<Producto> productos = hijo.getProductos();
+            for (Producto producto : productos) {
+                producto.getCategorias().remove(hijo);
+                if (producto.getCategorias().isEmpty()) {
+                    producto.setHabilitado(false);
+                }
+                productoRepository.save(producto);
+            }
+
+            hijo.getProductos().clear();
+
+            categoriaRepository.delete(hijo);
+        }
+
+        categoria.getHijos().clear();
     }
 
     public Page<CategoriaDto> listadoCategoriaPage(int pagina, int cantidad) {

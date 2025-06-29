@@ -32,4 +32,13 @@ export class PublicationService extends BaseHttpService<any, any> {
     return this.http.get<any[]>(this.baseUrl + this.apiUrl + '/page/date' + `?pagina=${pagina}&cantidad=${cantidad}`);
   }
 
+
+  deletePublication(publicacionId: number): Observable<string> {
+    return this.http.delete(this.baseUrl + this.apiUrl + `/${publicacionId}`, { 
+      withCredentials: true, 
+      responseType: 'text' 
+    }).pipe(
+      tap(response => console.log('Publicación eliminada:', response))
+    );
+  }
 }

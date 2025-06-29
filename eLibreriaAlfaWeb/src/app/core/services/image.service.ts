@@ -8,12 +8,21 @@ import { Observable } from 'rxjs';
 
 export class ImageService {
   private apiUrl = 'http://localhost:8080/elibreriaalfa/image';
+  private placeholderUrl = 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png';
 
   constructor(private http: HttpClient) {}
 
-  getImageUrl(filename: string): string {
+  getImageUrl(filename: string | null | undefined): string {
+    // Si el nombre del archivo es null o undefined, devuelve la imagen placeholder
+    if (!filename) {
+      return this.placeholderUrl;
+    }
+    
     const encodedFilename = encodeURIComponent(filename).replace(/%2F/g, '/');
-    return `${this.apiUrl}/${encodedFilename}`;
+    const fullUrl = `${this.apiUrl}/${encodedFilename}`;
+    
+  
+    return fullUrl;
   }
 
   validateImageFile(file: File): { isValid: boolean; error?: string } {
