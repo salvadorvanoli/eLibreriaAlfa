@@ -245,6 +245,8 @@ public class EncargueService {
         Encargue encargue = encargueRepository.findById(encargueId)
                 .orElseThrow(() -> new EntityNotFoundException("Encargue no encontrado con ID: " + encargueId));
 
+        encargue.getProductos().removeIf(pe -> !pe.getProducto().isHabilitado());
+
         encargue.setFecha(fechaEnvio);
         encargue.setEstado(Encargue_Estado.PENDIENTE);
 

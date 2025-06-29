@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ti.elibreriaalfa.exceptions.image.ImageNotFoundException;
 import ti.elibreriaalfa.services.ImageService;
 
 import java.io.IOException;
@@ -31,7 +32,12 @@ public class ImageController {
     public ResponseEntity<Object> getImage(HttpServletRequest request) {
         try {
             String relativePath = extractRelativePath(request);
-            Resource resource = imageService.loadImage(relativePath);
+
+            if (relativePath.isEmpty()) {
+                return ResponseEntity.badRequest().body("Ruta vacía");
+            }
+
+            Resource resource = imageService.loadImage(relativePath);  // Puede lanzar excepción
 
             String contentType = Files.probeContentType(resource.getFile().toPath());
             if (contentType == null) {
@@ -42,12 +48,13 @@ public class ImageController {
                     .contentType(MediaType.parseMediaType(contentType))
                     .header("Cache-Control", "public, max-age=86400")
                     .body(resource);
+        } catch (ImageNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Imagen no encontrada");
         } catch (IOException e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Error al cargar imagen: " + e.getMessage());
-            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al cargar imagen");
         }
     }
+
 
     private String extractRelativePath(HttpServletRequest request) {
         String requestURI = request.getRequestURI();

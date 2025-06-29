@@ -35,9 +35,5 @@ public class PublicacionRequestDto {
         if (this.contenido == null || this.contenido.isBlank() || this.contenido.length() > Constants.MAX_CONTENIDO_PUBLICACION_LENGTH) {
             throw new PublicacionException(Constants.ERROR_PRECIO_PRODUCTO_INVALIDO);
         }
-
-        if (this.imagen == null) {
-            throw new PublicacionException(Constants.ERROR_IMAGEN_PUBLICACION_NULA);
-        }
     }
 }

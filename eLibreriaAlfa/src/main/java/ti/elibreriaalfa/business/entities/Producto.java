@@ -75,8 +75,14 @@ public class Producto {
         producto.setId(this.id);
         producto.setNombre(this.nombre);
         producto.setPrecio(this.precio);
-        producto.setImagenes(this.imagenes);
         producto.setDescripcion(this.descripcion);
+
+        // Si no hay imágenes, enviar null directamente
+        if (this.imagenes == null || this.imagenes.length == 0) {
+            producto.setImagenes(null);
+        } else {
+            producto.setImagenes(this.imagenes);
+        }
 
         return producto;
     }

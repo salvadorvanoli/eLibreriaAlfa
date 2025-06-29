@@ -41,7 +41,10 @@ public class ProductoService {
     }
 
     public List<ProductoSimpleDto> getAllProductos() {
-        return productoRepository.findAll().stream().map(Producto::mapToDtoSimple).collect(Collectors.toList());
+        Specification<Producto> spec = (root, query, cb) -> cb.equal(root.get("habilitado"), true);
+        return productoRepository.findAll(spec).stream()
+                .map(Producto::mapToDtoSimple)
+                .collect(Collectors.toList());
     }
 
     public List<ProductoSimpleDto> getProductosFiltrados(Long idCategoria, String textoBusqueda, String orden) {
@@ -254,10 +257,21 @@ public class ProductoService {
 
     private ProductoConImagenesDto addImagesToDtoConImagenes(ProductoConImagenesDto producto, String[] imagenes) {
         if (imagenes != null && imagenes.length > 0) {
-            List<ImageDto> imagenesInfo = Arrays.stream(imagenes)
-                    .map(imageService::getImageInfo)
-                    .collect(Collectors.toList());
-            producto.setImagenes(imagenesInfo);
+            Map<String, ImageDto> imageMap = new HashMap<>();
+
+            Arrays.stream(imagenes)
+                    .forEach(path -> {
+                        ImageDto imgDto = imageService.getImageInfo(path);
+                        if (imgDto != null) {
+                            imageMap.put(path, imgDto);
+                        }
+                    });
+
+            if (!imageMap.isEmpty()) {
+                producto.setImagenes(new ArrayList<>(imageMap.values()));
+            } else {
+                producto.setImagenes(Collections.emptyList());
+            }
         } else {
             producto.setImagenes(Collections.emptyList());
         }
@@ -273,6 +287,11 @@ public class ProductoService {
     @Transactional
     public ProductoSimpleDto enableProducto(Long idProducto) {
         Producto producto = getProductoEntityById(idProducto);
+
+        if (producto.getCategorias() == null || producto.getCategorias().isEmpty()) {
+            throw new RuntimeException("No se puede habilitar un producto sin categorías");
+        }
+
         producto.setHabilitado(true);
         productoRepository.save(producto);
         return producto.mapToDtoSimple();
