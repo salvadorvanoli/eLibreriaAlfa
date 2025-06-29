@@ -3,6 +3,7 @@ package ti.elibreriaalfa.utils;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,9 +38,17 @@ public class DataInitializer {
 
     private Random random = new Random();
 
+    @Value("${data.init.enabled:true}")
+    private boolean dataInitEnabled;
+
     @PostConstruct
     @Transactional
     public void init() {
+        if (!dataInitEnabled) {
+            log.info("Carga de datos desactivada por configuración.");
+            return;
+        }
+
         // Crear usuarios
         crearUsuarios();
 
