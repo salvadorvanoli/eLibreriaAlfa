@@ -3,15 +3,14 @@ import { CommonModule } from '@angular/common';
 import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { ConfirmDialog, ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { CategoryService } from '../../../../../../core/services/category.service';
-import { CategoriaNodoDto, CategoriaRequestDto, CategoriaSimpleDto } from '../../../../../../core/models/categoria';
+import { CategoriaRequestDto, CategoriaSimpleDto } from '../../../../../../core/models/categoria';
 
 import { FormTextInputComponent } from '../../../../../../shared/components/inputs/form-text-input/form-text-input.component';
 import { PrimaryButtonComponent } from '../../../../../../shared/components/buttons/primary-button/primary-button.component';
 import { CategoryTreeSelectComponent } from "../../../../../../shared/components/category-tree-select/category-tree-select.component";
-import { ConfirmDialogButtonComponent } from '../../../../../../shared/components/confirm-dialog-button/confirm-dialog-button.component';
 
 @Component({
   selector: 'app-category-form',

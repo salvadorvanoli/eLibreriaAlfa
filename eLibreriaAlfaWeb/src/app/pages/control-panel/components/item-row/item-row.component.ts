@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ButtonModule } from 'primeng/button';
 import { PrimaryButtonComponent } from '../../../../shared/components/buttons/primary-button/primary-button.component';
+import { ConfirmationService } from 'primeng/api';
 import { ImageService } from '../../../../core/services/image.service';
 import { CategoriaSimpleDto } from '../../../../core/models/categoria';
 
@@ -10,8 +12,12 @@ import { CategoriaSimpleDto } from '../../../../core/models/categoria';
   standalone: true,
   imports: [
     CommonModule,
+    ConfirmDialogModule,
     ButtonModule,
     PrimaryButtonComponent
+  ],
+  providers: [
+    ConfirmationService
   ],
   templateUrl: './item-row.component.html',
   styleUrl: './item-row.component.scss'
@@ -25,7 +31,8 @@ export class ItemRowComponent {
   @Output() actionExecuted = new EventEmitter<{action: string, item: any}>();
 
   constructor(
-    private imageService: ImageService
+    private imageService: ImageService,
+    private confirmationService: ConfirmationService
   ) {}
 
   get itemImage(): string | null {
@@ -126,16 +133,30 @@ export class ItemRowComponent {
 
   descartarOInhabilitar(): void {
     if (this.itemType === 'Publicación') {
-      this.actionExecuted.emit({
-        action: 'eliminar',
-        item: this.item
-      });
+      this.showDeleteConfirmation();
     } else if (this.itemType === 'Producto') {
       this.actionExecuted.emit({
         action: 'inhabilitar',
         item: this.item
       });
     }
+  }
+
+  showDeleteConfirmation() {
+    this.confirmationService.confirm({
+      message: '¡ADVERTENCIA! Al eliminar esta publicación, todas los comentarios asociados también serán eliminados. ¿Desea continuar?',
+      header: 'Confirmar eliminación',
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger',
+      acceptLabel: 'Sí, eliminar',
+      rejectLabel: 'Cancelar',
+      accept: () => {
+        this.actionExecuted.emit({
+          action: 'eliminar',
+          item: this.item
+        });
+      }
+    });
   }
 
   habilitarProducto(): void {
