@@ -1,9 +1,11 @@
 <div class="w-full max-w-7xl mx-auto">
-  <app-select-profile 
-    [initialSection]="selectedSection"
-    (optionSelected)="onProfileOptionSelected($event)" 
-    class="mt-6">
-  </app-select-profile>
+  @if (usuario?.rol === 'CLIENTE') {
+    <app-select-profile 
+      [initialSection]="selectedSection"
+      (optionSelected)="onProfileOptionSelected($event)" 
+      class="mt-6">
+    </app-select-profile>
+  }
 
   <!-- Sección de Información Personal -->
   @if (selectedSection === 'info') {

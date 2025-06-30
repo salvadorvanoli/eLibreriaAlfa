@@ -67,9 +67,7 @@ export class RegisterFormComponent {
           this.messageService.add({ severity: 'success', summary: 'Operación exitosa', detail: "¡Usuario creado exitosamente!", life: 4000 });
           this.resetForm();
 
-          setTimeout(() => {
-            window.location.href = '/inicio-sesion';
-          }, 1500);
+          window.location.href = '/inicio-sesion';
         },
         error: (err) => {
           this.messageService.clear();

@@ -12,6 +12,7 @@ import { SecurityService } from '../../core/services/security.service';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import { of, timer, forkJoin } from 'rxjs';
 import { OrderTableComponent } from '../../shared/components/order-table/order-table.component';
+import { UsuarioSimple } from '../../core/models/usuario';
 
 @Component({
   selector: 'app-view-profile',
@@ -41,6 +42,7 @@ import { OrderTableComponent } from '../../shared/components/order-table/order-t
 export class ViewProfileComponent implements OnInit {
   orderState: 'none' | 'in-progress' | 'submitted' | 'loading' = 'loading';
   selectedSection: string = 'info'; 
+  usuario: UsuarioSimple | null = null;
   
   constructor(
     private route: ActivatedRoute,
@@ -50,6 +52,17 @@ export class ViewProfileComponent implements OnInit {
   ) {}
   
   ngOnInit() {
+    this.securityService.getActualUser().subscribe({
+      next: (usuario) => {
+        if (usuario) {
+          this.usuario = usuario;
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener el usuario actual:', error);
+      }
+    });
+
     this.route.queryParams.subscribe(params => {
       const section = params['section'];
       if (section && ['info', 'actual', 'historial'].includes(section)) {

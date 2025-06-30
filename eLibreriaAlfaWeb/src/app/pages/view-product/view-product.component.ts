@@ -10,6 +10,7 @@ import { SecurityService } from '../../core/services/security.service';
 import { FormsModule } from '@angular/forms';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { UsuarioSimple } from '../../core/models/usuario';
 
 @Component({
   selector: 'app-view-product',
@@ -32,7 +33,7 @@ export class ViewProductComponent implements OnInit {
   error?: string;
   modalVisible = false;
   cantidad: number = 1;
-  usuarioId?: number;
+  usuario: UsuarioSimple | null = null;
   addingToOrder = false;
 
   constructor(
@@ -47,7 +48,7 @@ export class ViewProductComponent implements OnInit {
     this.securityService.getActualUser().subscribe({
       next: (usuario) => {
         if (usuario) {
-          this.usuarioId = usuario.id;
+          this.usuario = usuario;
         }
       },
       error: (error) => {
@@ -81,8 +82,19 @@ export class ViewProductComponent implements OnInit {
   }
 
   agregarAlPedido() {
-    if (!this.usuarioId) {
-      this.router.navigate(['/login']);
+    if (!this.usuario) {
+      this.router.navigate(['/inicio-sesion']);
+      return;
+    }
+
+    if (this.usuario.rol !== 'CLIENTE') {
+      this.messageService.clear();
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Acción no permitida',
+        detail: 'Solo los clientes pueden agregar productos a un pedido.',
+        life: 4000
+      });
       return;
     }
 
@@ -90,7 +102,7 @@ export class ViewProductComponent implements OnInit {
     
     this.addingToOrder = true;
 
-    this.orderService.usuarioTieneEncargueEnCreacion(this.usuarioId).subscribe({
+    this.orderService.usuarioTieneEncargueEnCreacion(this.usuario?.id).subscribe({
       next: (tieneEncargue) => {
         if (!tieneEncargue) {
           this.addingToOrder = false;
@@ -109,7 +121,7 @@ export class ViewProductComponent implements OnInit {
           cantidad: this.cantidad
         };
 
-        this.orderService.agregarProductoAEncargue(this.usuarioId!, productoEncargue).subscribe({
+        this.orderService.agregarProductoAEncargue(this.usuario?.id!, productoEncargue).subscribe({
           next: () => {
             this.modalVisible = true;
             this.addingToOrder = false;

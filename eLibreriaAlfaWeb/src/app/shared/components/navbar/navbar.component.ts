@@ -45,7 +45,7 @@ export class NavbarComponent {
 
         if (userEntity.rol === "ADMINISTRADOR" || userEntity.rol === "EMPLEADO") {
           this.items.push({ label: 'Panel de control', icon: 'pi pi-cog', routerLink: '/panel' });
-          const clientsFeatures = ["Catálogo", "Impresiones", "Contáctanos", "Mi cuenta"];
+          const clientsFeatures = ["Impresiones", "Contáctanos"];
           this.items = this.items.filter(item => !clientsFeatures.includes(item.label));
         }
 
