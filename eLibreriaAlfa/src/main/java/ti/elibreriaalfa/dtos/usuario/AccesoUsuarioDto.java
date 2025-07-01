@@ -21,6 +21,9 @@ public class AccesoUsuarioDto {
     }
 
     public void validateAccesoUsuarioDto() {
+        if (this.email != null)
+            this.email = this.email.trim();
+
         if (this.email == null || this.email.isBlank() || !this.email.matches(Constants.EMAIL_REGEX) || this.email.length() > Constants.MAX_CORREO_ELECTRONICO_LENGTH) {
             throw new UsuarioException(Constants.ERROR_EMAIL_USUARIO_INVALIDO);
         }
