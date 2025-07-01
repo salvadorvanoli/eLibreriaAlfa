@@ -10,6 +10,8 @@
             errorMessage="Correo electrónico inválido"
             (textValue)="email = $event"
             (isInputInvalid)="isEmailInvalid = $event"
+            [minLength]="1"
+            [maxLength]="100"
         />
         <app-form-password-input
             #passwordInput

@@ -23,6 +23,9 @@ public class CategoriaRequestDto {
     }
 
     public void validateCategoriaRequestDto() {
+        if (this.nombre != null)
+            this.nombre = this.nombre.trim();
+
         if (this.nombre == null || this.nombre.isBlank() || this.nombre.length() > Constants.MAX_NOMBRE_CATEGORIA_LENGTH) {
             throw new CategoriaException(Constants.ERROR_NOMBRE_CATEGORIA_INVALIDO);
         }

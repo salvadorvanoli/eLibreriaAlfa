@@ -111,11 +111,26 @@ public class ComentarioService {
         }
 
         if (comentarioDto.getUsuario() == null || comentarioDto.getUsuario().getId() == null || !usuarioRepository.existsById(comentarioDto.getUsuario().getId())) {
-            throw new ComentarioValidacionException("Debe especificar un usuario válido para el comentario");
+            throw new ComentarioValidacionException(Constants.ERROR_COMENTARIO_SIN_USUARIO);
         }
 
         if (comentarioDto.getPublicacion() == null || comentarioDto.getPublicacion().getId() == null) {
-            throw new ComentarioValidacionException("Debe especificar una publicación válida para el comentario");
+            throw new ComentarioValidacionException(Constants.ERROR_COMENTARIO_SIN_PUBLICACION);
         }
+
+        if (comentarioDto.getTitulo() != null)
+            comentarioDto.setTitulo(comentarioDto.getTitulo().trim());
+
+        if (comentarioDto.getTitulo() == null || comentarioDto.getTitulo().isEmpty() || comentarioDto.getTitulo().length() > Constants.MAX_COMENTARIO_PUBLICACION_LENGTH) {
+            throw new ComentarioValidacionException(Constants.ERROR_COMENTARIO_LENGTH);
+        }
+
+        if (comentarioDto.getTexto() != null)
+            comentarioDto.setTexto(comentarioDto.getTexto().trim());
+
+        if (comentarioDto.getTexto() == null || comentarioDto.getTexto().isEmpty() || comentarioDto.getTexto().length() > Constants.MAX_COMENTARIO_PUBLICACION_LENGTH) {
+            throw new ComentarioValidacionException(Constants.ERROR_COMENTARIO_LENGTH);
+        }
+
     }
 }

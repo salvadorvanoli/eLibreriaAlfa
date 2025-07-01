@@ -33,6 +33,8 @@
         errorMessage="La descripción debe tener entre 1 y 200 caracteres"
         (textValue)="description = $event"
         (isInputInvalid)="isDescriptionInvalid = $event"
+        [minLength]="1"
+        [maxLength]="200"
     />
 
     <app-category-tree-select

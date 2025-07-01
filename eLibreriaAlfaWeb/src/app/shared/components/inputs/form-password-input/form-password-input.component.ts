@@ -26,6 +26,8 @@ export class FormPasswordInputComponent {
   @Input() formSubmitted = signal(false);
   @Input() resetErrorMessageOnChange: boolean = false;
   @Input() isPasswordWrong: boolean = false;
+  @Input() minLength: number = 6;
+  @Input() maxLength: number = 100;
 
   @Output() passwordValue = new EventEmitter<string>();
 

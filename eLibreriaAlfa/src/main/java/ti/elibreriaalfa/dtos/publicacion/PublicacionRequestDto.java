@@ -28,9 +28,15 @@ public class PublicacionRequestDto {
     }
 
     public void validatePublicacionDto() {
+        if (this.titulo != null)
+            this.titulo = this.titulo.trim();
+
         if (this.titulo == null || this.titulo.isBlank() || this.titulo.length() > Constants.MAX_TITULO_PUBLICACION_LENGTH) {
             throw new PublicacionException(Constants.ERROR_TITULO_PUBLICACION_INVALIDO);
         }
+
+        if (this.contenido != null)
+            this.contenido = this.contenido.trim();
 
         if (this.contenido == null || this.contenido.isBlank() || this.contenido.length() > Constants.MAX_CONTENIDO_PUBLICACION_LENGTH) {
             throw new PublicacionException(Constants.ERROR_PRECIO_PRODUCTO_INVALIDO);

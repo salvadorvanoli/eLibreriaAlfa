@@ -6,11 +6,11 @@
         placeholder="Título de la publicación"
         [formSubmitted]="formSubmitted"
         [textPattern]="titlePattern"
-        [minLength]="1"
-        [maxLength]="200"
         errorMessage="El título debe tener entre 1 y 200 caracteres"
         (textValue)="title = $event"
         (isInputInvalid)="isTitleInvalid = $event"
+        [minLength]="1"
+        [maxLength]="200"
     />
     <div class="w-full text-right text-sm character-counter" [class]="titleCharCountClass">
         {{ titleCharCount }}/200 caracteres
@@ -22,11 +22,11 @@
         placeholder="Contenido de la publicación"
         [formSubmitted]="formSubmitted"
         [textPattern]="contentPattern"
-        [minLength]="1"
-        [maxLength]="200"
         errorMessage="El título debe tener entre 1 y 200 caracteres"
         (textValue)="content = $event"
         (isInputInvalid)="isContentInvalid = $event"
+        [minLength]="1"
+        [maxLength]="200"
     />
     <div class="w-full text-right text-sm character-counter" [class]="contentCharCountClass">
         {{ contentCharCount }}/200 caracteres

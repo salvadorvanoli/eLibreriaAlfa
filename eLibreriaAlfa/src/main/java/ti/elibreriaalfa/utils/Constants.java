@@ -5,17 +5,21 @@ public class Constants {
     // Constantes de usuario
     public static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
     public static final String TELEFONO_REGEX = "^(09[0-9]{7}|9[0-9]{7})$";
+    public static final int MAX_CORREO_ELECTRONICO_LENGTH = 100;
     public static final int MIN_CONTRASENIA_LENGTH = 6;
+    public static final int MAX_CONTRASENIA_LENGTH = 100;
     public static final int MIN_NOMBRE_USUARIO_LENGTH = 1;
     public static final int MAX_NOMBRE_USUARIO_LENGTH = 40;
     public static final float ENCARGUE_INICIAL_TOTAL = 0f;
 
     // Mensajes de error para validaciones de usuario
-    public static final String ERROR_EMAIL_USUARIO_INVALIDO = "El correo electrónico no es válido";
+    public static final String ERROR_EMAIL_USUARIO_INVALIDO = "El correo electrónico no es válido (máximo " + MAX_CORREO_ELECTRONICO_LENGTH + " caracteres)";
     public static final String ERROR_EMAIL_USUARIO_YA_EXISTE = "El correo electrónico ya está registrado";
     public static final String ERROR_USUARIO_NO_ENCONTRADO_EMAIL = "No existe un usuario con ese correo electrónico";
     public static final String ERROR_USUARIO_NO_ENCONTRADO_ID = "No existe un usuario con ese ID";
-    public static final String ERROR_CONTRASENIA_USUARIO_INVALIDA = "La contraseña debe tener al menos 6 caracteres";
+    public static final String ERROR_CONTRASENIA_USUARIO_INVALIDA = "La contraseña debe tener al menos " + MIN_CONTRASENIA_LENGTH + " caracteres y máximo " + MAX_CONTRASENIA_LENGTH + " caracteres";
+    public static final String ERROR_NOMBRE_USUARIO_INVALIDO = "El nombre debe tener entre " + MIN_NOMBRE_USUARIO_LENGTH + " y " + MAX_NOMBRE_USUARIO_LENGTH + " caracteres";
+    public static final String ERROR_APELLIDO_USUARIO_INVALIDO = "El apellido debe tener entre " + MIN_NOMBRE_USUARIO_LENGTH + " y " + MAX_NOMBRE_USUARIO_LENGTH + " caracteres";
     public static final String ERROR_TELEFONO_USUARIO_INVALIDO = "El número de teléfono no es válido";
     public static final String ERROR_ROL_USUARIO_INVALIDO = "El rol no es válido";
 
@@ -36,7 +40,6 @@ public class Constants {
     
     // Mensajes de error para validaciones de comentario
     public static final String ERROR_COMENTARIO_NO_ENCONTRADO = "No se encontró el comentario especificado";
-    public static final String ERROR_COMENTARIO_TEXTO_VACIO = "El texto del comentario no puede estar vacío";
     public static final String ERROR_COMENTARIO_LENGTH = "El comentario debe tener entre 1 y 200 caracteres";
     public static final String ERROR_COMENTARIO_SIN_USUARIO = "El comentario debe tener un usuario asociado";
     public static final String ERROR_COMENTARIO_SIN_PUBLICACION = "El comentario debe estar asociado a una publicación";
@@ -54,7 +57,7 @@ public class Constants {
     public static final int MAX_NOMBRE_PRODUCTO_LENGTH = 50;
     public static final int MIN_PRECIO_PRODUCTO = 1;
     public static final int MIN_DESCRIPCION_PRODUCTO_LENGTH = 1;
-    public static final int MAX_DESCRIPCION_PRODUCTO_LENGTH = 500;
+    public static final int MAX_DESCRIPCION_PRODUCTO_LENGTH = 200;
     public static final int MIN_CATEGORIAS_PRODUCTO = 1;
 
     // Mensajes de error para validaciones de producto

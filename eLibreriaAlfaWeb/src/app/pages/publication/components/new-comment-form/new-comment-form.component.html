@@ -9,6 +9,8 @@
             errorMessage="El asunto debe tener entre 1 y 200 caracteres"
             (textValue)="titulo = $event"
             (isInputInvalid)="isHeaderInvalid = $event"
+            [minLength]="1"
+            [maxLength]="200"
         />
         <div class="w-full text-right text-sm" [class]="tituloCharCountClass">
             {{ tituloCharCount }}/200 caracteres
@@ -23,6 +25,8 @@
             errorMessage="El mensaje debe tener entre 1 y 200 caracteres"
             (textValue)="texto = $event"
             (isInputInvalid)="isTextInvalid = $event"
+            [minLength]="1"
+            [maxLength]="200"
         />
         <div class="w-full text-right text-sm" [class]="textoCharCountClass">
             {{ textoCharCount }}/200 caracteres

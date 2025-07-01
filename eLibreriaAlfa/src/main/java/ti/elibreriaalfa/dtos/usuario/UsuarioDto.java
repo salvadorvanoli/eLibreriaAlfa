@@ -32,11 +32,11 @@ public class UsuarioDto {
     }
 
     public void validateUsuarioDto() {
-        if (this.email == null || this.email.isBlank() || !this.email.matches(Constants.EMAIL_REGEX)) {
+        if (this.email == null || this.email.isBlank() || !this.email.matches(Constants.EMAIL_REGEX) || this.email.length() > Constants.MAX_CORREO_ELECTRONICO_LENGTH) {
             throw new UsuarioException(Constants.ERROR_EMAIL_USUARIO_INVALIDO);
         }
 
-        if (this.contrasenia == null || this.contrasenia.isBlank() || this.contrasenia.length() < Constants.MIN_CONTRASENIA_LENGTH) {
+        if (this.contrasenia == null || this.contrasenia.isBlank() || this.contrasenia.length() < Constants.MIN_CONTRASENIA_LENGTH || this.contrasenia.length() > Constants.MAX_CONTRASENIA_LENGTH) {
             throw new UsuarioException(Constants.ERROR_CONTRASENIA_USUARIO_INVALIDA);
         }
 
@@ -46,6 +46,18 @@ public class UsuarioDto {
 
         if (this.telefono == null || this.telefono.isBlank() || !this.telefono.matches(Constants.TELEFONO_REGEX)) {
             throw new UsuarioException(Constants.ERROR_TELEFONO_USUARIO_INVALIDO);
+        }
+
+        if (this.nombre != null) {
+            this.nombre = this.nombre.trim();
+            if (this.nombre.length() > Constants.MAX_NOMBRE_USUARIO_LENGTH)
+                throw new UsuarioException(Constants.ERROR_NOMBRE_USUARIO_INVALIDO);
+        }
+
+        if (this.apellido != null) {
+            this.apellido = this.apellido.trim();
+            if (this.apellido.length() > Constants.MAX_NOMBRE_USUARIO_LENGTH)
+                throw new UsuarioException(Constants.ERROR_APELLIDO_USUARIO_INVALIDO);
         }
     }
 }

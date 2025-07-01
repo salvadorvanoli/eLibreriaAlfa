@@ -87,8 +87,10 @@ export class ItemRowComponent {
   get itemLowerSubtitle(): string {
     switch(this.itemType) {
       case 'Usuario':
+        if (!this.item.nombre || !this.item.apellido)
+          return "Sin nombre completo";
         const fullname = this.item.nombre + ' ' + this.item.apellido;
-        if (fullname.trim() == '')
+        if (fullname.trim() === null)
           return "Sin nombre completo";
         return fullname;
       case 'Publicación':

@@ -29,6 +29,8 @@ export class InteractivePasswordInputComponent {
   @Input() placeholder: string = "";
   @Input() errorMessage: string = "";
   @Input() formSubmitted = signal(false);
+  @Input() minLength: number = 6;
+  @Input() maxLength: number = 100;
 
   @Output() passwordValue = new EventEmitter<string>();
   @Output() isPasswordInvalid = new EventEmitter<boolean>();

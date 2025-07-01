@@ -58,7 +58,7 @@ export class ProductFormComponent {
   areImagesInvalid: boolean = false;
   areCategoriesInvalid: boolean = false;
 
-  namePattern = /^.{1,200}$/;
+  namePattern = /^.{1,50}$/;
   descriptionPattern = /^.{1,200}$/;
 
   constructor(
@@ -203,7 +203,7 @@ export class ProductFormComponent {
     
     formData.append('nombre', this.name.trim());
     formData.append('precio', this.price!.toString());
-    formData.append('descripcion', this.description.trim());
+    formData.append('descripcion', this.htmlToPlainText(this.description).trim());
     
     this.categories.forEach(categoryId => {
       formData.append('categoriasIds', categoryId.toString());
@@ -221,6 +221,13 @@ export class ProductFormComponent {
     
     return formData;
   }
+
+  private htmlToPlainText(html: string): string {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    return tempDiv.textContent || tempDiv.innerText || '';
+  } 
 
   private handleSuccess(action: string, response: any) {
     this.messageService.clear();

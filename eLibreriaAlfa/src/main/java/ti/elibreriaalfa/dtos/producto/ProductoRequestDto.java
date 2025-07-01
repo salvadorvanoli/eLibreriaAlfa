@@ -29,6 +29,9 @@ public class ProductoRequestDto {
     }
 
     public void validateProductoDto() {
+        if (this.nombre != null)
+            this.nombre = this.nombre.trim();
+
         if (this.nombre == null || this.nombre.isBlank() || this.nombre.length() > Constants.MAX_NOMBRE_PRODUCTO_LENGTH) {
             throw new ProductoException(Constants.ERROR_NOMBRE_PRODUCTO_INVALIDO);
         }
@@ -36,6 +39,9 @@ public class ProductoRequestDto {
         if (this.precio == null || this.precio < Constants.MIN_PRECIO_PRODUCTO) {
             throw new ProductoException(Constants.ERROR_PRECIO_PRODUCTO_INVALIDO);
         }
+
+        if (this.descripcion != null)
+            this.descripcion = this.descripcion.trim();
 
         if (this.descripcion == null || this.descripcion.isBlank() || this.descripcion.length() > Constants.MAX_DESCRIPCION_PRODUCTO_LENGTH) {
             throw new ProductoException(Constants.ERROR_DESCRIPCION_PRODUCTO_INVALIDA);

@@ -9,6 +9,8 @@
         errorMessage="Correo electrónico inválido"
         (textValue)="email = $event"
         (isInputInvalid)="isEmailInvalid = $event"
+        [minLength]="1"
+        [maxLength]="60"
     />
     <app-form-password-input
         #passwordInput
@@ -38,6 +40,8 @@
         errorMessage="Teléfono inválido"
         (textValue)="telephone = $event"
         (isInputInvalid)="isTelephoneInvalid = $event"
+        [minLength]="8"
+        [maxLength]="9"
     />
     <app-form-text-input
         #nameInput
@@ -48,6 +52,8 @@
         errorMessage="Nombre inválido"
         (textValue)="name = $event"
         (isInputInvalid)="isNameInvalid = $event"
+        [minLength]="1"
+        [maxLength]="40"
     />
     <app-form-text-input
         #surnameInput
@@ -58,6 +64,8 @@
         errorMessage="Apellido inválido"
         (textValue)="surname = $event"
         (isInputInvalid)="isSurnameInvalid = $event"
+        [minLength]="1"
+        [maxLength]="40"
     />
     <app-primary-button
         class="w-full"

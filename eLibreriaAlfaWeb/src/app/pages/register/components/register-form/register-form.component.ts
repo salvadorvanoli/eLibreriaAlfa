@@ -57,7 +57,7 @@ export class RegisterFormComponent {
     if (!this.validateForm()) {
 
       const usuario: AccesoUsuario = {
-        email: this.email,
+        email: this.email.trim(),
         contrasenia: this.password()
       };
       

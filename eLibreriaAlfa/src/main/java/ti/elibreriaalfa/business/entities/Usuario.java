@@ -30,10 +30,10 @@ public class Usuario {
     @Column(nullable = false)
     private String contrasenia;
 
-    @Size(min = Constants.MIN_NOMBRE_USUARIO_LENGTH, max = Constants.MAX_NOMBRE_USUARIO_LENGTH, message = "El nombre debe tener entre " + Constants.MIN_NOMBRE_USUARIO_LENGTH + " y " + Constants.MAX_NOMBRE_USUARIO_LENGTH + " caracteres")
+    @Size(min = Constants.MIN_NOMBRE_USUARIO_LENGTH, max = Constants.MAX_NOMBRE_USUARIO_LENGTH, message = Constants.ERROR_NOMBRE_USUARIO_INVALIDO)
     private String nombre;
 
-    @Size(min = Constants.MIN_NOMBRE_USUARIO_LENGTH, max = Constants.MAX_NOMBRE_USUARIO_LENGTH, message = "El apellido debe tener entre " + Constants.MIN_NOMBRE_USUARIO_LENGTH + " y " + Constants.MAX_NOMBRE_USUARIO_LENGTH + " caracteres")
+    @Size(min = Constants.MIN_NOMBRE_USUARIO_LENGTH, max = Constants.MAX_NOMBRE_USUARIO_LENGTH, message = Constants.ERROR_APELLIDO_USUARIO_INVALIDO)
     private String apellido;
 
     private String telefono;

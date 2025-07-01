@@ -155,12 +155,12 @@ export class UserFormComponent {
 
   private createRequestDto(): Usuario {
     const usuario: Usuario = {
-      email: this.email,
+      email: this.email.trim(),
       contrasenia: this.password,
       rol: this.role as Rol,
       telefono: this.telephone,
-      nombre: this.name,
-      apellido: this.surname
+      nombre: this.name.trim(),
+      apellido: this.surname.trim()
     };
     
     return usuario;
