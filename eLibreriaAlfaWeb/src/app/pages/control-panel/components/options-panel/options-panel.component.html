@@ -13,7 +13,7 @@
         </ng-template>
     </p-menu>
 
-    @if(this.selectedDataType !== "Pedido" && this.selectedDataType !== "Impresión") {
+    @if(showCreateButton) {
         <app-primary-button label="Crear nuevo" classes="w-full mt-4" (onClick)="showModal()" />
     }
     

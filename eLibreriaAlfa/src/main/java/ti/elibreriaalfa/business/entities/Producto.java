@@ -31,11 +31,11 @@ public class Producto {
     private String nombre;
 
     @Column(nullable = false)
-    @Min(value = Constants.MIN_PRECIO_PRODUCTO, message = "El precio debe ser mayor o igual a 0")
+    @Min(value = Constants.MIN_PRECIO_PRODUCTO, message = Constants.ERROR_PRECIO_PRODUCTO_INVALIDO)
     private Float precio;
 
     @Column(nullable = false)
-    @Size(min = Constants.MIN_DESCRIPCION_PRODUCTO_LENGTH, max = Constants.MAX_DESCRIPCION_PRODUCTO_LENGTH, message = "La descripción debe tener entre " + Constants.MIN_DESCRIPCION_PRODUCTO_LENGTH + " y " + Constants.MAX_DESCRIPCION_PRODUCTO_LENGTH + " caracteres")
+    @Size(min = Constants.MIN_DESCRIPCION_PRODUCTO_LENGTH, max = Constants.MAX_DESCRIPCION_PRODUCTO_LENGTH, message = Constants.ERROR_DESCRIPCION_PRODUCTO_INVALIDA)
     private String descripcion;
 
     private String[] imagenes;

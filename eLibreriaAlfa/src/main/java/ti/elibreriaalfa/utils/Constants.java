@@ -77,6 +77,7 @@ public class Constants {
     public static final String ERROR_NOMBRE_CATEGORIA_INVALIDO = "El nombre debe tener entre " + MIN_NOMBRE_CATEGORIA_LENGTH + " y " + MAX_NOMBRE_CATEGORIA_LENGTH + " caracteres";
     public static final String ERROR_NOMBRE_CATEGORIA_YA_EXISTE = "Ya existe una categoría con ese nombre";
     public static final String ERROR_CATEGORIA_NO_ENCONTRADA = "No existe una categoría con ese ID";
+    public static final String ERROR_CATEGORIA_NO_PUEDE_SER_PADRE = "Una categoría no puede ser hija de si misma ni de uno de sus hijos";
 
     // Constantes de imagen
     public static final String IMAGEN_PRODUCTO_CARPETA = "productos";

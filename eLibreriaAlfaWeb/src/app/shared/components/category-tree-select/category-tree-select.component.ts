@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, computed, signal } from '@angular/core';
+import { Component, Output, EventEmitter, Input, computed, signal, effect } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { FormsModule } from '@angular/forms';
 import { TreeSelect } from 'primeng/treeselect';
@@ -24,6 +24,7 @@ export class CategoryTreeSelectComponent {
   selectedCategory: TreeNode | TreeNode[] | null = null;
   selectedDataNodes: CategoriaNodoDto[] = [];
   private categoriesLoaded = false;
+  private isCurrentlyInvalid = signal(false);
 
   @Input() selectionMode: 'single' | 'multiple' = 'multiple';
   @Input() placeholder: string = 'Selecciona categorías';
@@ -36,14 +37,20 @@ export class CategoryTreeSelectComponent {
 
   constructor(
     private categoryService: CategoryService
-  ) {}
+  ) {
+    effect(() => {
+      if (this.formSubmitted()) {
+        this.validateAndUpdateState();
+      }
+    });
+  }
 
   ngOnInit() {
     this.loadCategories();
   }
 
   showErrorMessage = computed(() => {
-    return this.validateInput() && this.formSubmitted() && this.required;
+    return this.isCurrentlyInvalid() && this.formSubmitted() && this.required;
   });
 
   private loadCategories() {
@@ -63,17 +70,15 @@ export class CategoryTreeSelectComponent {
   }
 
   onNodeSelect(event: any) {
-    console.log('Node selected:', event);
     this.addNodeToSelection(event.node);
     this.emitSelection();
-    this.isInputInvalid.emit(this.validateInput());
+    this.validateAndUpdateState();
   }
 
   onNodeUnselect(event: any) {
-    console.log('Node unselected:', event);
     this.removeNodeFromSelection(event.node);
     this.emitSelection();
-    this.isInputInvalid.emit(this.validateInput());
+    this.validateAndUpdateState();
   }
 
   private addNodeToSelection(node: TreeNode) {
@@ -150,6 +155,8 @@ export class CategoryTreeSelectComponent {
     if (!selectedCategories || (Array.isArray(selectedCategories) && selectedCategories.length === 0)) {
       this.selectedCategory = this.selectionMode === 'single' ? null : [];
       this.selectedDataNodes = [];
+
+      this.validateAndUpdateState();
       return;
     }
 
@@ -163,6 +170,8 @@ export class CategoryTreeSelectComponent {
       this.selectedDataNodes = this.selectedCategory ? 
         (this.selectedCategory as TreeNode[]).map(node => node.data) : [];
     }
+
+    this.validateAndUpdateState();
   }
 
   reset() {
@@ -170,17 +179,30 @@ export class CategoryTreeSelectComponent {
     this.selectedDataNodes = [];
     this.categorySelection.emit([]);
     this.categorySelectionDataNode.emit([]);
+    this.isCurrentlyInvalid.set(false);
     this.isInputInvalid.emit(false);
+    this.loadCategories();
   }
 
   private validateInput(): boolean {
     if (!this.required) return false;
+    return !this.selectedCategory || (Array.isArray(this.selectedCategory) && this.selectedCategory.length === 0);
+  }
+
+  private validateAndUpdateState(): void {
+    const isInvalid = this.checkIfInvalid();
+    this.isCurrentlyInvalid.set(isInvalid);
+    this.isInputInvalid.emit(isInvalid);
+  }
+
+  private checkIfInvalid(): boolean {
+    if (!this.required) return false;
     
-    if (this.selectionMode === 'single') {
-      return !this.selectedCategory;
-    } else {
-      return !this.selectedCategory || (Array.isArray(this.selectedCategory) && this.selectedCategory.length === 0);
-    }
+    if (!this.selectedCategory) return true;
+    
+    if (Array.isArray(this.selectedCategory) && this.selectedCategory.length === 0) return true;
+    
+    return false;
   }
 
   private findNodeById(id: number): TreeNode | null {
