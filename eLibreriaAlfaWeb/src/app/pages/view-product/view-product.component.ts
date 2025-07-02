@@ -81,6 +81,24 @@ export class ViewProductComponent implements OnInit {
     });  
   }
 
+  validarCantidad(event: any) {
+    let value = event.target.value;
+    
+    // Eliminar cualquier carácter que no sea número
+    value = value.replace(/[^0-9]/g, '');
+    
+    // Convertir a número entero
+    const numValue = parseInt(value);
+    
+    if (isNaN(numValue) || numValue < 1 || value === '') {
+      this.cantidad = 1;
+      event.target.value = '1';
+    } else {
+      this.cantidad = numValue;
+      event.target.value = numValue.toString();
+    }
+  }
+
   agregarAlPedido() {
     if (!this.usuario) {
       this.router.navigate(['/inicio-sesion']);
@@ -98,7 +116,7 @@ export class ViewProductComponent implements OnInit {
       return;
     }
 
-    if (!this.producto || this.addingToOrder) return;
+    if (!this.producto || this.addingToOrder || this.cantidad < 1) return;
     
     this.addingToOrder = true;
 
@@ -169,9 +187,14 @@ export class ViewProductComponent implements OnInit {
     });
   }
 
-irAVerPedido() {
-  this.modalVisible = false;
-  this.router.navigate(['/perfil'], { queryParams: { section: 'actual' } });
-}
+  irAVerPedido() {
+    this.modalVisible = false;
+    this.router.navigate(['/perfil'], { queryParams: { section: 'actual' } });
+  }
+
+  volverAlCatalogo() {
+    this.modalVisible = false;
+    this.router.navigate(['/catalogo']);
+  }
 
 }

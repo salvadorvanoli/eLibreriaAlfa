@@ -3,11 +3,13 @@
     <div class="col-span-1">
         <app-options-panel (dataType)="onDataTypeSelected($event)" (modalIsVisible)="modalIsVisible = $event" />
     </div>
-    <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
+    <div [class]="selectedDataType() === 'Pedido' ? 'col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 justify-start' : 'col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4'">
         @if (selectedDataType() === 'Impresión') {
             <app-prints-table [userRegistrado]="false" />
         } @else if (selectedDataType() === 'Pedido') {
-            <app-order-table [userRegistrado]="false"></app-order-table>
+            <div class="w-full flex justify-start">
+                <app-order-table [userRegistrado]="false"></app-order-table>
+            </div>
         } @else if (selectedDataType() === 'Categoría') {
             <app-category-tree-panel #categoryTreePanel selectionMode="single" (categorySelection)="onItemSelected($event)" />
         } @else {

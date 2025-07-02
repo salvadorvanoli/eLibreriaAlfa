@@ -42,8 +42,10 @@
     <div class="flex justify-center mt-1 mb-3 px-4">
       <div class="text-center text-black text-xl md:text-2xl font-semibold font-['Inter'] leading-7">Historial de órdenes</div>
     </div>
-    <div class="w-full overflow-x-auto">
-      <app-order-table [userRegistrado]="true"></app-order-table>
+    <div class="w-full max-w-6xl mx-auto px-4">
+      <div class="overflow-x-auto">
+        <app-order-table [userRegistrado]="true"></app-order-table>
+      </div>
     </div>
   }
 </div>

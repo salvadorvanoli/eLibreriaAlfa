@@ -210,88 +210,91 @@
         </app-dropdown-filter>
     </div>
 
-    <p-table
-        [value]="filteredOrders"
-        [paginator]="true"
-        [rows]="10"
-        [tableStyle]="{ 'min-width': '600px', 'max-width': '800px' }"
-        [rowsPerPageOptions]="[5, 10, 20]"
-        [loading]="isLoading"
+    <!-- Contenedor con scroll horizontal -->
+    <div class="table-container">
+        <p-table
+            [value]="filteredOrders"
+            [paginator]="true"
+            [rows]="10"
+            [tableStyle]="{ 'min-width': '600px' }"
+            [rowsPerPageOptions]="[5, 10, 20]"
+            [loading]="isLoading"
     >
-        <ng-template pTemplate="header">
-            <tr>
-                <th style="width:12%">ID</th>
-                @if (!userRegistrado) {
-                    <th style="width:20%">Cliente</th>
-                }
-                <th style="width:18%">Fecha de entrega</th>
-                <th style="width:15%">Estado</th>
-                <th style="width:20%">Acciones</th>
-            </tr>
-        </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width:12%">ID</th>
+                    @if (!userRegistrado) {
+                        <th style="width:20%">Cliente</th>
+                    }
+                    <th style="width:18%">Fecha de entrega</th>
+                    <th style="width:15%">Estado</th>
+                    <th style="width:20%">Acciones</th>
+                </tr>
+            </ng-template>
 
-        <ng-template pTemplate="body" let-order>
-            <tr>
-                <td class="text-center">
-                  {{ order.id }}
-                </td>
-                
-                @if (!userRegistrado) {
-                  <td class="truncate-cell" [title]="getClienteNombreCompleto(order)">
-                    {{ getClienteNombreCompleto(order) }}
-                  </td>
-                }
-                
-                <td class="text-center">
-                  {{ order.fecha ? (order.fecha | date:'dd/MM/yyyy') : '-' }}
-                </td>
-                
-                <td class="text-center">
-                  <p-tag 
-                    [value]="order.estado" 
-                    [severity]="getStatusSeverity(order.estado)"
-                    [icon]="getStatusIcon(order.estado)">
-                  </p-tag>
-                </td>
-                
-                <td>
-                  <div class="flex justify-center gap-2">
-                    <p-button 
-                      icon="pi pi-eye" 
-                      [rounded]="true" 
-                      [text]="true" 
-                      severity="info" 
-                      size="small"
-                      (onClick)="verDetalles(order)"
-                      pTooltip="Ver detalles de la orden">
-                    </p-button>
+            <ng-template pTemplate="body" let-order>
+                <tr>
+                    <td class="text-center">
+                      {{ order.id }}
+                    </td>
                     
                     @if (!userRegistrado) {
-                        <p-button 
-                            icon="pi pi-pencil" 
-                            [rounded]="true" 
-                            [text]="true"
-                            size="small"
-                            [disabled]="!puedeModificarEstado(order.estado)"
-                            [severity]="puedeModificarEstado(order.estado) ? 'primary' : 'secondary'"
-                            (onClick)="editarEstado(order)"
-                            [pTooltip]="puedeModificarEstado(order.estado) ? 'Modificar estado' : 'No se puede modificar el estado de órdenes canceladas o entregadas'">
-                        </p-button>
+                      <td class="truncate-cell" [title]="getClienteNombreCompleto(order)">
+                        {{ getClienteNombreCompleto(order) }}
+                      </td>
                     }
+                    
+                    <td class="text-center">
+                      {{ order.fecha ? (order.fecha | date:'dd/MM/yyyy') : '-' }}
+                    </td>
+                    
+                    <td class="text-center">
+                      <p-tag 
+                        [value]="order.estado" 
+                        [severity]="getStatusSeverity(order.estado)"
+                        [icon]="getStatusIcon(order.estado)">
+                      </p-tag>
+                    </td>
+                    
+                    <td>
+                      <div class="flex justify-center gap-2">
+                        <p-button 
+                          icon="pi pi-eye" 
+                          [rounded]="true" 
+                          [text]="true" 
+                          severity="info" 
+                          size="small"
+                          (onClick)="verDetalles(order)"
+                          pTooltip="Ver detalles de la orden">
+                        </p-button>
+                        
+                        @if (!userRegistrado) {
+                            <p-button 
+                                icon="pi pi-pencil" 
+                                [rounded]="true" 
+                                [text]="true"
+                                size="small"
+                                [disabled]="!puedeModificarEstado(order.estado)"
+                                [severity]="puedeModificarEstado(order.estado) ? 'primary' : 'secondary'"
+                                (onClick)="editarEstado(order)"
+                                [pTooltip]="puedeModificarEstado(order.estado) ? 'Modificar estado' : 'No se puede modificar el estado de órdenes canceladas o entregadas'">
+                            </p-button>
+                        }
+                      </div>
+                    </td>
+                </tr>
+            </ng-template>
+            
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td [attr.colspan]="userRegistrado ? 4 : 5" class="text-center p-8">
+                  <div class="flex flex-col items-center justify-center py-8">
+                    <i class="pi pi-inbox text-4xl text-gray-400 mb-3"></i>
+                    <p class="text-gray-500 text-lg">No hay órdenes para mostrar</p>
                   </div>
                 </td>
-            </tr>
-        </ng-template>
-        
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td [attr.colspan]="userRegistrado ? 3 : 4" class="text-center p-4">
-              <div class="flex flex-col items-center justify-center p-4">
-                <i class="pi pi-inbox text-4xl text-gray-400 mb-3"></i>
-                <p class="text-gray-500">No hay órdenes para mostrar</p>
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-    </p-table>
+              </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>
