@@ -1,6 +1,5 @@
 package ti.elibreriaalfa.business.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -13,7 +12,6 @@ import ti.elibreriaalfa.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -90,4 +88,15 @@ public class Categoria {
         }
         return idsHijas;
     }
+
+    public boolean esHijoDe(Categoria categoria) {
+        if (this.id.equals(categoria.getId())) {
+            return true;
+        }
+        if (this.padre != null) {
+            return this.padre.esHijoDe(categoria);
+        }
+        return false;
+    }
+
 }

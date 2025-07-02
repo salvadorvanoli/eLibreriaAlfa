@@ -94,6 +94,10 @@ public class CategoriaService {
 
         if (categoriaDto.getPadreId() != null) {
             Categoria padre = getCategoriaEntityById(categoriaDto.getPadreId());
+            if (padre.esHijoDe(categoria)) {
+                throw new CategoriaYaExisteException(Constants.ERROR_CATEGORIA_NO_PUEDE_SER_PADRE);
+            }
+
             padre.getHijos().removeIf(hijo -> hijo.getId().equals(categoria.getId()));
             padre.agregarHijo(categoria);
             categoriaRepository.save(padre);

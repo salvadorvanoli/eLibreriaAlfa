@@ -15,14 +15,12 @@ import { SecurityService } from '../../../../core/services/security.service';
 })
 export class OptionsPanelComponent implements OnInit {
 
+  showCreateButton: boolean = localStorage.getItem('selectedDataType') !== 'Pedido' && localStorage.getItem('selectedDataType') !== 'Impresión';
+
   @Output() modalIsVisible = new EventEmitter<boolean>();
   @Output() dataType = new EventEmitter<string>();
   
   selectedDataType: string = '';
-
-  constructor(
-    private securityService: SecurityService
-  ) {}
 
   items = [
     {
@@ -57,6 +55,10 @@ export class OptionsPanelComponent implements OnInit {
     }
   ];
 
+  constructor(
+    private securityService: SecurityService
+  ) {}
+
   ngOnInit(): void {
     this.securityService.getActualUser().subscribe(usuarioActual => {
       if (usuarioActual && usuarioActual.rol === 'EMPLEADO') {
@@ -65,7 +67,8 @@ export class OptionsPanelComponent implements OnInit {
     });
   }
 
-  sendDataType(type: string) {
+  sendDataType(type: string) { 
+    this.showCreateButton = (type !== 'Pedido' && type !== 'Impresión');
     this.selectedDataType = type;
     localStorage.setItem('selectedDataType', type);
     this.dataType.emit(type);
