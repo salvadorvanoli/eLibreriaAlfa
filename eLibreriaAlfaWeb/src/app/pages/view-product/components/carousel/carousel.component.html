@@ -1,0 +1,23 @@
+<div class="card">
+    <p-carousel 
+        [value]="productImagesUrls" 
+        [numVisible]="1" 
+        [numScroll]="1" 
+        [circular]="productImagesUrls.length > 1"
+        [showIndicators]="productImagesUrls.length > 1"
+        [showNavigators]="productImagesUrls.length > 1"
+        [autoplayInterval]="0">
+        <ng-template let-imageUrl pTemplate="item">
+            <div class="p-2">
+                <div class="relative mx-auto flex justify-center items-center" style="min-height: 400px;">
+                    <img 
+                        [src]="imageUrl" 
+                        [alt]="product?.nombre" 
+                        class="max-w-full max-h-full"
+                        style="max-height: 400px; object-fit: contain;"
+                    /> <!-- Extra classes: rounded-lg shadow-lg -->
+                </div>
+            </div>
+        </ng-template>
+    </p-carousel>
+</div>

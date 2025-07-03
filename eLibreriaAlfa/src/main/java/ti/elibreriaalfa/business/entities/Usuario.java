@@ -2,7 +2,13 @@ package ti.elibreriaalfa.business.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+import ti.elibreriaalfa.dtos.usuario.ModificarPerfilUsuarioDto;
+import ti.elibreriaalfa.dtos.usuario.UsuarioSimpleDto;
+import ti.elibreriaalfa.dtos.usuario.UsuarioDto;
+import ti.elibreriaalfa.utils.Constants;
+
 import java.util.List;
 
 @Data
@@ -17,14 +23,17 @@ public class Usuario {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Rol rol;
 
     @Column(nullable = false)
     private String contrasenia;
 
+    @Size(min = Constants.MIN_NOMBRE_USUARIO_LENGTH, max = Constants.MAX_NOMBRE_USUARIO_LENGTH, message = Constants.ERROR_NOMBRE_USUARIO_INVALIDO)
     private String nombre;
 
+    @Size(min = Constants.MIN_NOMBRE_USUARIO_LENGTH, max = Constants.MAX_NOMBRE_USUARIO_LENGTH, message = Constants.ERROR_APELLIDO_USUARIO_INVALIDO)
     private String apellido;
 
     private String telefono;
@@ -43,4 +52,31 @@ public class Usuario {
     @Column(nullable = false)
     @JsonBackReference
     private List<Encargue> encargues;
+
+    public UsuarioSimpleDto mapToDtoSimple() {
+        UsuarioSimpleDto usuarioSimpleDto = new UsuarioSimpleDto();
+
+        usuarioSimpleDto.setId(this.getId());
+        usuarioSimpleDto.setEmail(this.getEmail());
+        usuarioSimpleDto.setRol(this.getRol());
+        usuarioSimpleDto.setNombre(this.getNombre());
+        usuarioSimpleDto.setApellido(this.getApellido());
+        usuarioSimpleDto.setTelefono(this.getTelefono());
+
+        return usuarioSimpleDto;
+    }
+
+    public void setDatosPerfil(ModificarPerfilUsuarioDto perfilUsuario) {
+        this.nombre = perfilUsuario.getNombre();
+        this.apellido = perfilUsuario.getApellido();
+        this.telefono = perfilUsuario.getTelefono();
+    }
+
+    public void setDatosUsuario(UsuarioDto usuarioDto) {
+        this.email = usuarioDto.getEmail();
+        this.nombre = usuarioDto.getNombre();
+        this.apellido = usuarioDto.getApellido();
+        this.telefono = usuarioDto.getTelefono();
+        this.rol = usuarioDto.getRol();
+    }
 }

@@ -1,0 +1,44 @@
+<p-toast />
+@if (items && items.length > 0) {
+    <p-dataview
+        #dv
+        [value]="items"
+        [rows]="rows"
+        [paginator]="items && items.length > 0"
+        [rowsPerPageOptions]="rowsPerPageOptions"
+        (onPage)="onPageChange($event)"
+        emptyMessage=" "
+    >
+        <ng-template #header>
+            <div class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-11 gap-4 content-center">
+                <app-search-bar #searchBar class="md:col-span-3" (textValue)="onSearchTextChange($event)" />
+                <app-form-select-input #orderSelect class="md:col-span-3" [options]="sortOptions" placeholder="Ordenar por " (textValue)="onOrderChange($event)" />
+                <div class="col-span-1 sm:col-span-2 md:col-span-5 gap-4 grid grid-cols-2">
+                    <app-primary-button label="Buscar" classes="w-full" (onClick)="applyFilters()" />
+                    <app-primary-button label="Restablecer" classes="w-full" severity="secondary" (onClick)="resetFilters()" />
+                </div>
+            </div>
+        </ng-template>
+        <ng-template #list let-items>
+            <div *ngFor="let item of items; let first = first">
+                <app-item-row
+                    [item]="item"
+                    [itemType]="itemType()"
+                    [first]="first"
+                    [itemType]="itemType()"
+                    (details)="sendDetails($event)"
+                    (actionExecuted)="handleDelete($event)"
+                />
+            </div>
+        </ng-template>
+    </p-dataview>
+} @else {
+    <app-message
+        classes="p-2"
+        textClasses="text-3xl text-center"
+        iconStyle="font-size: 1.5rem"
+        severity="info"
+        icon="pi pi-info-circle"
+        message="No hay elementos disponibles"
+    />
+}

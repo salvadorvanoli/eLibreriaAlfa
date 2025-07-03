@@ -1,0 +1,22 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+<div class="order-container">
+  <app-title [text]="'Pedido Actual'" [align]="'center'" class="mt-2 mb-6"></app-title>
+   
+  <div *ngIf="!loading" class="flex flex-col items-center">
+    
+    <app-product-container 
+      (noProductsLeft)="onNoProductsLeft()" 
+      (encargueIdChange)="setEncargueId($event)">
+    </app-product-container>
+    
+    <!-- Componente para especificar la fecha y enviar el pedido -->
+    <div class="w-full flex justify-center">
+      <app-specify-order 
+        (submitOrder)="onSubmitOrder($event)"
+        class="mt-6">
+      </app-specify-order>
+    </div>
+  </div>
+</div>

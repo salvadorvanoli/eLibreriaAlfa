@@ -1,0 +1,30 @@
+@if (categoriesLoaded && categories && categories.length > 0) {
+<div class="card w-full">
+    <p class="text-2xl font-semibold mb-4 ml-8 mt-3">Categorías</p>
+    <p-tree
+        [value]="categories"
+        [selectionMode]="selectionMode"
+        styleClass="w-full"
+        [(selection)]="selectedCategory"
+        (selectionChange)="onSelectionChange()"
+        emptyMessage="No hay categorías disponibles"
+    />
+    @if (showMessage && categoriesLoaded && selectionMode === 'single' && selectedCategory) {
+        <app-message
+            classes="p-2"
+            severity="secondary"
+            icon="pi pi-info-circle"
+            [message]="'Categoría seleccionada: ' + selectedDataNodes[0].nombre"
+        />
+    }
+</div>
+} @else {
+    <app-message
+        classes="p-2"
+        textClasses="text-3xl text-center"
+        iconStyle="font-size: 1.5rem"
+        severity="info"
+        icon="pi pi-info-circle"
+        message="No hay categorías disponibles"
+    />
+}

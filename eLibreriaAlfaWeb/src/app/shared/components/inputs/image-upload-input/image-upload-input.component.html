@@ -1,0 +1,76 @@
+<div class="image-upload-container">
+  <p-fileUpload 
+    #fileUpload
+    mode="basic" 
+    [multiple]="maxFiles > 1"
+    [accept]="acceptedTypes"
+    [maxFileSize]="maxFileSize"
+    [auto]="false"
+    [chooseLabel]="placeholder"
+    chooseIcon="pi pi-upload"
+    class="upload-button"
+    [disabled]="images().length >= maxFiles"
+    (onSelect)="onFileSelect($event)"
+    [customUpload]="true">
+  </p-fileUpload>
+
+  @if (images().length > 0) {
+    <div class="images-grid">
+      @for (image of images(); track image.id; let i = $index) {
+        <div class="image-item">
+          <div class="image-preview">
+            <img 
+              [src]="image.preview" 
+              [alt]="image.originalName"
+              class="preview-image"
+            />
+            <div class="image-overlay">
+              <button 
+                type="button"
+                class="remove-button"
+                (click)="removeImage(i)"
+                pTooltip="Eliminar imagen"
+                tooltipPosition="top">
+                <i class="pi pi-times"></i>
+              </button>
+            </div>
+            @if (image.isExisting) {
+              <div class="existing-badge">
+                <small>Existente</small>
+              </div>
+            }
+          </div>
+          <div class="image-info">
+            <small class="image-name">{{ image.originalName }}</small>
+            <small class="image-size">{{ image.size > 0 ? formatFileSize(image.size) : 'Tamaño desconocido' }}</small>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (images().length === 0) {
+    <div class="upload-instructions">
+      <i class="pi pi-cloud-upload upload-icon"></i>
+      <p class="mb-2">{{ placeholder }}</p>
+      <small class="text-muted">
+        Máximo {{ maxFiles }} {{ maxFiles === 1 ? 'imagen' : 'imágenes' }}, 
+        tamaño máximo {{ formatFileSize(maxFileSize) }} cada una
+      </small>
+    </div>
+  }
+
+  @if (showErrorMessage()) {
+    <p-message class="w-full mt-2" severity="error" variant="simple" size="small">
+      {{ errorMessage }}
+    </p-message>
+  }
+
+  @if (maxFiles > 1 && images().length > 0) {
+    <p-badge 
+      [value]="images().length + '/' + maxFiles + ' imágenes'"
+      severity="info"
+      class="file-counter">
+    </p-badge>
+  }
+</div>

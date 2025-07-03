@@ -1,0 +1,26 @@
+<p-floatLabel variant="on" class="w-full">
+    <input
+        pInputText
+        [(ngModel)]="text"
+        (ngModelChange)="onTextChange($event);"
+        [ngModelOptions]="{standalone: true}"
+        type="text"
+        id="textInput"
+        autocomplete="off"
+        class="w-full"
+        [minlength]="minLength"
+        [maxlength]="maxLength"
+    />
+    <label for="textInput">{{ placeholder }}</label>
+</p-floatLabel>
+
+@if (showErrorMessage()) {
+    <p-message
+        class="w-full"
+        severity="error"
+        variant="simple"
+        size="small"
+    >
+        {{ errorMessage }}
+    </p-message>
+}

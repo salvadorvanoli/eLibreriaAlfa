@@ -1,0 +1,13 @@
+<div class="dropdown-filter-container">
+  <label for="estadoFiltro" class="dropdown-filter-label">Filtrar por estado:</label>
+  <p-dropdown
+    inputId="estadoFiltro"
+    [options]="estadosFiltro"
+    [ngModel]="selectedState"
+    (onChange)="onStateChange($event.value)"
+    [placeholder]="placeholder"
+    styleClass="w-48"
+    [showClear]="false"
+    [appendTo]="'body'">
+  </p-dropdown>
+</div>

@@ -1,0 +1,243 @@
+<div class="flex flex-col justify-center items-center w-full ">
+  <div class="flex justify-center mt-10 mb-6">
+    <div class="justify-start text-black text-2xl font-semibold font-['Inter'] leading-7">Especificaciones de la impresión</div>
+  </div>
+  <!-- Toast para mensajes -->
+  <p-toast></p-toast>
+  
+  <!-- Modal de confirmación -->
+  <p-dialog 
+    header="Confirmar solicitud de impresión" 
+    [(visible)]="showConfirmDialog" 
+    [modal]="true" 
+    [draggable]="false" 
+    [resizable]="false"
+    [style]="{width: '90%', maxWidth: '500px'}"
+    [closable]="!isSubmitting">
+    
+    <div class="flex flex-col gap-4">
+      <div class="text-gray-700">
+        <p><strong>Archivo:</strong> {{ selectedFile?.name }}</p>
+        <p><strong>Páginas:</strong> {{ totalPages }}</p>
+        <p><strong>Formato:</strong> {{ selectedFormat.label }}</p>
+        <p><strong>Tipo de papel:</strong> {{ selectedPaperType.label }}</p>
+        <p><strong>Color:</strong> {{ selectedColor.label }}</p>
+        <p><strong>Impresión:</strong> {{ selectedSide.label }}</p>
+        <p><strong>Orientación:</strong> {{ selectedOrientation.label }}</p>
+        <p><strong>Precio total:</strong> ${{ estimatedPrice }}.00</p>
+      </div>
+      
+      <div class="flex flex-col gap-2">
+        <label for="comentario" class="text-gray-800 text-sm font-medium">Comentario adicional (opcional):</label>
+        <textarea 
+          id="comentario"
+          pInputTextarea 
+          [(ngModel)]="comentarioAdicional" 
+          rows="3" 
+          placeholder="Añade cualquier comentario o instrucción especial..."
+          [disabled]="isSubmitting"
+          class="w-full p-2 border border-gray-300 rounded-md">
+        </textarea>
+      </div>
+    </div>
+    
+    <ng-template pTemplate="footer">
+      <button 
+        pButton 
+        type="button" 
+        label="Cancelar" 
+        class="p-button-text p-button-secondary" 
+        (click)="cancelPrintRequest()"
+        [disabled]="isSubmitting">
+      </button>
+      <button 
+        pButton 
+        type="button" 
+        [label]="isSubmitting ? 'Enviando...' : 'Confirmar solicitud'" 
+        class="p-button p-button-primary" 
+        (click)="confirmPrintRequest()"
+        [disabled]="isSubmitting"
+        [loading]="isSubmitting">
+      </button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Contenedor del formulario -->
+  <div class="w-full max-w-[500px] p-4 sm:p-6 bg-white rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-200 inline-flex flex-col justify-start items-start gap-6">
+      
+      <!-- Selector de Formato -->
+      <div class="self-stretch flex flex-col justify-start items-start gap-2">
+          <label class="self-stretch text-gray-800 text-base font-normal font-['Inter'] leading-snug">Formato de hoja</label>
+          <p-dropdown 
+            [(ngModel)]="selectedFormat"
+            [options]="formats"
+            optionLabel="label"
+            placeholder="Selecciona el formato"
+            [style]="{'width': '100%'}"
+            [showClear]="false"
+            (onChange)="onFormatChange()">
+            
+            <ng-template pTemplate="item" let-format>
+              <div class="flex align-items-center gap-2">
+                <span>{{ format.label }}</span>
+                <span class="ml-auto text-sm text-gray-500">
+                  {{ format.value === 'A3' ? 'Solo papel común' : 'Todos los tipos de papel' }}
+                </span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+      </div>
+
+      <!-- Selector de Tipo de Papel -->
+      <div class="self-stretch flex flex-col justify-start items-start gap-2">
+          <label class="self-stretch text-gray-800 text-base font-normal font-['Inter'] leading-snug">Tipo de papel</label>
+          <p-dropdown 
+            [(ngModel)]="selectedPaperType"
+            [options]="availablePaperTypes"
+            optionLabel="label"
+            placeholder="Selecciona el tipo de papel"
+            [style]="{'width': '100%'}"
+            [showClear]="false"
+            (onChange)="onPaperTypeChange()">
+            
+            <ng-template pTemplate="item" let-paperType>
+              <div class="flex align-items-center gap-2">
+                <span>{{ paperType.label }}</span>
+                <span class="ml-auto text-sm text-gray-500">
+                  {{ paperType.value === 'common' ? 'Precio base' : getPaperMultiplierText(paperType.value) }}
+                </span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+      </div>
+
+      <!-- Selector de Color -->
+      <div class="self-stretch flex flex-col justify-start items-start gap-2">
+          <label class="self-stretch text-gray-800 text-base font-normal font-['Inter'] leading-snug">Color de impresión</label>
+          <p-dropdown 
+            [(ngModel)]="selectedColor"
+            [options]="availableColors"
+            optionLabel="label"
+            placeholder="Selecciona el color"
+            [style]="{'width': '100%'}"
+            [showClear]="false">
+            
+            <ng-template pTemplate="item" let-color>
+              <div class="flex align-items-center gap-2">
+                <span>{{ color.label }}</span>
+                <span class="ml-auto text-sm text-gray-500" *ngIf="selectedFormat.value === 'A4'">
+                  {{ color.value === 'color' ? 'Desde $2.00/página' : 'Desde $1.00/página' }}
+                </span>
+                <span class="ml-auto text-sm text-gray-500" *ngIf="selectedFormat.value === 'A3'">
+                  Desde $3.00/página
+                </span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+      </div>
+
+      <!-- Selector de Cara -->
+      <div class="self-stretch flex flex-col justify-start items-start gap-2">
+          <label class="self-stretch text-gray-800 text-base font-normal font-['Inter'] leading-snug">Tipo de impresión</label>
+          <p-dropdown 
+            [(ngModel)]="selectedSide"
+            [options]="availableSides"
+            optionLabel="label"
+            placeholder="Selecciona el tipo de impresión"
+            [style]="{'width': '100%'}"
+            [showClear]="false">
+            
+            <ng-template pTemplate="item" let-side>
+              <div class="flex align-items-center gap-2">
+                <span>{{ side.label }}</span>
+                <span class="ml-auto text-sm text-gray-500">
+                  {{ side.value === 'double' ? '+50% precio' : 'Precio base' }}
+                </span>
+              </div>
+            </ng-template>
+          </p-dropdown>
+      </div>
+
+      <!-- Selector de Orientación -->
+      <div class="self-stretch flex flex-col justify-start items-start gap-2">
+          <label class="self-stretch text-gray-800 text-base font-normal font-['Inter'] leading-snug">Orientación</label>
+          <p-dropdown 
+            [(ngModel)]="selectedOrientation"
+            [options]="orientations"
+            optionLabel="label"
+            placeholder="Selecciona la orientación"
+            [style]="{'width': '100%'}"
+            [showClear]="false">
+          </p-dropdown>
+      </div>
+
+      <!-- Uploader de archivo + Botón -->
+      <div class="self-stretch w-full flex flex-col sm:flex-row gap-3">
+          <div class="flex-1 min-w-0">
+              <div class="w-full px-4 py-3 bg-white rounded-lg outline outline-1 outline-offset-[-0.50px] outline-gray-200 inline-flex justify-start items-center overflow-hidden">
+                  <div class="flex-1 text-gray-700 text-sm sm:text-base font-normal font-['Inter'] leading-none truncate">
+                    {{ selectedFile?.name || 'Ningún archivo seleccionado' }}
+                  </div>
+              </div>
+              <input 
+                type="file" 
+                id="fileInput" 
+                class="hidden" 
+                (change)="onFileSelected($event)" 
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.cdr,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,image/png,image/jpeg">
+          </div>
+          <label for="fileInput" class="p-3 flex-shrink-0 bg-black rounded-lg outline outline-1 outline-offset-[-1px] outline-black flex justify-center items-center gap-2 overflow-hidden cursor-pointer">
+              <div class="text-white text-base font-normal font-['Inter'] leading-none whitespace-nowrap">Subir</div>
+          </label>
+      </div>
+
+      <!-- Precio estimado -->
+      <div class="self-stretch w-full flex flex-col gap-3">
+          <div class="self-stretch p-3 bg-gray-50 rounded-lg border border-gray-200 flex justify-between items-center">
+              <div class="flex items-center gap-2">
+                  <div class="text-gray-800 text-base font-normal font-['Inter'] leading-none">Precio estimado:</div>
+                  <i class="pi pi-info-circle text-amber-500 text-sm cursor-help" 
+                     pTooltip="El precio es solo estimativo. Archivos Word y Excel son imprecisos." 
+                     tooltipPosition="top"
+                     [showDelay]="300">
+                  </i>
+              </div>
+              <div class="text-black text-lg font-semibold font-['Inter'] leading-none">
+                @if (estimatedPrice > 0) {
+                  ${{ estimatedPrice }}.00
+                } @else {
+                  $0.00
+                }
+              </div>
+          </div>
+          
+          @if (selectedFile) {
+            <div class="self-stretch text-gray-600 text-sm font-normal font-['Inter'] leading-tight">
+              {{ totalPages }} página{{ totalPages !== 1 ? 's' : '' }} × ${{ pricePerPage }}.00 = ${{ estimatedPrice }}.00
+              <div class="text-xs text-gray-500 mt-1">
+                {{ selectedFormat.label }} • {{ selectedPaperType.label }} • {{ selectedColor.label }} • {{ selectedSide.label }}
+              </div>
+            </div>
+          }
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="self-stretch w-full flex flex-col sm:flex-row justify-start items-center gap-4">
+          <button (click)="cancelPreview()" class="w-full sm:flex-1 p-3 rounded-lg flex justify-center items-center gap-2 overflow-hidden">
+              <div class="text-gray-700 text-base font-normal font-['Inter'] leading-none">Cancelar</div>
+          </button>
+          <button [disabled]="!selectedFile || estimatedPrice === 0" 
+                  (click)="proceedWithPrint()" 
+                  [class]="selectedFile && estimatedPrice > 0 ? 'w-full sm:flex-1 p-3 bg-black rounded-lg outline outline-1 outline-offset-[-1px] outline-black flex justify-center items-center gap-2 overflow-hidden' : 'w-full sm:flex-1 p-3 bg-gray-400 rounded-lg outline outline-1 outline-offset-[-1px] outline-gray-400 flex justify-center items-center gap-2 overflow-hidden cursor-not-allowed'">
+              <div [class]="selectedFile && estimatedPrice > 0 ? 'text-white text-base font-normal font-[Inter] leading-none' : 'text-gray-200 text-base font-normal font-[Inter] leading-none'">
+                Solicitar impresión
+              </div>
+          </button>
+      </div>
+  </div>
+  
+  <!-- Componente de previsualización -->
+  <div class="w-full">
+    <app-preview [file]="selectedFile" [selectedColor]="selectedColor.value"></app-preview>
+  </div>
+</div>

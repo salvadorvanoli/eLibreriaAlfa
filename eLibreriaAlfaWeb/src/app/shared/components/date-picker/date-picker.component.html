@@ -1,0 +1,15 @@
+<div style="width: 306px;">
+  <p-datepicker 
+      [(ngModel)]="date" 
+      [iconDisplay]="'input'" 
+      [showIcon]="true" 
+      [disabled]="disabled"
+      [minDate]="minDate"
+      [maxDate]="maxDate"
+      (onSelect)="onDateSelect($event)"
+      [dateFormat]="'dd/mm/yy'"
+      [style]="{'width': '100%'}"
+      placeholder="DD/MM/YYYY"
+      inputId="icondisplay">
+  </p-datepicker>
+</div>

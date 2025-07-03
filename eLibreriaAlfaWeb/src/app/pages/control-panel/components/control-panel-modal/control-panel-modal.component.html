@@ -1,0 +1,20 @@
+<app-modal
+    [visible]="visible"
+    [classes]="classes"
+    [style]="style"
+    (closed)="this.onClose.emit()"
+    [breakpoints]="breakpoints"
+>
+    <div modal-title>{{ title }}</div>
+    <div modal-action>
+        @if (dataType === 'Usuario') {
+            <app-user-form class="w-full" [user]="item" (reloadData)="onDataReloaded()" />
+        } @else if (dataType === 'Publicación') {
+            <app-publication-form class="w-full" [publication]="item" (reloadData)="onDataReloaded()" />
+        } @else if (dataType === 'Producto') {
+            <app-product-form class="w-full" [product]="item" (reloadData)="onDataReloaded()" />
+        } @else if (dataType === 'Categoría') {
+            <app-category-form class="w-full" [category]="item" (reloadData)="onDataReloaded()" (itemDeleted)="onItemDeleted()" />
+        }
+    </div>
+</app-modal>

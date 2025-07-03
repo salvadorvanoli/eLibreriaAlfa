@@ -3,8 +3,8 @@ package ti.elibreriaalfa.business.entities;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.util.List;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -16,7 +16,7 @@ public class Encargue {
     private Long id;
 
     @Column(nullable = false)
-    private Integer total;
+    private Float total;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -26,11 +26,11 @@ public class Encargue {
     @OneToMany(mappedBy = "encargue", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Producto_Encargue> productos;
 
-    /*
-    @ManyToMany
-    @JoinTable(name = "encargue_producto",
-            joinColumns = @JoinColumn(name = "encargue_id"),
-            inverseJoinColumns = @JoinColumn(name = "producto_id"))
-    private List<Producto> productos;
-    */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Encargue_Estado estado = Encargue_Estado.EN_CREACION;
+
+    @Column
+    private LocalDate fecha = null;
+
 }

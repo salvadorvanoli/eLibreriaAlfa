@@ -1,0 +1,45 @@
+<p-toast />
+<p-confirmDialog header="Confirmación de eliminación" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+<form novalidate action="" method="post" class="mx-auto flex flex-col items-center gap-4 w-full max-w-md">
+    <app-form-text-input
+        #nameInput
+        class="w-full" 
+        placeholder="Nombre"
+        [formSubmitted]="formSubmitted"
+        [textPattern]="namePattern"
+        errorMessage="El nombre debe tener entre 1 y 50 caracteres"
+        (textValue)="name = $event"
+        (isInputInvalid)="isNameInvalid = $event"
+        [minLength]="1"
+        [maxLength]="50"
+    />
+
+    <app-category-tree-select
+        #parentCategoryInput
+        class="w-full"
+        [formSubmitted]="formSubmitted"
+        selectionMode="single"
+        placeholder="Seleccionar categoría padre (opcional)"
+        [required]="false"
+        (categorySelection)="parentCategory = $event"
+    />
+    
+    <app-primary-button
+        class="w-full"
+        styleClass="w-full"
+        [classes]="'w-full'"
+        [label]="'Confirmar'"
+        (onClick)="confirm()"
+    />
+    
+    <button 
+        *ngIf="category"
+        type="button" 
+        pButton 
+        pRipple 
+        label="Eliminar Categoría" 
+        class="p-button-danger w-full" 
+        (click)="showDeleteConfirmation()"
+    ></button>
+</form>

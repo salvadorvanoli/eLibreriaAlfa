@@ -1,0 +1,40 @@
+<div class="forum-container">
+  <app-title-and-description [center]="true" title="Foro de eLibreriaAlfa" description="Participa en las discusiones de nuestra comunidad" />
+
+  @if (loading) {
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Cargando publicaciones...</p>
+    </div>
+  }
+
+  @if (error && !loading) {
+    <div class="error-container">
+      <h3>Error</h3>
+      <p>{{ error }}</p>
+      <button (click)="loadPublications()" class="retry-btn">Reintentar</button>
+    </div>
+  }
+  
+  @if (!loading && !error) {
+    <div class="publications-container">
+      @if (publicaciones.length === 0) {
+        <div class="no-publications">
+          <h3>No hay publicaciones disponibles</h3>
+        </div>
+      } @else {
+        <div class="publications-list">
+          @for (publicacion of publicaciones; track publicacion.id) {
+            <app-publication-card 
+              [publicacion]="publicacion"
+              [maxContentLength]="150"
+              (cardClicked)="goToPublication($event)"
+            />
+          }
+        </div>
+
+        <p-paginator (onPageChange)="onPageChange($event)" [first]="currentPage * pageSize" [totalRecords]="totalPublications" [rows]="pageSize"/>
+      }
+    </div>
+  }
+</div>

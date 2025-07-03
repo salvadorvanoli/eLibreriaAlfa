@@ -1,0 +1,30 @@
+<app-title-and-description [center]="true" title="Panel de control" description="Gestiona los datos de la aplicación" />
+<div class="p-4 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <div class="col-span-1">
+        <app-options-panel (dataType)="onDataTypeSelected($event)" (modalIsVisible)="modalIsVisible = $event" />
+    </div>
+    <div [class]="selectedDataType() === 'Pedido' ? 'col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 justify-start' : 'col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4'">
+        @if (selectedDataType() === 'Impresión') {
+            <app-prints-table [userRegistrado]="false" />
+        } @else if (selectedDataType() === 'Pedido') {
+            <div class="w-full flex justify-start">
+                <app-order-table [userRegistrado]="false"></app-order-table>
+            </div>
+        } @else if (selectedDataType() === 'Categoría') {
+            <app-category-tree-panel #categoryTreePanel selectionMode="single" (categorySelection)="onItemSelected($event)" />
+        } @else {
+            <app-data-panel #dataPanel [itemType]="selectedDataType" (itemSelected)="onItemSelected($event)" />
+        }
+    </div>
+</div>
+
+<app-control-panel-modal
+    [visible]="modalIsVisible"
+    [dataType]="selectedDataType()"
+    [item]="selectedItem"
+    (onClose)="closeModal()"
+    [title]="this.selectedItem ? 'Editar ' + selectedDataType() : 'Crear ' + selectedDataType()"
+    classes="mx-5 w-150"
+    (reloadData)="onDataReloaded()"
+    (itemDeleted)="onItemDeleted()"
+/>

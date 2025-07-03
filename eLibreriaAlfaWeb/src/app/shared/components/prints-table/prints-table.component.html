@@ -1,0 +1,278 @@
+<div class="card">
+   
+    <p-toast></p-toast>
+    
+    <!-- Agregar el componente de filtro -->
+    <div class="flex items-center justify-start mb-4 gap-2">
+        <app-dropdown-filter
+            [registeredUser]="userRegistrado"
+            type="prints"
+            [(selectedState)]="estadoSeleccionado"
+            (selectedStateChange)="onEstadoChange()"
+            placeholder="Todos">
+        </app-dropdown-filter>
+    </div>
+
+    <p-dialog 
+        header="Comentario adicional" 
+        [(visible)]="showDetailsDialog" 
+        [modal]="true" 
+        [draggable]="false" 
+        [resizable]="false"
+        [style]="{width: '400px'}">
+        
+        <div *ngIf="selectedImpresionForDetails">
+            <p class="font-medium text-gray-800 mb-3">{{ formatFileName(selectedImpresionForDetails.nombreArchivo) }}</p>
+            <div class="bg-gray-50 p-3 rounded border border-gray-200 min-h-[80px]">
+                <p class="text-gray-800">{{ 
+                    selectedImpresionForDetails.comentarioAdicional || 'No hay comentarios adicionales para esta impresión.' 
+                }}</p>
+            </div>
+        </div>
+        
+        <ng-template pTemplate="footer">
+            <div class="flex justify-end">
+                <p-button 
+                    label="Cerrar" 
+                    icon="pi pi-times" 
+                    [text]="true"
+                    (onClick)="cerrarModalDetalles()">
+                </p-button>
+            </div>
+        </ng-template>
+    </p-dialog>
+
+   
+    <p-dialog 
+        header="Modificar estado de impresión" 
+        [(visible)]="showEditStateDialog" 
+        [modal]="true" 
+        [draggable]="false" 
+        [resizable]="false"
+        [style]="{width: '500px', 'min-height': '400px'}"
+        [closable]="!isUpdatingState"
+        appendTo="body">
+        
+        <div class="flex flex-col gap-6" *ngIf="selectedImpresionForEdit">
+          
+            <div class="flex flex-col gap-3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Estado actual:</label>
+                    <p-tag 
+                        [value]="selectedImpresionForEdit.estado | uppercase" 
+                        [severity]="getStatusSeverity(selectedImpresionForEdit.estado)"
+                        [icon]="getStatusIcon(selectedImpresionForEdit.estado)"
+                        class="text-base px-3 py-2">
+                    </p-tag>
+                </div>
+                
+               
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Seleccionar nuevo estado:</label>
+                    <p-dropdown 
+                        [options]="estadosDisponibles" 
+                        [(ngModel)]="selectedNewState" 
+                        placeholder="Seleccionar estado"
+                        [disabled]="isUpdatingState"
+                        [appendTo]="'body'"
+                        [showClear]="false"
+                        styleClass="w-full"
+                        [style]="{'min-width': '200px'}">
+                    </p-dropdown>
+                </div>
+            </div>
+        </div>
+        
+        <ng-template pTemplate="footer">
+            <div class="flex gap-2 justify-end mt-4">
+                <p-button 
+                    label="Cancelar" 
+                    icon="pi pi-times" 
+                    [text]="true"
+                    severity="secondary"
+                    [disabled]="isUpdatingState"
+                    (onClick)="cerrarModalEditarEstado()">
+                </p-button>
+                <p-button 
+                    label="Cambiar estado" 
+                    icon="pi pi-check" 
+                    severity="success"
+                    [loading]="isUpdatingState"
+                    [disabled]="!selectedNewState || selectedNewState === selectedImpresionForEdit?.estado"
+                    (onClick)="confirmarCambioEstado()">
+                </p-button>
+            </div>
+        </ng-template>
+    </p-dialog>
+    
+    
+    <p-dialog 
+        header="Cancelar impresión" 
+        [(visible)]="showCancelDialog" 
+        [modal]="true" 
+        [draggable]="false" 
+        [resizable]="false"
+        [style]="{width: '400px'}"
+        [closable]="!isCancelling">
+        
+        <div class="flex flex-col gap-4">
+            <div class="flex items-center gap-3">
+                <i class="pi pi-exclamation-triangle text-orange-500 text-2xl"></i>
+                <span>¿Estás seguro de que deseas cancelar esta impresión?</span>
+            </div>
+            
+            <div class="bg-gray-50 p-3 rounded-lg" *ngIf="selectedImpresionToCancel">
+                <p class="font-medium text-gray-800">{{ formatFileName(selectedImpresionToCancel.nombreArchivo) }}</p>
+                <p class="text-sm text-gray-600">Esta acción no se puede deshacer.</p>
+            </div>
+        </div>
+        
+        <ng-template pTemplate="footer">
+            <div class="flex gap-2 justify-end">
+                <p-button 
+                    label="Cancelar" 
+                    icon="pi pi-times" 
+                    [text]="true"
+                    severity="secondary"
+                    [disabled]="isCancelling"
+                    (onClick)="cerrarModalCancelacion()">
+                </p-button>
+                <p-button 
+                    label="Sí, cancelar impresión" 
+                    icon="pi pi-trash" 
+                    severity="danger"
+                    [loading]="isCancelling"
+                    (onClick)="confirmarCancelacion()">
+                </p-button>
+            </div>
+        </ng-template>
+    </p-dialog>
+
+    <p-table
+        [value]="filteredImpresiones"
+        [paginator]="true"
+        [rows]="5"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [rowsPerPageOptions]="[5, 10, 20]"
+        [loading]="isLoading"
+    >
+        <ng-template #header>
+            <tr>
+        @if (userRegistrado) {
+            <th style="width:18%">Archivo</th>  
+            <th style="width:12%">Estado</th>
+            <th style="width:12%">Color</th>    
+            <th style="width:8%">Formato</th>
+            <th style="width:16%">Papel</th>
+            <th style="width:8%">Caras</th>
+            <th style="width:14%">Orientación</th>
+            <th style="width:12%">Acciones</th>
+        } @else {
+            <th style="width:15%">Archivo</th>   
+            <th style="width:13%">Cliente</th>
+            <th style="width:12%">Estado</th>    
+            <th style="width:8%">Color</th>
+            <th style="width:6%">Formato</th>
+            <th style="width:12%">Papel</th>
+            <th style="width:10%">Caras</th>
+            <th style="width:10%">Orientación</th>
+            <th style="width:13%">Acciones</th>
+        }
+    </tr>
+        </ng-template>
+        <ng-template #body let-impresion>
+            <tr>
+                <td class="truncate-cell" [title]="impresion.nombreArchivo">
+                    {{ formatFileName(impresion.nombreArchivo) }}
+                </td>
+                
+               
+                @if (!userRegistrado) {
+                    <td class="truncate-cell" [title]="getClienteNombreCompleto(impresion)">
+                        {{ getClienteNombreCompleto(impresion) }}
+                    </td>
+                }
+                
+                <td>
+                    <p-tag 
+                        [value]="impresion.estado | uppercase" 
+                        [severity]="getStatusSeverity(impresion.estado)"
+                        [icon]="getStatusIcon(impresion.estado)">
+                    </p-tag>
+                </td>
+                <td>{{ impresion.color ? 'Color' : 'B&N' }}</td>
+                <td>{{ impresion.formato }}</td>
+                <td>{{ impresion.tipoPapel }}</td>
+                <td>{{ impresion.dobleCara ? 'Doble Cara' : 'Simple' }}</td>
+                <td>{{ impresion.orientacion | titlecase }}</td>
+                <td>
+                    <div class="flex justify-center gap-1">
+                        <p-button 
+                            icon="pi pi-download" 
+                            [rounded]="true" 
+                            [text]="true" 
+                            severity="success" 
+                            size="small"
+                            [disabled]="!impresion.nombreArchivo"
+                            (onClick)="descargarArchivo(impresion)"
+                            pTooltip="Descargar archivo">
+                        </p-button>
+                        
+                        @if (userRegistrado) {
+                            <p-button 
+                                icon="pi pi-eye" 
+                                [rounded]="true" 
+                                [text]="true" 
+                                severity="info" 
+                                size="small"
+                                (onClick)="verDetalles(impresion)"
+                                pTooltip="Ver comentario adicional">
+                            </p-button>
+                            
+                            <p-button 
+                                icon="pi pi-trash" 
+                                [rounded]="true" 
+                                [text]="true" 
+                                severity="danger" 
+                                size="small"
+                                [disabled]="impresion.estado === 'En proceso' || impresion.estado === 'Completado' || impresion.estado === 'Entregado' || impresion.estado === 'Cancelado'"
+                                (onClick)="descartarImpresion(impresion)"
+                                pTooltip="Cancelar impresión">
+                            </p-button>
+                        } @else {
+                            <p-button 
+                                icon="pi pi-eye" 
+                                [rounded]="true" 
+                                [text]="true" 
+                                severity="info" 
+                                size="small"
+                                (onClick)="verDetalles(impresion)"
+                                pTooltip="Ver comentario adicional">
+                            </p-button>
+                            
+                            <p-button 
+                                icon="pi pi-pencil" 
+                                [rounded]="true" 
+                                [text]="true"
+                                size="small"
+                                (onClick)="editarEstado(impresion)"
+                                pTooltip="Modificar estado">
+                            </p-button>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td [attr.colspan]="userRegistrado ? 8 : 9" class="text-center p-8">
+                    <div class="flex flex-col items-center justify-center py-8">
+                        <i class="pi pi-print text-4xl text-gray-400 mb-3"></i>
+                        <p class="text-gray-500 text-lg">No hay impresiones para mostrar</p>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

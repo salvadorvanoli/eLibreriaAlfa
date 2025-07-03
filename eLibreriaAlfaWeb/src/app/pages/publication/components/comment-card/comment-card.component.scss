@@ -1,0 +1,150 @@
+.comment-item {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #3b82f6;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #f1f5f9;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .comment-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      .comment-author {
+        font-weight: 600;
+        color: #1e293b;
+        font-size: 0.9rem;
+      }
+
+      .comment-date {
+        font-size: 0.8rem;
+        color: #64748b;
+        white-space: nowrap;
+      }
+    }
+
+    .delete-comment-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 36px;
+
+      &:hover {
+        background: #dc2626;
+        transform: scale(1.05);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      i {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .comment-title {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e2e8f0;
+    
+    h4 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 0;
+      line-height: 1.4;
+      text-transform: none;
+      letter-spacing: 0.025em;
+    }
+  }
+
+  .comment-content {
+    p {
+      margin: 0;
+      color: #374151;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .comment-item {
+    padding: 0.75rem;
+
+    .comment-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
+
+      .comment-info {
+        width: 100%;
+
+        .comment-author {
+          font-size: 0.85rem;
+        }
+
+        .comment-date {
+          font-size: 0.75rem;
+        }
+      }
+
+      .delete-comment-btn {
+        align-self: flex-end;
+        margin-top: -2rem;
+      }
+    }
+
+    .comment-title h4 {
+      font-size: 1rem;
+    }
+
+    .comment-content p {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Animation for new comments
+.comment-item.new-comment {
+  animation: slideIn 0.3s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

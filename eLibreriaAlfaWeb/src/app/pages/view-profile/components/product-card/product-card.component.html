@@ -1,0 +1,53 @@
+<div *ngIf="product" class="flex flex-col md:flex-row items-start gap-4 md:gap-6 p-4 md:p-6 bg-white rounded-lg border border-gray-200 relative"
+     [class.opacity-75]="product.habilitado === false">
+
+  <!-- Contenedor de imagen con overlay si está deshabilitado -->
+  <div class="relative w-full md:w-52 h-48 md:h-60 mx-auto md:mx-0">
+  <img class="w-full h-full object-cover rounded" [src]="product.imageUrl" [alt]="product.title" />
+  
+  <!-- Overlay gris transparente usando la notación moderna de Tailwind (aumenté de /20 a /30) -->
+  <div *ngIf="product.habilitado === false" 
+       class="absolute inset-0 bg-gray-500/30 rounded">
+  </div>
+</div>
+
+  <!-- Información del producto -->
+  <div class="flex-1 flex flex-col gap-2 w-full" 
+       [class.text-gray-600]="product.habilitado === false">
+    <h3 class="text-xl md:text-2xl font-semibold text-center md:text-left"
+        [class.text-gray-900]="product.habilitado !== false"
+        [class.text-gray-500]="product.habilitado === false">
+      {{ product.title }}
+    </h3>
+    <p class="text-sm md:text-base font-semibold text-center md:text-left"
+       [class.text-gray-900]="product.habilitado !== false"
+       [class.text-gray-500]="product.habilitado === false">
+      ${{ product.price | number:'1.2-2' }}
+    </p>
+    <p class="text-sm md:text-base font-semibold text-gray-500 text-center md:text-left">
+      Cantidad: {{ product.quantity }}
+    </p>
+    <p class="text-sm md:text-base text-center md:text-left"
+       [class.text-gray-900]="product.habilitado !== false"
+       [class.text-gray-500]="product.habilitado === false">
+      Subtotal: ${{ subtotal | number:'1.2-2' }}
+    </p>
+    
+    <!-- Mensaje adicional para producto deshabilitado -->
+    <div *ngIf="product.habilitado === false" 
+         class="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
+      <p class="text-xs md:text-sm text-yellow-700 text-center">
+        <i class="pi pi-info-circle mr-1"></i>
+        Este producto ya no está disponible en nuestro catálogo
+      </p>
+    </div>
+  </div>
+
+  <!-- Botón Eliminar - SIEMPRE ROJO -->
+  <button 
+    *ngIf="!readOnly" 
+    (click)="onRemove()"
+    class="md:absolute md:right-6 md:bottom-6 w-full md:w-[84px] h-[36px] md:h-[40px] bg-red-500 hover:bg-red-600 border-red-600 text-white text-sm md:text-base rounded-lg border transition flex items-center justify-center mt-4 md:mt-0">
+    Eliminar
+  </button>
+</div>

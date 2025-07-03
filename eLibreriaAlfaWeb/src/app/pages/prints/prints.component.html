@@ -1,0 +1,25 @@
+<app-title-and-description 
+    title="Impresiones" 
+    [center]="true">
+</app-title-and-description>
+
+
+<div class="loading-container" *ngIf="isUserAuthenticated === null">
+    <p-progressSpinner></p-progressSpinner>
+</div>
+
+
+<div class="authenticated-content-container" *ngIf="isUserAuthenticated !== null">
+    <app-select-prints 
+        (optionSelected)="onPrintOptionSelected($event)">
+    </app-select-prints>
+
+    @if (selectedPrintOption === 'solicitar') {
+        <app-especificaciones></app-especificaciones>
+    } @else if (selectedPrintOption === 'ver') {
+        <app-user-prints></app-user-prints>
+    }
+    
+    <app-restricted-overlay *ngIf="isUserAuthenticated === false"></app-restricted-overlay>
+</div>
+

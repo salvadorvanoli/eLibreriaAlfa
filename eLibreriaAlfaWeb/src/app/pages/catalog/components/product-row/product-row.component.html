@@ -1,0 +1,24 @@
+<a routerLink="/producto/{{ product.id }}">
+    <div
+        class="flex flex-col sm:flex-row sm:items-center p-6 gap-4"
+        [ngClass]="{ 'border-t border-surface-200': !first }"
+    >
+        <div class="product-row-image-container">
+            <img
+                [src]="productImageUrl"
+                [alt]="product.nombre"
+                (error)="onImageError($event)"
+            />
+        </div>
+        <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+            <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+                <div>
+                    <div class="text-lg font-medium mt-2">{{ product.nombre }}</div>
+                </div>
+            </div>
+            <div class="flex flex-col md:items-end gap-8">
+                <span class="text-xl font-semibold">${{ product.precio }}</span>
+            </div>
+        </div>
+    </div>
+</a>

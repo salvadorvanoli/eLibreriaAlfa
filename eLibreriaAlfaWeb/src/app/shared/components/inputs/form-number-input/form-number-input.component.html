@@ -1,0 +1,26 @@
+<p-floatlabel variant="on" class="w-full">
+    <p-inputnumber
+        [(ngModel)]="value"
+        (ngModelChange)="onValueChange($event);"
+        [ngModelOptions]="{standalone: true}"
+        [min]="min"
+        [max]="max"
+        inputId="numberInput"
+        class="w-full"
+        mode="currency"
+        currency="UYU"
+        locale="es-UY"
+    />
+    <label for="numberInput">{{placeholder}}</label>
+</p-floatlabel>
+
+@if (showErrorMessage()) {
+    <p-message
+        class="w-full"
+        severity="error"
+        variant="simple"
+        size="small"
+    >
+        {{ errorMessage }}
+    </p-message>
+}

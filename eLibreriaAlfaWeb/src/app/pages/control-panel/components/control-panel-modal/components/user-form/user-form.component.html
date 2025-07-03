@@ -1,0 +1,77 @@
+<p-toast />
+<form novalidate action="" method="post" class="mx-auto flex flex-col items-center gap-4 w-full max-w-md">
+    <app-form-text-input
+        #emailInput
+        class="w-full" 
+        placeholder="Email"
+        [formSubmitted]="formSubmitted"
+        [textPattern]="emailPattern"
+        errorMessage="Correo electrónico inválido"
+        (textValue)="email = $event"
+        (isInputInvalid)="isEmailInvalid = $event"
+        [minLength]="1"
+        [maxLength]="60"
+    />
+    <app-form-password-input
+        #passwordInput
+        class="w-full" 
+        placeholder="Contraseña"
+        [formSubmitted]="formSubmitted"
+        errorMessage="La contraseña debe tener al menos 6 caracteres"
+        (passwordValue)="password = $event;"
+        [isPasswordWrong]="password.length < 6 && formSubmitted()"
+    />
+    <app-form-select-input
+        #roleSelect
+        class="w-full"
+        [options]="roleOptions"
+        placeholder="Selecciona un rol"
+        errorMessage="Debes seleccionar un rol"
+        [formSubmitted]="formSubmitted"
+        (isInputInvalid)="isRoleInvalid = $event"
+        (textValue)="role = $event"
+    />
+    <app-form-text-input
+        #telephoneInput
+        class="w-full" 
+        placeholder="Teléfono"
+        [formSubmitted]="formSubmitted"
+        [textPattern]="telephonePattern"
+        errorMessage="Teléfono inválido"
+        (textValue)="telephone = $event"
+        (isInputInvalid)="isTelephoneInvalid = $event"
+        [minLength]="8"
+        [maxLength]="9"
+    />
+    <app-form-text-input
+        #nameInput
+        class="w-full" 
+        placeholder="Nombre"
+        [formSubmitted]="formSubmitted"
+        [textPattern]="namePattern"
+        errorMessage="Nombre inválido"
+        (textValue)="name = $event"
+        (isInputInvalid)="isNameInvalid = $event"
+        [minLength]="1"
+        [maxLength]="40"
+    />
+    <app-form-text-input
+        #surnameInput
+        class="w-full" 
+        placeholder="Apellido"
+        [formSubmitted]="formSubmitted"
+        [textPattern]="namePattern"
+        errorMessage="Apellido inválido"
+        (textValue)="surname = $event"
+        (isInputInvalid)="isSurnameInvalid = $event"
+        [minLength]="1"
+        [maxLength]="40"
+    />
+    <app-primary-button
+        class="w-full"
+        styleClass="w-full"
+        [classes]="'w-full'"
+        [label]="'Confirmar'"
+        (onClick)="confirm()"
+    />
+</form>

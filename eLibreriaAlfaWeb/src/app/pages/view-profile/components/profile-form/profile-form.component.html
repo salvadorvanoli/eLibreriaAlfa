@@ -1,0 +1,38 @@
+<p-toast></p-toast>
+
+<div class="custom-form-container">
+    <div class="self-stretch flex flex-col gap-2 items-start">
+        <div class="form-label">Nombre</div>
+        <input type="text" 
+               [(ngModel)]="nombre" 
+               class="form-input"
+               maxlength="15"
+               (input)="onNombreChange($event)"
+               placeholder="Solo letras, máximo 15 caracteres">
+    </div>
+    <div class="self-stretch flex flex-col gap-2 items-start">
+        <div class="form-label">Apellido</div>
+        <input type="text" 
+               [(ngModel)]="apellido" 
+               class="form-input"
+               maxlength="15"
+               (input)="onApellidoChange($event)"
+               placeholder="Solo letras, máximo 15 caracteres">
+    </div>
+    <div class="self-stretch flex flex-col gap-2 items-start">
+        <div class="form-label">Teléfono</div>
+        <input type="tel" 
+               [(ngModel)]="telefono" 
+               class="form-input" 
+               maxlength="9"
+               (input)="onTelefonoChange($event)"
+               placeholder="9 números (ej: 123456789)">
+    </div>
+    <div class="self-stretch inline-flex items-center gap-4">
+        <button (click)="updateProfile()" 
+                class="update-button" 
+                [disabled]="loading || !isFormValid()">
+            <div class="button-text">{{ loading ? 'Actualizando...' : 'Actualizar' }}</div>
+        </button>
+    </div>
+</div>
