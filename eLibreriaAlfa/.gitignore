@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### Image files ###
-*.png
-*.jpg
-*.jpeg
-*.webp
+#*.png
+#*.jpg
+#*.jpeg
+#*.webp
