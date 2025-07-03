@@ -19,7 +19,7 @@
         placeholder="Precio"
         [formSubmitted]="formSubmitted"
         [min]="1"
-        errorMessage="El precio debe ser mayor a 1"
+        errorMessage="El precio debe ser de al menos 1"
         (inputValue)="price = $event"
         (isInputInvalid)="isPriceInvalid = $event"
     />

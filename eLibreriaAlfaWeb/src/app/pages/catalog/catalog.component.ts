@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ViewChild } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { CategoryTreeComponent } from '../../shared/components/category-tree/category-tree.component';
@@ -23,6 +23,7 @@ import { ProductoSimpleDto } from '../../core/models/producto';
   styleUrl: './catalog.component.scss'
 })
 export class CatalogComponent {
+  @ViewChild('productsCatalog') productsCatalog!: ProductsCatalogComponent;
 
   products!: ProductoSimpleDto[];
   selectedCategory: number = 0;
@@ -66,6 +67,8 @@ export class CatalogComponent {
 
   onCategorySelection(category: number | number[]) {
     this.selectedCategory = category as number;
+    this.productsCatalog?.onPageChange({ first: 0 });
+    this.productsCatalog?.setDataViewPage(0);
     this.filterProducts();
   }
 

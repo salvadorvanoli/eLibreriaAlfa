@@ -52,11 +52,14 @@
         }
 
         <div class="publication-body">
-          <div [innerHTML]="publicacion.contenido" class="publication-text"></div>
+          <div class="publication-text">
+            {{ publicacion.contenido }}
+          </div>
         </div>
       </article>
 
-      <section class="comments-section">        <h2 class="comments-title">
+      <section class="comments-section">
+        <h2 class="comments-title">
           Comentarios 
           <span class="comments-count">
             ({{ totalComments }})

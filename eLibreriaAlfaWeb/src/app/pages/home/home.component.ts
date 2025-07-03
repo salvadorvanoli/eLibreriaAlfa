@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
   }
 
   getLink(p: PublicacionSimple): string {
-    return '/publication/' + p.id;
+    return '/publicacion/' + p.id;
   }
 
   getImageUrl(p: PublicacionSimple): string {

@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, computed, effect, EventEmitter, Input, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Message } from 'primeng/message';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -49,11 +49,16 @@ export class ImageUploadInputComponent {
   @Output() isInputInvalid = new EventEmitter<boolean>();
   @Output() removedImages = new EventEmitter<{ image: ImageItem, index: number } | null>();
 
-  constructor(private imageService: ImageService) {}
+  constructor(private imageService: ImageService) {
+    effect(() => {
+      if (this.formSubmitted()) {
+        this.validateInput();
+      }
+    });
+  }
 
   showErrorMessage = computed(() => {
-    const hasError = this.required && this.images().length === 0;
-    return hasError && this.formSubmitted();
+    return this.validateInput() && this.formSubmitted();
   });
 
   newFiles = computed(() => {
@@ -61,6 +66,12 @@ export class ImageUploadInputComponent {
       .filter(img => !img.isExisting && img.file)
       .map(img => img.file!);
   });
+
+  validateInput() {
+    const isInvalid = this.required && this.images().length === 0;
+    this.isInputInvalid.emit(isInvalid);
+    return isInvalid;
+  }
 
   onFileSelect(event: any) {
     const files: File[] = event.files || event.currentFiles || [];
@@ -133,9 +144,7 @@ export class ImageUploadInputComponent {
 
   private emitChanges() {
     this.imagesValue.emit(this.newFiles());
-    
-    const isInvalid = this.required && this.images().length === 0;
-    this.isInputInvalid.emit(isInvalid);
+    this.validateInput();
   }
 
   setValue(existingImages: ImageDto[] | null) {

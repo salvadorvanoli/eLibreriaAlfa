@@ -71,18 +71,23 @@ export class ProductsCatalogComponent {
   onResetFilters() {
     this.resetChildComponents();
     this.first = 0;
-    if (this.dataView)
-      this.dataView.first = 0;
+    this.setDataViewPage(0);
     this.resetFilters.emit();
   }
 
   onPageChange(event: any) {
     this.first = event.first;
-    this.rows = event.rows;
+    if (event.rows)
+      this.rows = event.rows;
   }
   
   onRowsChange(event: any) {
     this.rows = event.value;
+  }
+
+  setDataViewPage(first: number) {
+    if (this.dataView)
+      this.dataView.first = first;
   }
 
   private resetChildComponents() {

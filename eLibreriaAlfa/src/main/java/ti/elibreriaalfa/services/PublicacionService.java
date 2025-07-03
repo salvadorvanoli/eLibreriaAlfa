@@ -62,6 +62,11 @@ public class PublicacionService {
         }
 
         try {
+            Publicacion publicacion = getPublicacionEntityById(idPublicacion);
+
+            if (publicacion.getImagen() != null)
+                imageService.deleteImage(publicacion.getImagen());
+
             publicacionRepository.deleteById(idPublicacion);
         } catch (Exception e) {
             log.error("Error al eliminar publicación con ID {}: {}", idPublicacion, e.getMessage(), e);

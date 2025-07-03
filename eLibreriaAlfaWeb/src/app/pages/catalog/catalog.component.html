@@ -6,7 +6,7 @@
                 <app-category-tree (selection)="onCategorySelection($event)" [showMessage]="true" />
             </div>
             <div class="col-span-1 sm:m-5 sm:col-span-2 md:col-span-3 lg:col-span-4">
-                <app-products-catalog [products]="products" (searchTextChange)="onSearchTextChange($event)" (sortChange)="onSortChange($event)" (applyFilters)="applyFilters()" (resetFilters)="resetFilters()" />
+                <app-products-catalog #productsCatalog [products]="products" (searchTextChange)="onSearchTextChange($event)" (sortChange)="onSortChange($event)" (applyFilters)="applyFilters()" (resetFilters)="resetFilters()" />
             </div>
         </div>
     } @else {

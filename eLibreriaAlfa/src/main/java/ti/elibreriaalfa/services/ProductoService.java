@@ -176,6 +176,12 @@ public class ProductoService {
     public void deleteProducto(Long idProducto) {
         Producto producto = getProductoEntityById(idProducto);
 
+        if (producto.getImagenes() != null) {
+            for (String imagen : producto.getImagenes()) {
+                imageService.deleteImage(imagen);
+            }
+        }
+
         for (Categoria categoria : producto.getCategorias()) {
             categoria.getProductos().remove(producto);
         }

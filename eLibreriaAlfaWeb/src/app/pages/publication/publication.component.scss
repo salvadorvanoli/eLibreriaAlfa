@@ -102,6 +102,10 @@
   color: #374151;
   font-size: 1rem;
 
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+
   ::ng-deep p {
     margin-bottom: 1rem;
   }

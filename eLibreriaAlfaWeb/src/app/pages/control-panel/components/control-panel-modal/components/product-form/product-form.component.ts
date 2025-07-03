@@ -85,26 +85,9 @@ export class ProductFormComponent {
   }
 
   confirm() {
-    console.log('[ProductFormComponent] confirm() called');
     this.formSubmitted.set(true);
-    console.log('[ProductFormComponent] formSubmitted:', this.formSubmitted());
 
     const isInvalid = this.validateForm();
-    console.log('[ProductFormComponent] validateForm result:', isInvalid);
-    console.log('[ProductFormComponent] Form state:', {
-      name: this.name,
-      price: this.price,
-      description: this.description,
-      categories: this.categories,
-      newImages: this.newImages,
-      existingImages: this.existingImages,
-      imagesToDelete: this.imagesToDelete,
-      isNameInvalid: this.isNameInvalid,
-      isPriceInvalid: this.isPriceInvalid,
-      isDescriptionInvalid: this.isDescriptionInvalid,
-      areImagesInvalid: this.areImagesInvalid,
-      areCategoriesInvalid: this.areCategoriesInvalid,
-    });
 
     if (isInvalid) {
       this.messageService.clear();
@@ -114,13 +97,10 @@ export class ProductFormComponent {
         detail: "Datos ingresados inválidos", 
         life: 4000
       });
-      console.log('[ProductFormComponent] Invalid form, error message shown');
     } else {
       if (this.product) {
-        console.log('[ProductFormComponent] Updating product:', this.product);
         this.update();
       } else {
-        console.log('[ProductFormComponent] Creating new product');
         this.create();
       }
     }
